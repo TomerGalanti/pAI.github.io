@@ -131,6 +131,34 @@ svg.plot{width:100%;height:auto;display:block;overflow:visible}
 .realcode .c{color:var(--txt-faint)}.realcode .s{color:var(--teal)}.realcode .k{color:var(--violet)}.realcode .f{color:#7fb6ff}.realcode .dec{color:var(--amber)}
 
 .deccard-wrap{max-width:660px}
+
+.workspace{display:grid;grid-template-columns:minmax(430px,.92fr) minmax(520px,1.08fr);gap:18px;align-items:start}
+.decorated-panel{position:sticky;top:72px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--ink-2)}
+.decorated-panel .realbar{background:var(--panel)}
+.decorated-status{margin-left:auto;font-size:11px;color:var(--txt-faint)}
+.decorated-status.live{color:var(--amber)}
+.decorated-status.done{color:var(--teal)}
+.decorated-code{max-height:680px;overflow:auto;font-family:var(--mono);font-size:12px;line-height:1.55;padding:15px 17px;white-space:pre;tab-size:2}
+.decorated-code.deployed{padding:0;white-space:normal}
+.decorated-code .ln{display:flex;padding:0 16px 0 0}
+.decorated-code .ln.flash{background:rgba(255,178,62,.10)}
+.decorated-code .gut{flex:none;width:48px;text-align:right;padding-right:14px;color:var(--txt-faint);user-select:none;border-right:1px solid var(--line);margin-right:14px}
+.decorated-code .src{white-space:pre}
+.decorated-code .c{color:var(--txt-faint)}.decorated-code .s{color:var(--teal)}.decorated-code .k{color:var(--violet)}.decorated-code .f{color:#7fb6ff}.decorated-code .dec{color:var(--amber)}
+.deploy-banner{display:none;border-top:1px solid var(--line);background:rgba(52,214,176,.06);padding:10px 14px;font-size:11.5px;color:var(--txt-mut)}
+.deploy-banner b{color:var(--teal)}
+.decorated-panel.deployed .deploy-banner{display:block}
+.decorated-panel .steps{display:none;margin:0;padding:12px 14px;border-top:1px solid var(--line);background:var(--panel)}
+.decorated-panel.deployed .steps{display:flex}
+.side-instrument .instrument{grid-template-columns:1fr;border-radius:14px 14px 0 0}
+.side-instrument .col-mid{border-left:none;border-right:none;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.side-instrument .plotwrap{padding:12px 14px 2px}
+.side-instrument svg.plot{max-height:280px}
+.side-instrument .stream{min-height:238px;max-height:270px;overflow:auto}
+.side-instrument .readout{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.side-instrument .counters{grid-column:1 / -1}
+@media (max-width:1080px){.workspace{grid-template-columns:1fr}.decorated-panel{position:relative;top:auto}}
+
 footer{padding:30px 0 54px;color:var(--txt-faint);font-size:11.5px;border-top:1px solid var(--line)}
 
 @media (max-width:960px){.twoup{grid-template-columns:1fr}.instrument{grid-template-columns:1fr}.col-mid{border-left:none;border-right:none;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}}
@@ -153,88 +181,87 @@ footer{padding:30px 0 54px;color:var(--txt-faint);font-size:11.5px;border-top:1p
   <p>Below is one real run: pAI studies the instances a knapsack solver sees, proposes specialized solvers, evaluates each on held-out instances, and deploys only the one that stays provably optimal &mdash; verified, with fallback. The deployed code is shown in full at the bottom.</p>
 </div></header>
 
-<section class="wrap"><div class="deccard-wrap">
-  <div class="codecard">
-    <div class="bar"><span class="tl r"></span><span class="tl y"></span><span class="tl g"></span><span class="fn">what you write</span></div>
-    <div class="code"><span class="dec">@pai.optimize</span>(
-    objective=<span class="s">"minimize_runtime"</span>,
-    constraint=<span class="s">"quality == optimal"</span>,
-    fallback=<span class="s">"generic_solver"</span>,
-)
-<span class="k">def</span> <span class="f">solve</span>(instance):
-    <span class="k">return</span> generic_solver(instance)</div>
-  </div>
-</div></section>
-
 <section class="section"><div class="wrap">
   <div class="run-row">
     <div class="sec-head" style="margin:0">
-      <div class="idx">THE LOOP</div>
-      <h2>Propose &rarr; evaluate &rarr; keep the best, reject the rest</h2>
-      <p class="sub">Nine candidate solvers, scored on held-out instances. Only provably-optimal candidates can ship; the fastest of those is deployed.</p>
+      <div class="idx">FROM DECORATOR TO DEPLOYED SOLVER</div>
+      <h2>The code and the specialization loop run side by side</h2>
+      <p class="sub">The user starts with a safe generic solver inside a pAI-decorated function. pAI proposes candidates, evaluates them on held-out instances, rejects unsafe variants, and finally rewrites the decorated block into the deployed specialized solver.</p>
     </div>
     <button class="btn btn-primary" id="runMain">&#9654; Run optimization</button>
   </div>
 
-  <div class="instrument">
-    <div>
-      <div class="col-head">Workflow &amp; distribution</div>
-      <div class="target">
-        <div class="name">mdkp &middot; single_resource_density</div>
-        <div class="meta">48-constraint multi-dim knapsack</div>
-        <div class="dist">
-          <div class="chip"><div class="v">64</div><div class="l">train</div></div>
-          <div class="chip"><div class="v">32</div><div class="l">val</div></div>
-          <div class="chip"><div class="v">500</div><div class="l">held-out</div></div>
-        </div>
-      </div>
-      <div class="howbox">Each candidate is run on the instances and scored on two axes: <b>how often it hits the true optimum</b>, and <b>how fast</b>. The constraint says quality must equal optimal &mdash; so anything below the line is rejected, however fast.</div>
-    </div>
-    <div class="col-mid">
-      <div class="col-head">Candidate profiler <span id="phase" style="color:var(--amber)">idle</span></div>
-      <div class="plotwrap">
-        <div class="plotcap"><span>solved to optimum &uarr;</span><span>&larr; faster &middot; runtime (ms) &middot; slower &rarr;</span></div>
-        <svg class="plot" id="plot" viewBox="0 0 700 410" role="img" aria-label="Optimality versus runtime of candidate solvers"></svg>
-      </div>
-      <div class="col-head" style="border-top:1px solid var(--line)">Hypothesis stream</div>
-      <div class="stream" id="stream"></div>
-    </div>
-    <div>
-      <div class="col-head">Live readout</div>
-      <div class="readout">
-        <div class="stat"><div class="l">Solved to optimum</div><div class="v teal" id="roOpt">&mdash;</div></div>
-        <div class="stat"><div class="l">Deployed runtime</div><div class="v amber" id="roMs" style="font-size:26px">&mdash;<span class="u"> ms</span></div></div>
-        <div class="counters">
-          <div class="cnt"><span class="l">Proposed</span><span class="v" id="cProp">0</span></div>
-          <div class="cnt"><span class="l">Evaluated</span><span class="v" id="cEval">0</span></div>
-          <div class="cnt"><span class="l">Rejected</span><span class="v rej" id="cRej">0</span></div>
-          <div class="cnt"><span class="l">Deployed</span><span class="v" style="color:var(--teal)" id="cDep">0</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="tblwrap">
-    <table class="evaltbl"><thead><tr><th>Version</th><th class="hyp">Hypothesis</th><th>Optimum</th><th>Runtime</th><th>Decision</th></tr></thead>
-    <tbody id="evalBody"></tbody></table>
-  </div>
-</div></section>
+  <div class="workspace">
+    <div class="decorated-panel" id="decoratedPanel">
+      <div class="realbar"><span class="tl r"></span><span class="tl y"></span><span class="tl g"></span><span class="fn" id="codeTitle">solve.py</span><span class="decorated-status" id="codeStatus">initial generic solver</span></div>
+      <div class="decorated-code" id="decoratedCode"><span class="dec">@pai.optimize</span>(
+    objective=<span class="s">"minimize_runtime"</span>,
+    constraint=<span class="s">"quality == optimal"</span>,
+    fallback=<span class="s">"initial_solver"</span>,
+    observe=<span class="s">"deployment_distribution"</span>,
+)
+<span class="k">def</span> <span class="f">solve</span>(instance, analysis=None, manifest=None):
+    <span class="c"># This is the safe solver the developer starts with.</span>
+    <span class="c"># It is correct, but too slow for the repeated workload.</span>
+    <span class="k">return</span> initial_solver(instance)
 
-<section class="section"><div class="wrap">
-  <div class="sec-head" style="margin-bottom:18px">
-    <div class="idx">THE DEPLOYED ARTIFACT</div>
-    <h2>The actual code pAI shipped</h2>
-    <p class="sub">Verbatim <span style="color:var(--txt-mut)">solution.py</span> for the deployed candidate (it1&middot;s1). Jump to the four moving parts:</p>
-  </div>
-  <div class="steps">
-    <div class="stepchip" data-line="118"><b>1</b> choose bottleneck</div>
-    <div class="stepchip" data-line="263"><b>2</b> 1-D knapsack DP</div>
-    <div class="stepchip" data-line="319"><b>3</b> feasibility check (all 48)</div>
-    <div class="stepchip" data-line="366"><b>4</b> repair / fallback</div>
-    <div class="stepchip" data-line="448"><b>&rarr;</b> solve()</div>
-  </div>
-  <div class="realwrap">
-    <div class="realbar"><span class="tl r"></span><span class="tl y"></span><span class="tl g"></span><span class="fn">deployed.py</span><span class="meta">591 lines &middot; runs in production with generic fallback</span></div>
-    <div class="realcode" id="realcode"></div>
+<span class="k">def</span> <span class="f">initial_solver</span>(instance):
+    <span class="c"># Generic multidimensional knapsack solver.</span>
+    <span class="c"># pAI keeps this as the production fallback.</span>
+    <span class="k">return</span> generic_solver(instance)</div>
+      <div class="deploy-banner"><b>Deployed:</b> pAI replaced the generic body with the verified specialized solver. The fallback remains available if the specialization cannot safely apply.</div>
+      <div class="steps" id="inlineSteps">
+        <div class="stepchip" data-line="118"><b>1</b> choose bottleneck</div>
+        <div class="stepchip" data-line="263"><b>2</b> 1-D knapsack DP</div>
+        <div class="stepchip" data-line="319"><b>3</b> feasibility check</div>
+        <div class="stepchip" data-line="366"><b>4</b> repair / fallback</div>
+        <div class="stepchip" data-line="448"><b>&rarr;</b> solve()</div>
+      </div>
+    </div>
+
+    <div class="side-instrument">
+      <div class="instrument">
+        <div>
+          <div class="col-head">Workflow &amp; distribution</div>
+          <div class="target">
+            <div class="name">mdkp &middot; single_resource_density</div>
+            <div class="meta">48-constraint multi-dim knapsack</div>
+            <div class="dist">
+              <div class="chip"><div class="v">64</div><div class="l">train</div></div>
+              <div class="chip"><div class="v">32</div><div class="l">val</div></div>
+              <div class="chip"><div class="v">500</div><div class="l">held-out</div></div>
+            </div>
+          </div>
+          <div class="howbox">Each candidate is scored on two axes: <b>how often it hits the true optimum</b>, and <b>how fast</b>. Anything below the optimality line is rejected, however fast.</div>
+        </div>
+        <div class="col-mid">
+          <div class="col-head">Candidate profiler <span id="phase" style="color:var(--amber)">idle</span></div>
+          <div class="plotwrap">
+            <div class="plotcap"><span>solved to optimum &uarr;</span><span>&larr; faster &middot; runtime (ms) &middot; slower &rarr;</span></div>
+            <svg class="plot" id="plot" viewBox="0 0 700 410" role="img" aria-label="Optimality versus runtime of candidate solvers"></svg>
+          </div>
+          <div class="col-head" style="border-top:1px solid var(--line)">Hypothesis stream</div>
+          <div class="stream" id="stream"></div>
+        </div>
+        <div>
+          <div class="col-head">Live readout</div>
+          <div class="readout">
+            <div class="stat"><div class="l">Solved to optimum</div><div class="v teal" id="roOpt">&mdash;</div></div>
+            <div class="stat"><div class="l">Deployed runtime</div><div class="v amber" id="roMs" style="font-size:26px">&mdash;<span class="u"> ms</span></div></div>
+            <div class="counters">
+              <div class="cnt"><span class="l">Proposed</span><span class="v" id="cProp">0</span></div>
+              <div class="cnt"><span class="l">Evaluated</span><span class="v" id="cEval">0</span></div>
+              <div class="cnt"><span class="l">Rejected</span><span class="v rej" id="cRej">0</span></div>
+              <div class="cnt"><span class="l">Deployed</span><span class="v" style="color:var(--teal)" id="cDep">0</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="tblwrap">
+        <table class="evaltbl"><thead><tr><th>Version</th><th class="hyp">Hypothesis</th><th>Optimum</th><th>Runtime</th><th>Decision</th></tr></thead>
+        <tbody id="evalBody"></tbody></table>
+      </div>
+    </div>
   </div>
 </div></section>
 
@@ -876,7 +903,7 @@ function dot(c){
 }
 let running=false,ran=false;
 function setBtns(l,d){['runTop','runMain'].forEach(id=>{const b=$(id);b.innerHTML='&#9654; '+l;b.disabled=d;b.style.opacity=d?.6:1;});}
-function reset(){HERO.forEach((c,i)=>{$('cand'+i).classList.remove('shown','active');$('row'+i).classList.remove('shown');});$('pts').innerHTML='';$('roOpt').textContent='\u2014';$('roMs').innerHTML='\u2014<span class="u"> ms</span>';['cProp','cEval','cRej','cDep'].forEach(id=>$(id).textContent='0');$('phase').textContent='idle';}
+function reset(){HERO.forEach((c,i)=>{$('cand'+i).classList.remove('shown','active');$('row'+i).classList.remove('shown');});$('pts').innerHTML='';$('roOpt').textContent='\u2014';$('roMs').innerHTML='\u2014<span class="u"> ms</span>';['cProp','cEval','cRej','cDep'].forEach(id=>$(id).textContent='0');$('phase').textContent='idle';resetDecoratedCode();}
 function run(){
   if(running)return; if(ran)reset();
   running=true;ran=true;setBtns('running\u2026',true);$('phase').textContent='running';
@@ -890,17 +917,50 @@ function run(){
     dot(c);
     if(c.dec==='rej'){rej++;$('cRej').textContent=rej;}
     if(c.opt>=1.0&&(bestOpt===null||c.ms<bestOpt)){bestOpt=c.ms;$('roOpt').textContent='100%';$('roMs').innerHTML=c.ms.toFixed(0)+'<span class="u"> ms</span>';}
-    if(c.deployed)$('cDep').textContent='1';
+    if(c.deployed){$('cDep').textContent='1';showDeployedCode();}
     i++;setTimeout(tick,c.deployed?1300:780);
   };
   setTimeout(tick,360);
 }
 
 /* ---- real code render + highlight ---- */
+const INITIAL_CODE=`<span class="dec">@pai.optimize</span>(
+    objective=<span class="s">"minimize_runtime"</span>,
+    constraint=<span class="s">"quality == optimal"</span>,
+    fallback=<span class="s">"initial_solver"</span>,
+    observe=<span class="s">"deployment_distribution"</span>,
+)
+<span class="k">def</span> <span class="f">solve</span>(instance, analysis=None, manifest=None):
+    <span class="c"># This is the safe solver the developer starts with.</span>
+    <span class="c"># It is correct, but too slow for the repeated workload.</span>
+    <span class="k">return</span> initial_solver(instance)
+
+<span class="k">def</span> <span class="f">initial_solver</span>(instance):
+    <span class="c"># Generic multidimensional knapsack solver.</span>
+    <span class="c"># pAI keeps this as the production fallback.</span>
+    <span class="k">return</span> generic_solver(instance)`;
+function resetDecoratedCode(){
+  const panel=$('decoratedPanel'), code=$('decoratedCode');
+  if(!panel||!code)return;
+  panel.classList.remove('deployed');
+  code.classList.remove('deployed');
+  code.innerHTML=INITIAL_CODE;
+  $('codeTitle').textContent='solve.py';
+  $('codeStatus').textContent='initial generic solver';
+  $('codeStatus').className='decorated-status';
+}
+function showDeployedCode(){
+  renderCode();
+  $('decoratedPanel').classList.add('deployed');
+  $('codeTitle').textContent='solve.py  →  deployed.py';
+  $('codeStatus').textContent='verified specialization';
+  $('codeStatus').className='decorated-status done';
+}
 function renderCode(){
   const raw=$('realsrc').textContent.replace(/^\n/,'');
   const lines=raw.split('\n');
-  const box=$('realcode');
+  const box=$('decoratedCode');
+  box.classList.add('deployed');
   const KW=/\b(def|return|if|elif|else|for|while|in|not|and|or|is|try|except|finally|raise|import|from|as|with|None|True|False|continue|break|pass|lambda|class|global)\b/g;
   let inDoc=false;
   let html='';
@@ -912,9 +972,7 @@ function renderCode(){
     else if(/^\s*#/.test(line)){ out='<span class="c">'+esc+'</span>'; }
     else if(triple%2===1){ out='<span class="c">'+esc+'</span>'; inDoc=true; }
     else {
-      // strings
       out=esc.replace(/(&quot;|")(?:[^"\\]|\\.)*\1|'(?:[^'\\]|\\.)*'/g,m=>'\u0001'+m+'\u0002');
-      // inline comment
       out=out.replace(/(#.*)$/,'\u0003$1\u0004');
       out=out.replace(KW,'<span class="k">$1</span>');
       out=out.replace(/\bdef\s+(_?\w+)/g,'def <span class="f">$1</span>');
@@ -927,16 +985,17 @@ function renderCode(){
   });
   box.innerHTML=html;
   document.querySelectorAll('.stepchip').forEach(ch=>{
-    ch.addEventListener('click',()=>{
+    ch.onclick=()=>{
       const n=ch.getAttribute('data-line');const t=$('L'+n);if(!t)return;
-      $('realcode').scrollTo({top:t.offsetTop-$('realcode').offsetTop-10,behavior:'smooth'});
+      $('decoratedCode').scrollTo({top:t.offsetTop-$('decoratedCode').offsetTop-10,behavior:'smooth'});
       document.querySelectorAll('.ln.flash').forEach(e=>e.classList.remove('flash'));
       t.classList.add('flash');
-    });
+    };
   });
 }
 
-axes();build();renderCode();
+
+axes();build();resetDecoratedCode();
 
 $('runTop').addEventListener('click',run);$('runMain').addEventListener('click',run);
 </script>
