@@ -55,11 +55,11 @@ a{color:var(--txt-mut)}
 .note b{color:var(--txt);font-weight:600}
 .note .pin{color:var(--amber)}
 
-.section{padding:18px 0 38px;border-top:none}
-.run-row{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:20px}
-.sec-head h2{font-size:clamp(18px,2.2vw,23px)}
+.section{padding:24px 0 38px;border-top:none}
+.run-row{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:16px}
+.sec-head h2{font-size:clamp(19px,2.1vw,25px);font-weight:600}
 .sec-head .idx{font-size:11px;letter-spacing:.16em;color:var(--amber);margin-bottom:6px}
-.sec-head .sub{color:var(--txt-mut);font-size:13px;max-width:58ch;margin-top:5px}
+.sec-head .sub{color:var(--txt-mut);font-size:13px;max-width:64ch;margin-top:6px}
 
 .instrument{display:grid;grid-template-columns:280px 1fr 210px;border:1px solid var(--line);border-radius:14px 14px 0 0;overflow:hidden;background:var(--panel)}
 .col-head{padding:12px 15px;border-bottom:1px solid var(--line);background:var(--ink-2);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--txt-faint)}
@@ -68,8 +68,8 @@ a{color:var(--txt-mut)}
 .target .name{font-family:var(--display);font-weight:600;font-size:14px}
 .target .meta{font-size:11.5px;color:var(--txt-mut);margin-top:3px}
 .dist{display:flex;gap:8px;margin-top:14px}
-.chip{flex:1;background:var(--ink-2);border:1px solid var(--line);border-radius:8px;padding:9px;text-align:center}
-.chip .v{font-family:var(--display);font-weight:600;font-size:18px}
+.chip{flex:1;background:var(--ink-2);border:1px solid var(--line);border-radius:8px;padding:7px;text-align:center}
+.chip .v{font-family:var(--display);font-weight:600;font-size:16px}
 .chip .l{font-size:10px;color:var(--txt-faint);text-transform:uppercase;letter-spacing:.07em;margin-top:1px}
 .howbox{margin:14px;font-size:11.5px;color:var(--txt-mut);background:var(--ink-2);border:1px solid var(--line);border-radius:8px;padding:11px 13px}
 .howbox b{color:var(--txt)}
@@ -151,14 +151,15 @@ svg.plot{width:100%;height:auto;display:block;overflow:visible}
 .decorated-panel .steps{display:none;margin:0;padding:12px 14px;border-top:1px solid var(--line);background:var(--panel)}
 .decorated-panel.deployed .steps{display:flex}
 .side-instrument .instrument{grid-template-columns:1fr;border-radius:14px 14px 0 0}
-.flowline{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
-.flowstep{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px 11px;min-height:62px;transition:.2s}
-.flowstep b{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:999px;background:var(--ink-2);border:1px solid var(--line-2);color:var(--txt-faint);font-size:10px;margin-bottom:7px}
-.flowstep span{display:block;font-size:11.5px;line-height:1.25;color:var(--txt-mut)}
-.flowstep.active{border-color:var(--amber);background:rgba(255,178,62,.055)}
-.flowstep.active b{border-color:var(--amber);color:var(--amber)}
-.flowstep.done{border-color:rgba(52,214,176,.42);background:rgba(52,214,176,.045)}
-.flowstep.done b{background:var(--teal);border-color:var(--teal);color:#062b22}
+.flowline{display:flex;align-items:center;gap:7px;margin-bottom:12px;padding:7px 9px;border:1px solid var(--line);border-radius:999px;background:rgba(15,19,28,.72);width:max-content;max-width:100%}
+.flowlabel{font-family:var(--display);font-weight:700;font-size:12px;letter-spacing:-.02em;color:var(--txt);padding:0 4px 0 2px}
+.flowstep{border:1px solid transparent;border-radius:999px;padding:4px 8px;transition:.2s}
+.flowstep span{display:block;font-size:11px;line-height:1;color:var(--txt-faint);white-space:nowrap}
+.flowsep{font-size:11px;color:var(--txt-faint);opacity:.55}
+.flowstep.active{border-color:rgba(255,178,62,.5);background:rgba(255,178,62,.075)}
+.flowstep.active span{color:var(--amber)}
+.flowstep.done{border-color:rgba(52,214,176,.34);background:rgba(52,214,176,.055)}
+.flowstep.done span{color:var(--teal)}
 .side-instrument .col-mid{border-left:none;border-right:none;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .side-instrument .plotwrap{padding:12px 14px 2px}
 .side-instrument svg.plot{max-height:280px}
@@ -168,7 +169,7 @@ svg.plot{width:100%;height:auto;display:block;overflow:visible}
 .side-instrument .howbox{margin:0 14px 14px}
 .side-instrument .evaltbl{font-size:12px}
 .side-instrument .evaltbl td,.side-instrument .evaltbl th{padding:8px 12px}
-@media (max-width:640px){.flowline{grid-template-columns:1fr 1fr}}
+@media (max-width:640px){.flowline{width:100%;overflow:auto}}
 .side-instrument .counters{grid-column:1 / -1}
 @media (max-width:1080px){.workspace{grid-template-columns:1fr}.decorated-panel{position:relative;top:auto}}
 
@@ -184,15 +185,15 @@ footer{padding:30px 0 54px;color:var(--txt-faint);font-size:11.5px;border-top:1p
 <section class="section"><div class="wrap">
   <div class="run-row">
     <div class="sec-head" style="margin:0">
-      <h2>Codebase → verified solver patch</h2>
-      <p class="sub">The app keeps calling <span style="color:var(--amber)">solve()</span>. pAI observes repeated instances, tests replacements, and rewrites only the marked region after verification.</p>
+      <h2>Mark a solver. pAI specializes it.</h2>
+      <p class="sub">Your application keeps calling <span style="color:var(--amber)">solve()</span>. pAI observes the trace, verifies replacements, and patches only the decorated region.</p>
     </div>
     <button class="btn btn-primary" id="runMain">&#9654; Run demo</button>
   </div>
 
   <div class="workspace">
     <div class="decorated-panel" id="decoratedPanel">
-      <div class="realbar"><span class="tl r"></span><span class="tl y"></span><span class="tl g"></span><span class="fn" id="codeTitle">workflow.py</span><span class="decorated-status" id="codeStatus">pAI region: generic solver</span></div>
+      <div class="realbar"><span class="tl r"></span><span class="tl y"></span><span class="tl g"></span><span class="fn" id="codeTitle">workflow.py</span><span class="decorated-status" id="codeStatus">generic solver</span></div>
       <div class="decorated-code" id="decoratedCode"><span class="c"># workflow.py — normal application code</span>
 <span class="k">import</span> pai
 
@@ -216,7 +217,7 @@ footer{padding:30px 0 54px;color:var(--txt-faint);font-size:11.5px;border-top:1p
 
 <span class="k">def</span> <span class="f">initial_solver</span>(instance):
     <span class="k">return</span> generic_mdkp_solver(instance)</div>
-      <div class="deploy-banner"><b>Patch applied:</b> the app still calls <code>solve()</code>, but the pAI-managed region now contains the verified specialized solver. The original generic solver remains the fallback.</div>
+      <div class="deploy-banner"><b>Patch applied:</b> <code>solve()</code> now contains the verified specialized solver. The generic solver remains as fallback.</div>
       <div class="steps" id="inlineSteps">
         <div class="stepchip" data-line="118"><b>1</b> choose bottleneck</div>
         <div class="stepchip" data-line="263"><b>2</b> 1-D knapsack DP</div>
@@ -228,38 +229,42 @@ footer{padding:30px 0 54px;color:var(--txt-faint);font-size:11.5px;border-top:1p
 
     <div class="side-instrument">
       <div class="flowline" aria-label="pAI specialization process">
-        <div class="flowstep" id="flow0"><b>1</b><span>observe repeated calls</span></div>
-        <div class="flowstep" id="flow1"><b>2</b><span>synthesize candidate solvers</span></div>
-        <div class="flowstep" id="flow2"><b>3</b><span>verify quality and speed</span></div>
-        <div class="flowstep" id="flow3"><b>4</b><span>patch the marked region</span></div>
+        <div class="flowlabel">pAI</div>
+        <div class="flowstep" id="flow0"><span>trace</span></div>
+        <div class="flowsep">→</div>
+        <div class="flowstep" id="flow1"><span>candidates</span></div>
+        <div class="flowsep">→</div>
+        <div class="flowstep" id="flow2"><span>verification</span></div>
+        <div class="flowsep">→</div>
+        <div class="flowstep" id="flow3"><span>patch</span></div>
       </div>
       <div class="instrument">
         <div>
-          <div class="col-head">Observed workload</div>
+          <div class="col-head">Trace</div>
           <div class="target">
-            <div class="name">Repeated knapsack decisions</div>
-            <div class="meta">same workflow, many drawn instances</div>
+            <div class="name">knapsack / production calls</div>
+            <div class="meta">64 train · 32 val · 500 held-out</div>
             <div class="dist">
               <div class="chip"><div class="v">64</div><div class="l">train</div></div>
               <div class="chip"><div class="v">32</div><div class="l">val</div></div>
               <div class="chip"><div class="v">500</div><div class="l">held-out</div></div>
             </div>
           </div>
-          <div class="howbox"><b>Rule:</b> ship only if quality stays optimal. Among correct candidates, choose the fastest. Unsafe speedups are rejected.</div>
+          <div class="howbox"><b>Gate:</b> 100% optimal. Passing candidates compete on runtime.</div>
         </div>
         <div class="col-mid">
-          <div class="col-head">Verification gate <span id="phase" style="color:var(--amber)">idle</span></div>
+          <div class="col-head">Quality <span id="phase" style="color:var(--amber)">idle</span></div>
           <div class="plotwrap">
-            <div class="plotcap"><span>quality must reach 100%</span><span>faster &larr; runtime &rarr; slower</span></div>
+            <div class="plotcap"><span>must hit 100% optimal</span><span>faster &larr; runtime &rarr; slower</span></div>
             <svg class="plot" id="plot" viewBox="0 0 700 410" role="img" aria-label="Optimality versus runtime of candidate solvers"></svg>
           </div>
-          <div class="col-head" style="border-top:1px solid var(--line)">Candidate queue</div>
+          <div class="col-head" style="border-top:1px solid var(--line)">Candidates</div>
           <div class="stream" id="stream"></div>
         </div>
         <div>
-          <div class="col-head">Current best</div>
+          <div class="col-head">Best passing solver</div>
           <div class="readout">
-            <div class="stat"><div class="l">Quality gate</div><div class="v teal" id="roOpt">&mdash;</div></div>
+            <div class="stat"><div class="l">Quality</div><div class="v teal" id="roOpt">&mdash;</div></div>
             <div class="stat"><div class="l">Runtime</div><div class="v amber" id="roMs" style="font-size:26px">&mdash;<span class="u"> ms</span></div></div>
             <div class="counters">
               <div class="cnt"><span class="l">Proposed</span><span class="v" id="cProp">0</span></div>
@@ -977,14 +982,14 @@ function resetDecoratedCode(){
   code.classList.remove('deployed');
   code.innerHTML=INITIAL_CODE;
   $('codeTitle').textContent='workflow.py';
-  $('codeStatus').textContent='pAI region: generic solver';
+  $('codeStatus').textContent='generic solver';
   $('codeStatus').className='decorated-status';
 }
 function showDeployedCode(){
   renderCode();
   $('decoratedPanel').classList.add('deployed');
   $('codeTitle').textContent='workflow.py  →  patched';
-  $('codeStatus').textContent='verified specialized region';
+  $('codeStatus').textContent='verified solver';
   $('codeStatus').className='decorated-status done';
 }
 function highlightLine(line){
