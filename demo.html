@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>pAI — how it specializes a workflow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0B0E14;--ink-2:#0F131C;--panel:#131927;--panel-2:#161D2D;
+  --line:#222B3D;--line-2:#2C3650;--txt:#E7ECF6;--txt-mut:#8B96AC;--txt-faint:#596277;
+  --amber:#FFB23E;--teal:#34D6B0;--coral:#FF6B61;--violet:#9C8CFF;
+  --display:'Space Grotesk',system-ui,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ink);color:var(--txt);font-family:var(--mono);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;
+  background-image:linear-gradient(transparent calc(100% - 1px),rgba(255,255,255,.016) 100%),linear-gradient(90deg,transparent calc(100% - 1px),rgba(255,255,255,.016) 100%);background-size:28px 28px;}
+.wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+h1,h2{font-family:var(--display);font-weight:600;letter-spacing:-.015em;margin:0}
+.eyebrow{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--amber)}
+a{color:var(--txt-mut)}
+.topbar{position:sticky;top:0;z-index:40;backdrop-filter:blur(10px);background:rgba(11,14,20,.82);border-bottom:1px solid var(--line)}
+.topbar .row{display:flex;align-items:center;gap:16px;padding:13px 0}
+.brand{font-family:var(--display);font-weight:700;font-size:18px;letter-spacing:-.02em}
+.brand .p{color:var(--amber)}
+.brand .tag{font-family:var(--mono);font-weight:400;font-size:11px;color:var(--txt-mut);margin-left:8px}
+.spacer{flex:1}
+.replaynote{font-size:11px;color:var(--txt-faint);display:flex;align-items:center;gap:7px}
+.dot-live{width:7px;height:7px;border-radius:50%;background:var(--teal);animation:pulse 2.4s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(52,214,176,.45)}70%{box-shadow:0 0 0 7px rgba(52,214,176,0)}100%{box-shadow:0 0 0 0 rgba(52,214,176,0)}}
+.btn{font-family:var(--mono);font-weight:600;font-size:13px;border:1px solid var(--line-2);background:var(--panel);color:var(--txt);padding:9px 16px;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:9px;transition:.15s}
+.btn:hover{border-color:#3a486a;background:var(--panel-2)}
+.btn:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.btn-primary{background:var(--amber);color:#1a1205;border-color:var(--amber)}
+.btn-primary:hover{background:#ffc163}
+
+.intro{padding:40px 0 26px}
+.intro h1{font-size:clamp(22px,3vw,30px);line-height:1.1;margin-top:12px;max-width:24ch}
+.intro p{color:var(--txt-mut);font-size:14px;max-width:62ch;margin-top:12px}
+
+.codecard{background:var(--ink-2);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.codecard .bar{display:flex;align-items:center;gap:7px;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--panel)}
+.codecard .bar .fn{margin-left:6px;font-size:11px;color:var(--txt-mut)}
+.codecard .bar .rt{margin-left:auto;font-size:11px;color:var(--txt-faint)}
+.tl{width:11px;height:11px;border-radius:50%}.tl.r{background:#ff5f57}.tl.y{background:#febc2e}.tl.g{background:#28c840}
+.code{padding:15px 17px;font-size:12.5px;line-height:1.6;overflow-x:auto;white-space:pre;tab-size:2}
+.code .c{color:var(--txt-faint)}.code .k{color:var(--violet)}.code .s{color:var(--teal)}.code .d{color:var(--amber)}.code .f{color:#7fb6ff}
+
+.twoup{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:stretch}
+.note{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.note .h{font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--txt-faint);margin-bottom:9px}
+.note p{margin:0;font-size:13px;color:var(--txt-mut)}
+.note b{color:var(--txt);font-weight:600}
+.note .pin{color:var(--amber)}
+
+.section{padding:38px 0;border-top:1px solid var(--line)}
+.run-row{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:20px}
+.sec-head h2{font-size:clamp(18px,2.2vw,23px)}
+.sec-head .idx{font-size:11px;letter-spacing:.16em;color:var(--amber);margin-bottom:6px}
+.sec-head .sub{color:var(--txt-mut);font-size:13px;max-width:58ch;margin-top:5px}
+
+.instrument{display:grid;grid-template-columns:280px 1fr 210px;border:1px solid var(--line);border-radius:14px 14px 0 0;overflow:hidden;background:var(--panel)}
+.col-head{padding:12px 15px;border-bottom:1px solid var(--line);background:var(--ink-2);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--txt-faint)}
+.col-mid{border-left:1px solid var(--line);border-right:1px solid var(--line)}
+.target{padding:15px}
+.target .name{font-family:var(--display);font-weight:600;font-size:14px}
+.target .meta{font-size:11.5px;color:var(--txt-mut);margin-top:3px}
+.dist{display:flex;gap:8px;margin-top:14px}
+.chip{flex:1;background:var(--ink-2);border:1px solid var(--line);border-radius:8px;padding:9px;text-align:center}
+.chip .v{font-family:var(--display);font-weight:600;font-size:18px}
+.chip .l{font-size:10px;color:var(--txt-faint);text-transform:uppercase;letter-spacing:.07em;margin-top:1px}
+.howbox{margin:14px;font-size:11.5px;color:var(--txt-mut);background:var(--ink-2);border:1px solid var(--line);border-radius:8px;padding:11px 13px}
+.howbox b{color:var(--txt)}
+.plotwrap{padding:14px 16px 4px}
+.plotcap{display:flex;justify-content:space-between;font-size:11px;color:var(--txt-faint);padding:0 2px 6px}
+svg.plot{width:100%;height:auto;display:block;overflow:visible}
+.gridline{stroke:var(--line);stroke-width:1}
+.shipline{stroke:var(--teal);stroke-width:1;stroke-dasharray:5 4;opacity:.5}
+.axislbl{fill:var(--txt-faint);font-size:10px;font-family:var(--mono)}
+.axisttl{fill:var(--txt-mut);font-size:11px;font-family:var(--mono)}
+.pt{transition:opacity .4s ease,r .4s ease}
+.lbl{font-size:10.5px;font-family:var(--mono);font-weight:600;opacity:0;transition:opacity .5s}
+.lbl.on{opacity:1}
+.stream{padding:8px;display:flex;flex-direction:column;gap:6px;min-height:300px}
+.cand{display:grid;grid-template-columns:42px 1fr auto;gap:10px;align-items:center;padding:8px 10px;border:1px solid transparent;border-radius:9px;opacity:.3;transition:opacity .35s,background .25s,border-color .25s;background:var(--ink-2)}
+.cand.shown{opacity:1}
+.cand.active{border-color:var(--amber);background:rgba(255,178,62,.06)}
+.cand .id{font-size:11px;color:var(--txt-faint)}
+.cand .ti{font-size:11.5px;line-height:1.3}
+.cand .num{font-size:10.5px;color:var(--txt-mut);margin-top:2px;font-variant-numeric:tabular-nums}
+.cand .st{font-size:9px;letter-spacing:.05em;text-transform:uppercase;padding:3px 7px;border-radius:5px;white-space:nowrap;font-weight:600}
+.st-opt{background:rgba(52,214,176,.12);color:var(--teal)}
+.st-rej{background:rgba(255,107,97,.13);color:var(--coral)}
+.st-dep{background:var(--teal);color:#062b22}
+.readout{padding:15px;display:flex;flex-direction:column;gap:13px}
+.stat .l{font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--txt-faint)}
+.stat .v{font-family:var(--display);font-weight:600;font-size:30px;line-height:1;margin-top:5px;font-variant-numeric:tabular-nums}
+.stat .v.teal{color:var(--teal)}.stat .v.amber{color:var(--amber)}
+.stat .u{font-size:13px;color:var(--txt-mut)}
+.counters{border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:8px}
+.cnt{display:flex;justify-content:space-between;font-size:12px}
+.cnt .l{color:var(--txt-mut)}.cnt .v{font-variant-numeric:tabular-nums;font-weight:600}
+.cnt .v.rej{color:var(--coral)}
+.tblwrap{border:1px solid var(--line);border-top:none;border-radius:0 0 14px 14px;overflow:hidden;background:var(--panel)}
+.evaltbl{width:100%;border-collapse:collapse;font-size:12.5px}
+.evaltbl th{text-align:left;font-weight:500;color:var(--txt-faint);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:10px 14px;border-bottom:1px solid var(--line)}
+.evaltbl td{padding:10px 14px;border-bottom:1px solid var(--line)}
+.evaltbl tbody tr{opacity:0;transition:opacity .4s}
+.evaltbl tbody tr.shown{opacity:1}
+.evaltbl tbody tr:last-child td{border-bottom:none}
+.evaltbl tr.dep td{background:rgba(52,214,176,.05)}
+.evaltbl .vid{font-weight:600}.evaltbl .num{font-variant-numeric:tabular-nums}.evaltbl .hyp{color:var(--txt-mut)}
+.tag{font-size:10px;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:5px;font-weight:600;white-space:nowrap}
+
+/* real code panel */
+.steps{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.stepchip{font-size:11.5px;color:var(--txt-mut);background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:7px 12px;cursor:pointer;transition:.15s;display:flex;align-items:center;gap:7px}
+.stepchip:hover{border-color:var(--amber);color:var(--txt)}
+.stepchip b{color:var(--amber);font-weight:600}
+.realwrap{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--ink-2)}
+.realbar{display:flex;align-items:center;gap:7px;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--panel)}
+.realbar .fn{margin-left:6px;font-size:11.5px;color:var(--txt)}
+.realbar .meta{margin-left:auto;font-size:11px;color:var(--txt-faint)}
+.realcode{max-height:560px;overflow:auto;font-family:var(--mono);font-size:12px;line-height:1.55}
+.realcode .ln{display:flex;padding:0 16px 0 0}
+.realcode .ln:target,.realcode .ln.flash{background:rgba(255,178,62,.10)}
+.realcode .gut{flex:none;width:48px;text-align:right;padding-right:14px;color:var(--txt-faint);user-select:none;border-right:1px solid var(--line);margin-right:14px}
+.realcode .src{white-space:pre}
+.realcode .c{color:var(--txt-faint)}.realcode .s{color:var(--teal)}.realcode .k{color:var(--violet)}.realcode .f{color:#7fb6ff}.realcode .dec{color:var(--amber)}
+
+.deccard-wrap{max-width:660px}
+footer{padding:30px 0 54px;color:var(--txt-faint);font-size:11.5px;border-top:1px solid var(--line)}
+
+@media (max-width:960px){.twoup{grid-template-columns:1fr}.instrument{grid-template-columns:1fr}.col-mid{border-left:none;border-right:none;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}}
+@media (max-width:600px){.evaltbl .hyp{display:none}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="wrap row">
+  <div class="brand"><span class="p">p</span>AI<span class="tag">/ workflow specialization</span></div>
+  <div class="spacer"></div>
+  <div class="replaynote"><span class="dot-live"></span>real run</div>
+  <button class="btn btn-primary" id="runTop">&#9654; Run</button>
+</div></div>
+
+<header class="intro"><div class="wrap">
+  <div class="eyebrow">specializing one workflow</div>
+  <h1>You mark a function. pAI replaces it with a solver tuned to your data.</h1>
+  <p>Below is one real run: pAI studies the instances a knapsack solver sees, proposes specialized solvers, evaluates each on held-out instances, and deploys only the one that stays provably optimal &mdash; verified, with fallback. The deployed code is shown in full at the bottom.</p>
+</div></header>
+
+<section class="wrap"><div class="deccard-wrap">
+  <div class="codecard">
+    <div class="bar"><span class="tl r"></span><span class="tl y"></span><span class="tl g"></span><span class="fn">what you write</span></div>
+    <div class="code"><span class="dec">@pai.optimize</span>(
+    objective=<span class="s">"minimize_runtime"</span>,
+    constraint=<span class="s">"quality == optimal"</span>,
+    fallback=<span class="s">"generic_solver"</span>,
+)
+<span class="k">def</span> <span class="f">solve</span>(instance):
+    <span class="k">return</span> generic_solver(instance)</div>
+  </div>
+</div></section>
+
+<section class="section"><div class="wrap">
+  <div class="run-row">
+    <div class="sec-head" style="margin:0">
+      <div class="idx">THE LOOP</div>
+      <h2>Propose &rarr; evaluate &rarr; keep the best, reject the rest</h2>
+      <p class="sub">Nine candidate solvers, scored on held-out instances. Only provably-optimal candidates can ship; the fastest of those is deployed.</p>
+    </div>
+    <button class="btn btn-primary" id="runMain">&#9654; Run optimization</button>
+  </div>
+
+  <div class="instrument">
+    <div>
+      <div class="col-head">Workflow &amp; distribution</div>
+      <div class="target">
+        <div class="name">mdkp &middot; single_resource_density</div>
+        <div class="meta">48-constraint multi-dim knapsack</div>
+        <div class="dist">
+          <div class="chip"><div class="v">64</div><div class="l">train</div></div>
+          <div class="chip"><div class="v">32</div><div class="l">val</div></div>
+          <div class="chip"><div class="v">500</div><div class="l">held-out</div></div>
+        </div>
+      </div>
+      <div class="howbox">Each candidate is run on the instances and scored on two axes: <b>how often it hits the true optimum</b>, and <b>how fast</b>. The constraint says quality must equal optimal &mdash; so anything below the line is rejected, however fast.</div>
+    </div>
+    <div class="col-mid">
+      <div class="col-head">Candidate profiler <span id="phase" style="color:var(--amber)">idle</span></div>
+      <div class="plotwrap">
+        <div class="plotcap"><span>solved to optimum &uarr;</span><span>&larr; faster &middot; runtime (ms) &middot; slower &rarr;</span></div>
+        <svg class="plot" id="plot" viewBox="0 0 700 410" role="img" aria-label="Optimality versus runtime of candidate solvers"></svg>
+      </div>
+      <div class="col-head" style="border-top:1px solid var(--line)">Hypothesis stream</div>
+      <div class="stream" id="stream"></div>
+    </div>
+    <div>
+      <div class="col-head">Live readout</div>
+      <div class="readout">
+        <div class="stat"><div class="l">Solved to optimum</div><div class="v teal" id="roOpt">&mdash;</div></div>
+        <div class="stat"><div class="l">Deployed runtime</div><div class="v amber" id="roMs" style="font-size:26px">&mdash;<span class="u"> ms</span></div></div>
+        <div class="counters">
+          <div class="cnt"><span class="l">Proposed</span><span class="v" id="cProp">0</span></div>
+          <div class="cnt"><span class="l">Evaluated</span><span class="v" id="cEval">0</span></div>
+          <div class="cnt"><span class="l">Rejected</span><span class="v rej" id="cRej">0</span></div>
+          <div class="cnt"><span class="l">Deployed</span><span class="v" style="color:var(--teal)" id="cDep">0</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="tblwrap">
+    <table class="evaltbl"><thead><tr><th>Version</th><th class="hyp">Hypothesis</th><th>Optimum</th><th>Runtime</th><th>Decision</th></tr></thead>
+    <tbody id="evalBody"></tbody></table>
+  </div>
+</div></section>
+
+<section class="section"><div class="wrap">
+  <div class="sec-head" style="margin-bottom:18px">
+    <div class="idx">THE DEPLOYED ARTIFACT</div>
+    <h2>The actual code pAI shipped</h2>
+    <p class="sub">Verbatim <span style="color:var(--txt-mut)">solution.py</span> for the deployed candidate (it1&middot;s1). Jump to the four moving parts:</p>
+  </div>
+  <div class="steps">
+    <div class="stepchip" data-line="118"><b>1</b> choose bottleneck</div>
+    <div class="stepchip" data-line="263"><b>2</b> 1-D knapsack DP</div>
+    <div class="stepchip" data-line="319"><b>3</b> feasibility check (all 48)</div>
+    <div class="stepchip" data-line="366"><b>4</b> repair / fallback</div>
+    <div class="stepchip" data-line="448"><b>&rarr;</b> solve()</div>
+  </div>
+  <div class="realwrap">
+    <div class="realbar"><span class="tl r"></span><span class="tl y"></span><span class="tl g"></span><span class="fn">deployed.py</span><span class="meta">591 lines &middot; runs in production with generic fallback</span></div>
+    <div class="realcode" id="realcode"></div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  Real run (<span style="color:var(--txt-mut)">second_scale_benchmark_v2 / 20260427</span>, mdkp / single_resource_density). &ldquo;Solved to optimum&rdquo; = share of held-out instances solved to the proven optimum. Method: <a href="https://arxiv.org/abs/2605.14141">arxiv.org/abs/2605.14141</a>.
+</div></footer>
+
+<script id="realsrc" type="text/plain">import math
+from typing import Any, Dict, List, Optional, Sequence, Tuple
+
+def _get_field(inst: Any, names: Sequence[str]) -> Any:
+    if isinstance(inst, dict):
+        for n in names:
+            if n in inst:
+                return inst[n]
+        return None
+    for n in names:
+        if hasattr(inst, n):
+            return getattr(inst, n)
+    return None
+
+def _as_list(x: Any) -> List[Any]:
+    if x is None:
+        return []
+    if isinstance(x, list):
+        return x
+    return list(x)
+
+def _extract_instance(inst: Any) -> Tuple[List[int], List[List[int]], List[int]]:
+    """Return (values, weights_rows[item][res], capacities) as Python ints."""
+
+    # Allow tuple/list container: (values, weights, capacities)
+    if isinstance(inst, (list, tuple)) and len(inst) == 3:
+        values_raw, weights_raw, caps_raw = inst
+    else:
+        values_raw = _get_field(
+            inst,
+            [
+                "values",
+                "value_vector",
+                "profits",
+                "profit_vector",
+                "p",
+                "v",
+                "value",
+            ],
+        )
+        weights_raw = _get_field(inst, ["weights", "weight_matrix", "w", "weight"])
+        caps_raw = _get_field(inst, ["capacities", "capacity_vector", "c", "capacity"])
+
+    if values_raw is None or weights_raw is None or caps_raw is None:
+        raise ValueError("Instance missing one of values/weights/capacities")
+
+    values = [int(x) for x in _as_list(values_raw)]
+    caps = [int(x) for x in _as_list(caps_raw)]
+    n = len(values)
+    m = len(caps)
+
+    w_obj = weights_raw
+    shape = getattr(w_obj, "shape", None)
+
+    def _row_to_ints(row: Any) -> List[int]:
+        return [int(x) for x in _as_list(row)]
+
+    if shape is not None and isinstance(shape, (tuple, list)) and len(shape) == 2:
+        r, c = int(shape[0]), int(shape[1])
+        if r == n and c == m:
+            weights_rows = [_row_to_ints(w_obj[i]) for i in range(n)]
+        elif r == m and c == n:
+            weights_rows = [[int(w_obj[j][i]) for j in range(m)] for i in range(n)]
+        else:
+            raise ValueError(f"Unrecognized weights shape {shape} for n={n}, m={m}")
+    else:
+        w_list = _as_list(w_obj)
+        if len(w_list) == n and (n == 0 or len(_as_list(w_list[0])) == m):
+            weights_rows = [_row_to_ints(row) for row in w_list]
+        elif len(w_list) == m and (m == 0 or len(_as_list(w_list[0])) == n):
+            w_ll = [_as_list(row) for row in w_list]
+            weights_rows = [[int(w_ll[j][i]) for j in range(m)] for i in range(n)]
+        else:
+            raise ValueError(
+                f"Unrecognized weights container: len={len(w_list)} for n={n}, m={m}"
+            )
+
+    return values, weights_rows, caps
+
+def _compute_sum_w(weights_rows: List[List[int]], m: int) -> List[int]:
+    sum_w = [0] * m
+    for row in weights_rows:
+        for j in range(m):
+            sum_w[j] += row[j]
+    return sum_w
+
+def _argmin_and_second(t: List[float]) -> Tuple[int, float, float]:
+    m = len(t)
+    if m == 0:
+        return 0, float("inf"), float("inf")
+    best_j = 0
+    best_t = t[0]
+    second_t = float("inf")
+
+    # First pass: argmin
+    for j in range(1, m):
+        tj = t[j]
+        if tj < best_t:
+            best_t = tj
+            best_j = j
+
+    # Second pass: second min
+    for j in range(m):
+        if j == best_j:
+            continue
+        tj = t[j]
+        if tj < second_t:
+            second_t = tj
+
+    return best_j, best_t, second_t
+
+def _choose_bottleneck(
+    caps: List[int],
+    weights_rows: List[List[int]],
+    analysis: Optional[Dict[str, Any]],
+) -> Tuple[int, float, float, List[int]]:
+    """Return (bottleneck_index, min_t, second_t, sum_w)."""
+    m = len(caps)
+    sum_w = _compute_sum_w(weights_rows, m)
+
+    t = [float("inf")] * m
+    for j in range(m):
+        sw = sum_w[j]
+        if sw > 0:
+            t[j] = caps[j] / sw
+
+    b_hat, min_t, second_t = _argmin_and_second(t)
+
+    ana = analysis if isinstance(analysis, dict) else {}
+    sp = ana.get("suggested_params") or {}
+
+    b_ana = sp.get("global_bottleneck_index")
+    if b_ana is None:
+        bc = ana.get("bottleneck_consistency") or ana.get("bottleneck_tightness") or {}
+        b_ana = bc.get("mode_bottleneck_index")
+
+    trust = sp.get("trust_global_bottleneck_if_t_within_factor", 1.05)
+    try:
+        trust_f = float(trust)
+    except Exception:
+        trust_f = 1.05
+
+    b = b_hat
+    if b_ana is not None:
+        try:
+            b_ai = int(b_ana)
+        except Exception:
+            b_ai = -1
+        if 0 <= b_ai < m:
+            tb = t[b_ai]
+            if math.isfinite(tb) and (not math.isfinite(min_t) or tb <= trust_f * min_t):
+                b = b_ai
+
+    # Recompute min/second wrt chosen b? (not necessary; keep detection stats)
+    return b, float(min_t), float(second_t), sum_w
+
+def _order_by_bottleneck_density(values: List[int], w_b: List[int]) -> List[int]:
+    n = len(values)
+    dens_pairs = []
+    append = dens_pairs.append
+    for i in range(n):
+        vi = values[i]
+        wi = w_b[i]
+        if wi > 0:
+            d = vi / wi
+        else:
+            d = float("inf") if vi > 0 else float("-inf")
+        append((d, i))
+    dens_pairs.sort(reverse=True)
+    return [i for _, i in dens_pairs]
+
+def _order_by_weighted_surrogate_density(
+    values: List[int],
+    weights_rows: List[List[int]],
+    caps: List[int],
+    b: int,
+    gamma: float,
+) -> List[int]:
+    n = len(values)
+    m = len(caps)
+    inv_caps = [1.0 / c if c > 0 else 0.0 for c in caps]
+    inv_b = inv_caps[b] if 0 <= b < m else 0.0
+
+    dens_pairs = []
+    append = dens_pairs.append
+
+    for i in range(n):
+        row = weights_rows[i]
+        # denom = wb/cb + gamma * sum_{j!=b} wj/cj
+        base = row[b] * inv_b if 0 <= b < m else 0.0
+        other = 0.0
+        for j in range(m):
+            if j == b:
+                continue
+            other += row[j] * inv_caps[j]
+        denom = base + gamma * other
+        vi = values[i]
+        if denom > 0.0:
+            d = vi / denom
+        else:
+            d = float("inf") if vi > 0 else float("-inf")
+        append((d, i))
+
+    dens_pairs.sort(reverse=True)
+    return [i for _, i in dens_pairs]
+
+def _order_by_value(values: List[int]) -> List[int]:
+    pairs = [(values[i], i) for i in range(len(values))]
+    pairs.sort(reverse=True)
+    return [i for _, i in pairs]
+
+def _pick_candidates(
+    n: int,
+    order_b: List[int],
+    order_val: List[int],
+    order_sur: List[int],
+    k_density: int,
+    k_limit: int,
+    k_value: int,
+    k_sur: int,
+) -> List[int]:
+    k_density = max(0, min(n, int(k_density)))
+    k_limit = max(0, min(n, int(k_limit)))
+    k_value = max(0, min(n, int(k_value)))
+    k_sur = max(0, min(n, int(k_sur)))
+
+    marked = bytearray(n)
+    cand: List[int] = []
+    add = cand.append
+
+    for i in order_b[:k_density]:
+        if not marked[i]:
+            marked[i] = 1
+            add(i)
+    # Enrich with high-value items
+    for i in order_val[:k_value]:
+        if len(cand) >= k_limit:
+            break
+        if not marked[i]:
+            marked[i] = 1
+            add(i)
+    # Enrich with surrogate-dense items
+    for i in order_sur[:k_sur]:
+        if len(cand) >= k_limit:
+            break
+        if not marked[i]:
+            marked[i] = 1
+            add(i)
+
+    return cand
+
+def _knap_dp_1d(
+    candidates: List[int], values: List[int], weights_b: List[int], cap: int
+) -> List[int]:
+    """0/1 knapsack DP on a single weight vector with backtracking."""
+    if cap <= 0 or not candidates:
+        return []
+
+    dp = [0] * (cap + 1)
+    choice = [-1] * (cap + 1)
+    prev = [-1] * (cap + 1)
+
+    dpl = dp
+    cho = choice
+    pre = prev
+    v = values
+    w = weights_b
+
+    for i in candidates:
+        vi = v[i]
+        if vi <= 0:
+            continue
+        wi = w[i]
+        if wi <= 0 or wi > cap:
+            continue
+        for c in range(cap, wi - 1, -1):
+            nv = dpl[c - wi] + vi
+            if nv > dpl[c]:
+                dpl[c] = nv
+                cho[c] = i
+                pre[c] = c - wi
+
+    # smallest capacity achieving best value (leaves slack for later fill)
+    best_v = dpl[0]
+    best_c = 0
+    for c in range(1, cap + 1):
+        val = dpl[c]
+        if val > best_v:
+            best_v = val
+            best_c = c
+
+    sel: List[int] = []
+    c = best_c
+    while c >= 0:
+        i = cho[c]
+        if i < 0:
+            break
+        sel.append(i)
+        nc = pre[c]
+        if nc == c:
+            # safety (should not happen with wi>0)
+            break
+        c = nc
+
+    return sel
+
+def _compute_used_and_value(
+    sel_iter: Sequence[int],
+    values: List[int],
+    weights_rows: List[List[int]],
+    m: int,
+) -> Tuple[List[int], int]:
+    used = [0] * m
+    total = 0
+    for i in sel_iter:
+        total += values[i]
+        row = weights_rows[i]
+        for j in range(m):
+            used[j] += row[j]
+    return used, int(total)
+
+def _greedy_from_order(
+    order: List[int],
+    values: List[int],
+    weights_rows: List[List[int]],
+    caps: List[int],
+) -> Tuple[List[int], List[int], int]:
+    m = len(caps)
+    used = [0] * m
+    sel: List[int] = []
+    total = 0
+
+    for i in order:
+        vi = values[i]
+        if vi <= 0:
+            continue
+        row = weights_rows[i]
+        feasible = True
+        for j in range(m):
+            if used[j] + row[j] > caps[j]:
+                feasible = False
+                break
+        if not feasible:
+            continue
+        for j in range(m):
+            used[j] += row[j]
+        sel.append(i)
+        total += vi
+
+    return sel, used, int(total)
+
+def _repair_to_feasible(
+    sel_set: set,
+    used: List[int],
+    values: List[int],
+    weights_rows: List[List[int]],
+    caps: List[int],
+    max_drops: int,
+) -> bool:
+    m = len(caps)
+
+    for _ in range(max_drops):
+        viol = [j for j in range(m) if used[j] > caps[j]]
+        if not viol:
+            return True
+
+        worst_i = None
+        worst_metric = -1.0
+        for i in sel_set:
+            vi = values[i]
+            if vi <= 0:
+                worst_i = i
+                worst_metric = float("inf")
+                break
+            row = weights_rows[i]
+            pen = 0.0
+            for j in viol:
+                cj = caps[j]
+                if cj > 0:
+                    pen += row[j] / cj
+                else:
+                    pen += row[j]
+            if pen <= 0.0:
+                continue
+            metric = pen / (vi + 1e-12)
+            if metric > worst_metric:
+                worst_metric = metric
+                worst_i = i
+
+        if worst_i is None:
+            return False
+
+        sel_set.remove(worst_i)
+        row = weights_rows[worst_i]
+        for j in range(m):
+            used[j] -= row[j]
+
+    return False
+
+def _fill_greedy(
+    sel_set: set,
+    used: List[int],
+    order: List[int],
+    values: List[int],
+    weights_rows: List[List[int]],
+    caps: List[int],
+) -> int:
+    m = len(caps)
+    added = 0
+
+    for i in order:
+        if i in sel_set:
+            continue
+        vi = values[i]
+        if vi <= 0:
+            continue
+        row = weights_rows[i]
+        feasible = True
+        for j in range(m):
+            if used[j] + row[j] > caps[j]:
+                feasible = False
+                break
+        if not feasible:
+            continue
+        for j in range(m):
+            used[j] += row[j]
+        sel_set.add(i)
+        added += vi
+
+    return int(added)
+
+def solve(instance: Any, analysis: Optional[Dict[str, Any]] = None, manifest: Any = None) -> Any:
+    try:
+        values, weights_rows, caps = _extract_instance(instance)
+    except Exception:
+        return []
+
+    n = len(values)
+    m = len(caps)
+    if n == 0 or m == 0:
+        return []
+
+    ana = analysis if isinstance(analysis, dict) else {}
+    sp = ana.get("suggested_params") or {}
+
+    # ---- Identify bottleneck ----
+    b, min_t, second_t, _ = _choose_bottleneck(caps, weights_rows, ana)
+    cap_b = caps[b]
+
+    # If no clear bottleneck or DP would be too big, we will just use greedy.
+    ratio = (min_t / second_t) if (second_t > 0 and math.isfinite(second_t) and math.isfinite(min_t)) else 1.0
+    strong_bottleneck = ratio <= 0.80
+
+    # ---- Orders ----
+    w_b = [row[b] for row in weights_rows]
+    order_b = _order_by_bottleneck_density(values, w_b)
+
+    # Weighted surrogate order (for robustness / candidate enrichment)
+    gamma = max(0.05, min(1.0, ratio))
+    order_sur = _order_by_weighted_surrogate_density(values, weights_rows, caps, b, gamma)
+
+    # Greedy baseline(s)
+    sel_gb, used_gb, val_gb = _greedy_from_order(order_b, values, weights_rows, caps)
+    sel_gs, used_gs, val_gs = _greedy_from_order(order_sur, values, weights_rows, caps)
+    if val_gs > val_gb:
+        best_greedy_sel = sel_gs
+        best_greedy_val = val_gs
+    else:
+        best_greedy_sel = sel_gb
+        best_greedy_val = val_gb
+
+    # ---- DP parameters from analysis ----
+    dp_topk = sp.get("dp_topk")
+    if dp_topk is None:
+        dp_topk = (ana.get("dp_eval") or {}).get("params", {}).get("topk")
+    if dp_topk is None:
+        dp_topk = 300
+    try:
+        k_base = int(dp_topk)
+    except Exception:
+        k_base = 300
+
+    rmax = (
+        (ana.get("dp_eval") or {})
+        .get("topk_loss_explainer", {})
+        .get("full_selected_rank_max", {})
+        .get("max")
+    )
+    try:
+        rmax_i = int(rmax) if rmax is not None else 0
+    except Exception:
+        rmax_i = 0
+
+    # Candidate sizing: tuned for this distribution (but capped for runtime)
+    k_density = max(k_base, rmax_i + 20, n // 2)
+    k_limit = min(n, max(k_density, int(k_density * 1.25)))
+    k_value = max(50, k_base // 2)
+    k_sur = max(50, k_base // 2)
+
+    # Safety cap on DP work
+    max_ops = 6_000_000
+    if cap_b > 0 and k_limit * cap_b > max_ops:
+        k_limit = max(k_base, int(max_ops / max(1, cap_b)))
+        k_limit = min(n, max(100, k_limit))
+        k_density = min(k_density, k_limit)
+
+    # If bottleneck not strong, skip DP and return best greedy
+    if (not strong_bottleneck) or cap_b <= 0 or k_limit <= 0:
+        return sorted(best_greedy_sel)
+
+    order_val = _order_by_value(values)
+    candidates = _pick_candidates(
+        n=n,
+        order_b=order_b,
+        order_val=order_val,
+        order_sur=order_sur,
+        k_density=k_density,
+        k_limit=k_limit,
+        k_value=k_value,
+        k_sur=k_sur,
+    )
+
+    # ---- Bottleneck DP ----
+    sel_dp_list = _knap_dp_1d(candidates, values, w_b, cap_b)
+    if not sel_dp_list:
+        return sorted(best_greedy_sel)
+
+    sel_dp_set = set(sel_dp_list)
+
+    # Add any positive-value items with zero bottleneck weight (rare), if feasible.
+    # (Keep it cheap: only consider the best few by value.)
+    zero_b = [i for i in range(n) if values[i] > 0 and w_b[i] <= 0 and i not in sel_dp_set]
+    if zero_b:
+        zero_b.sort(key=lambda i: values[i], reverse=True)
+        used_tmp, _ = _compute_used_and_value(list(sel_dp_set), values, weights_rows, m)
+        for i in zero_b[:50]:
+            row = weights_rows[i]
+            ok = True
+            for j in range(m):
+                if used_tmp[j] + row[j] > caps[j]:
+                    ok = False
+                    break
+            if ok:
+                for j in range(m):
+                    used_tmp[j] += row[j]
+                sel_dp_set.add(i)
+        # overwrite used/value below
+
+    used_dp, val_dp = _compute_used_and_value(list(sel_dp_set), values, weights_rows, m)
+
+    # ---- Repair if needed ----
+    max_drops = sp.get("repair_max_drops")
+    if max_drops is None:
+        max_drops = 300
+    try:
+        max_drops_i = int(max_drops)
+    except Exception:
+        max_drops_i = 300
+
+    if any(used_dp[j] > caps[j] for j in range(m)):
+        ok = _repair_to_feasible(sel_dp_set, used_dp, values, weights_rows, caps, max_drops=max_drops_i)
+        if not ok:
+            return sorted(best_greedy_sel)
+        # Re-fill after drops using surrogate order (more balanced)
+        _fill_greedy(sel_dp_set, used_dp, order_sur, values, weights_rows, caps)
+        val_dp = int(sum(values[i] for i in sel_dp_set))
+
+    # Optional tiny fill attempt (usually no effect, but cheap)
+    _fill_greedy(sel_dp_set, used_dp, order_sur, values, weights_rows, caps)
+    val_dp = int(sum(values[i] for i in sel_dp_set))
+
+    # Choose best feasible between DP-based and greedy baseline
+    if val_dp >= best_greedy_val:
+        return sorted(sel_dp_set)
+    return sorted(best_greedy_sel)
+</script>
+<script>
+const HERO=[
+ {id:'it0\u00b7s0',title:'Single bottleneck with tightness regimes',opt:0.0,ms:156.9,dec:'rej',decTxt:'Rejected \u00b7 not optimal'},
+ {id:'it0\u00b7s1',title:'One dominant constraint \u2192 1-D knapsack',opt:1.0,ms:198.0,dec:'opt',decTxt:'Optimal',base:true},
+ {id:'it0\u00b7s2',title:'Bottleneck + bounded feasibility repair',opt:0.0,ms:320.2,dec:'rej',decTxt:'Rejected \u00b7 broken'},
+ {id:'it1\u00b7s0',title:'Bottleneck constraint; rest are slack decorations',opt:0.0,ms:354.8,dec:'rej',decTxt:'Rejected \u00b7 broken'},
+ {id:'it1\u00b7s1',title:'Fixed bottleneck, proportional non-bottleneck caps',opt:1.0,ms:176.2,dec:'dep',decTxt:'Deployed',deployed:true},
+ {id:'it1\u00b7s2',title:'Fixed bottleneck + exchangeable constraints',opt:0.344,ms:342.5,dec:'rej',decTxt:'Rejected \u00b7 misses optimum'},
+ {id:'it2\u00b7s0',title:'47 redundant constraints; small bottleneck shortlist',opt:0.719,ms:142.1,dec:'rej',decTxt:'Rejected \u00b7 misses optimum'},
+ {id:'it2\u00b7s1',title:'Fixed dominant resource; others engineered slack',opt:1.0,ms:229.6,dec:'opt',decTxt:'Optimal'},
+ {id:'it2\u00b7s2',title:'1-D density regime; remaining constraints redundant',opt:0.344,ms:2.90,dec:'rej',decTxt:'Rejected \u00b7 fastest run, only 34% optimal',fast:true},
+];
+const SVG='http://www.w3.org/2000/svg';
+const PL={l:54,r:24,t:20,b:48,W:700,H:410};
+const xdom=[0.30,2.62];
+const px=ms=>PL.l+(Math.log10(ms)-xdom[0])/(xdom[1]-xdom[0])*(PL.W-PL.l-PL.r);
+const py=o=>PL.t+(1.08-o)/1.08*(PL.H-PL.t-PL.b);
+const el=(t,a)=>{const e=document.createElementNS(SVG,t);for(const k in a)e.setAttribute(k,a[k]);return e;};
+const $=id=>document.getElementById(id);
+function axes(){
+  const svg=$('plot');
+  [[0,'0'],[0.5,'50%'],[1.0,'100%']].forEach(([o,l])=>{
+    svg.appendChild(el('line',{class:o===1?'shipline':'gridline',x1:PL.l,y1:py(o),x2:PL.W-PL.r,y2:py(o),'stroke-dasharray':o===0?'0':(o===1?'5 4':'2 4')}));
+    const t=el('text',{class:'axislbl',x:PL.l-8,y:py(o)+3,'text-anchor':'end'});t.textContent=l;svg.appendChild(t);
+  });
+  const sl=el('text',{class:'axislbl',x:PL.W-PL.r,y:py(1.0)-6,'text-anchor':'end',fill:'var(--teal)'});sl.textContent='ship line \u00b7 provably optimal';svg.appendChild(sl);
+  [3,10,30,100,300].forEach(ms=>{
+    svg.appendChild(el('line',{class:'gridline',x1:px(ms),y1:PL.t,x2:px(ms),y2:PL.H-PL.b,'stroke-dasharray':'2 4',opacity:.5}));
+    const t=el('text',{class:'axislbl',x:px(ms),y:PL.H-PL.b+15,'text-anchor':'middle'});t.textContent=ms;svg.appendChild(t);
+  });
+  const xt=el('text',{class:'axisttl',x:(PL.l+PL.W-PL.r)/2,y:PL.H-8,'text-anchor':'middle'});xt.textContent='runtime (ms)';svg.appendChild(xt);
+  svg.appendChild(el('g',{id:'pts'}));
+}
+const stCls={opt:'st-opt',rej:'st-rej',dep:'st-dep'},stWord={opt:'optimal',rej:'rejected',dep:'deployed'};
+function build(){
+  const s=$('stream'),b=$('evalBody');
+  HERO.forEach((c,i)=>{
+    const card=document.createElement('div');card.className='cand';card.id='cand'+i;
+    card.innerHTML='<div class="id">'+c.id+'</div><div><div class="ti">'+c.title+'</div><div class="num">'+Math.round(c.opt*100)+'% optimal \u00b7 '+c.ms.toFixed(1)+' ms</div></div><div class="st '+stCls[c.dec]+'">'+stWord[c.dec]+'</div>';
+    s.appendChild(card);
+    const tr=document.createElement('tr');tr.id='row'+i;if(c.deployed)tr.className='dep';
+    const ocol=c.opt>=1?'color:var(--teal)':(c.opt<0.5?'color:var(--coral)':'color:var(--amber)');
+    const tcls=c.dec==='opt'?'st-opt':(c.dec==='dep'?'st-dep':'st-rej');
+    tr.innerHTML='<td class="vid">'+c.id+'</td><td class="hyp">'+c.title+'</td><td class="num" style="'+ocol+'">'+Math.round(c.opt*100)+'%</td><td class="num">'+c.ms.toFixed(1)+' ms</td><td><span class="tag '+tcls+'">'+c.decTxt+'</span></td>';
+    b.appendChild(tr);
+  });
+}
+function dot(c){
+  const g=$('pts'),x=px(c.ms),y=py(c.opt);
+  const col=c.opt>=1?'var(--teal)':'var(--coral)';
+  if(c.deployed){const r=el('circle',{cx:x,cy:y,r:0,fill:'none',stroke:'var(--teal)','stroke-width':1.6,opacity:0,class:'pt'});g.appendChild(r);requestAnimationFrame(()=>{r.setAttribute('r',13);r.setAttribute('opacity',.9);});}
+  const o=el('circle',{cx:x,cy:y,r:0,fill:col,opacity:0,class:'pt'});g.appendChild(o);
+  requestAnimationFrame(()=>{o.setAttribute('r',c.deployed?6:5);o.setAttribute('opacity',c.base?.6:.95);});
+  if(c.deployed){const t=el('text',{class:'lbl',x:x+18,y:y+4,fill:'var(--teal)'});t.textContent='DEPLOYED \u00b7 176ms';g.appendChild(t);setTimeout(()=>t.classList.add('on'),250);}
+  if(c.fast){const t=el('text',{class:'lbl',x:x+10,y:y-10,fill:'var(--coral)'});t.textContent='fastest \u2014 only 34% optimal';g.appendChild(t);setTimeout(()=>t.classList.add('on'),250);}
+}
+let running=false,ran=false;
+function setBtns(l,d){['runTop','runMain'].forEach(id=>{const b=$(id);b.innerHTML='&#9654; '+l;b.disabled=d;b.style.opacity=d?.6:1;});}
+function reset(){HERO.forEach((c,i)=>{$('cand'+i).classList.remove('shown','active');$('row'+i).classList.remove('shown');});$('pts').innerHTML='';$('roOpt').textContent='\u2014';$('roMs').innerHTML='\u2014<span class="u"> ms</span>';['cProp','cEval','cRej','cDep'].forEach(id=>$(id).textContent='0');$('phase').textContent='idle';}
+function run(){
+  if(running)return; if(ran)reset();
+  running=true;ran=true;setBtns('running\u2026',true);$('phase').textContent='running';
+  let prop=0,evald=0,rej=0,bestOpt=null,i=0;
+  const tick=()=>{
+    if(i>0)$('cand'+(i-1)).classList.remove('active');
+    if(i>=HERO.length){running=false;setBtns('Run again',false);$('phase').textContent='deployed \u2713';return;}
+    const c=HERO[i];
+    $('cand'+i).classList.add('shown','active');$('row'+i).classList.add('shown');
+    prop++;$('cProp').textContent=prop;evald++;$('cEval').textContent=evald;
+    dot(c);
+    if(c.dec==='rej'){rej++;$('cRej').textContent=rej;}
+    if(c.opt>=1.0&&(bestOpt===null||c.ms<bestOpt)){bestOpt=c.ms;$('roOpt').textContent='100%';$('roMs').innerHTML=c.ms.toFixed(0)+'<span class="u"> ms</span>';}
+    if(c.deployed)$('cDep').textContent='1';
+    i++;setTimeout(tick,c.deployed?1300:780);
+  };
+  setTimeout(tick,360);
+}
+
+/* ---- real code render + highlight ---- */
+function renderCode(){
+  const raw=$('realsrc').textContent.replace(/^\n/,'');
+  const lines=raw.split('\n');
+  const box=$('realcode');
+  const KW=/\b(def|return|if|elif|else|for|while|in|not|and|or|is|try|except|finally|raise|import|from|as|with|None|True|False|continue|break|pass|lambda|class|global)\b/g;
+  let inDoc=false;
+  let html='';
+  lines.forEach((line,idx)=>{
+    let esc=line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    let out;
+    const triple=(line.match(/"""/g)||[]).length;
+    if(inDoc){ out='<span class="c">'+esc+'</span>'; if(triple%2===1)inDoc=false; }
+    else if(/^\s*#/.test(line)){ out='<span class="c">'+esc+'</span>'; }
+    else if(triple%2===1){ out='<span class="c">'+esc+'</span>'; inDoc=true; }
+    else {
+      // strings
+      out=esc.replace(/(&quot;|")(?:[^"\\]|\\.)*\1|'(?:[^'\\]|\\.)*'/g,m=>'\u0001'+m+'\u0002');
+      // inline comment
+      out=out.replace(/(#.*)$/,'\u0003$1\u0004');
+      out=out.replace(KW,'<span class="k">$1</span>');
+      out=out.replace(/\bdef\s+(_?\w+)/g,'def <span class="f">$1</span>');
+      out=out.replace(/@(\w+)/g,'<span class="dec">@$1</span>');
+      out=out.replace(/\u0001/g,'<span class="s">').replace(/\u0002/g,'</span>');
+      out=out.replace(/\u0003/g,'<span class="c">').replace(/\u0004/g,'</span>');
+    }
+    const n=idx+1;
+    html+='<div class="ln" id="L'+n+'"><span class="gut">'+n+'</span><span class="src">'+(out||'&nbsp;')+'</span></div>';
+  });
+  box.innerHTML=html;
+  document.querySelectorAll('.stepchip').forEach(ch=>{
+    ch.addEventListener('click',()=>{
+      const n=ch.getAttribute('data-line');const t=$('L'+n);if(!t)return;
+      $('realcode').scrollTo({top:t.offsetTop-$('realcode').offsetTop-10,behavior:'smooth'});
+      document.querySelectorAll('.ln.flash').forEach(e=>e.classList.remove('flash'));
+      t.classList.add('flash');
+    });
+  });
+}
+
+axes();build();renderCode();
+
+$('runTop').addEventListener('click',run);$('runMain').addEventListener('click',run);
+</script>
+</body>
+</html>
