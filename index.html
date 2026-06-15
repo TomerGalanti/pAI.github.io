@@ -3,1112 +3,677 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>pAI — solver specialization, replayed</title>
+<title>pAI — PACE 2025 Dominating Set, synthesized</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <style>
 :root{
-  --bg:#070A12;
-  --surface:rgba(10,16,28,.72);
-  --surface-2:rgba(255,255,255,.04);
-  --surface-3:rgba(255,255,255,.055);
-  --card-ink:#080C15;
-  --line:rgba(148,163,184,.16);
-  --line-2:rgba(148,163,184,.27);
-  --text:#F5F7FB;
-  --muted:#A8B3C7;
-  --faint:#6E7A91;
-  --gold:#F6B95B;
-  --cyan:#45E0C1;
-  --red:#FF7474;
-  --shadow:0 18px 54px rgba(0,0,0,.34);
-  --radius:20px;
-  --radius-sm:14px;
-  --sans:'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --paper:#ECEEF1;
+  --panel:#FFFFFF;
+  --panel-2:#F6F7F9;
+  --ink:#15171C;
+  --ink-2:#4A515E;
+  --ink-3:#8A92A0;
+  --rule:#E4E7ED;
+  --rule-2:#CCD3DC;
+  --accent:#2348C8;
+  --accent-soft:#E8ECFB;
+  --pass:#157F58;
+  --pass-soft:#E2F1EA;
+  --fail:#B23A2E;
+  --fail-soft:#F6E7E4;
+  --amber:#9A6B12;
+  --amber-soft:#F4ECDD;
+  --code-bg:#14161B;
+  --code-line:#1C1F26;
+  --display:'Space Grotesk', system-ui, sans-serif;
+  --sans:'Inter', system-ui, -apple-system, sans-serif;
   --mono:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --shadow:0 1px 2px rgba(20,24,34,.04), 0 8px 24px rgba(20,24,34,.06);
+  --r:14px; --r-sm:10px;
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{
-  margin:0;
-  color:var(--text);
-  font-family:var(--sans);
-  font-size:14px;
-  line-height:1.55;
-  -webkit-font-smoothing:antialiased;
-  overflow-x:hidden;
-  background:
-    radial-gradient(circle at 12% -8%, rgba(112,167,255,.20), transparent 30rem),
-    radial-gradient(circle at 88% 4%, rgba(246,185,91,.13), transparent 26rem),
-    linear-gradient(180deg, #070A12 0%, #080B13 45%, #090D17 100%);
+  margin:0; color:var(--ink); background:var(--paper);
+  font-family:var(--sans); font-size:14px; line-height:1.55;
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; overflow-x:hidden;
 }
-body::before{
-  content:"";
-  position:fixed; inset:0; pointer-events:none; z-index:0;
-  background-image:
-    linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
-  background-size:64px 64px;
-  mask-image:linear-gradient(to bottom, rgba(0,0,0,.7), transparent 46%);
-  opacity:.5;
-}
-a{color:inherit;text-decoration:none}
+a{color:var(--accent); text-decoration:none}
+a:hover{text-decoration:underline; text-underline-offset:2px}
 button{font-family:inherit}
-.wrap{width:min(1180px, calc(100% - 44px)); margin:0 auto; position:relative; z-index:1}
+.wrap{width:min(1160px, calc(100% - 48px)); margin:0 auto}
+.mono{font-family:var(--mono); font-variant-numeric:tabular-nums}
 
-/* ---- Buttons ---- */
-.btn{
-  border:1px solid var(--line-2); border-radius:12px; cursor:pointer;
-  padding:10px 16px; color:var(--text); background:var(--surface-3);
-  font-weight:700; font-size:13px; display:inline-flex; align-items:center; gap:9px;
-  transition:transform .16s ease, border-color .16s ease, background .16s ease;
-}
-.btn:hover{transform:translateY(-1px); border-color:rgba(255,255,255,.3); background:rgba(255,255,255,.08)}
-.btn:focus-visible{outline:2px solid var(--gold); outline-offset:3px}
-.btn[disabled]{cursor:default; transform:none}
-.btn-primary{
-  color:#120C03; border-color:rgba(255,210,138,.9);
-  background:linear-gradient(180deg, #FFD58D, #F6B95B);
-  box-shadow:0 8px 26px rgba(246,185,91,.2), inset 0 1px 0 rgba(255,255,255,.34);
-}
-.btn-primary:hover{background:linear-gradient(180deg, #FFE0A7, #F8BD66)}
+/* ---- buttons ---- */
+.btn{border:1px solid var(--rule-2); border-radius:var(--r-sm); cursor:pointer;
+  padding:9px 15px; color:var(--ink); background:var(--panel); font-weight:600; font-size:13px;
+  display:inline-flex; align-items:center; gap:8px; transition:border-color .15s, background .15s, color .15s, transform .15s}
+.btn:hover{border-color:var(--rule-2); background:var(--panel-2); transform:translateY(-1px)}
+.btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.btn[disabled]{cursor:default; transform:none; color:var(--ink-3)}
+.btn-primary{background:var(--accent); border-color:var(--accent); color:#fff}
+.btn-primary:hover{background:#1d3eb0; border-color:#1d3eb0}
+.btn-primary[disabled]{background:var(--accent-soft); border-color:var(--accent-soft); color:#8b9bd8}
 
-/* ---- Top bar ---- */
-.topbar{position:sticky; top:0; z-index:50; backdrop-filter:blur(18px);
-  background:rgba(7,10,18,.74); border-bottom:1px solid rgba(148,163,184,.13)}
-.nav{height:64px; display:flex; align-items:center; gap:16px}
-.logo{display:flex; align-items:baseline; gap:10px; white-space:nowrap}
-.logo .mark{font-weight:800; font-size:21px; letter-spacing:-.05em}
-.logo .mark span{color:var(--gold)}
-.logo .sub{font-size:12px; color:var(--muted); font-weight:600}
-.navspacer{flex:1}
-.navmeta{display:flex; align-items:center; gap:9px; color:var(--muted); font-size:12px; font-weight:600}
-.dot-live{width:8px; height:8px; border-radius:50%; background:var(--cyan); animation:pulse 2.2s infinite}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(69,224,193,.45)}70%{box-shadow:0 0 0 8px rgba(69,224,193,0)}100%{box-shadow:0 0 0 0 rgba(69,224,193,0)}}
+/* ---- top bar ---- */
+.topbar{position:sticky; top:0; z-index:40; background:rgba(236,238,241,.82); backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--rule)}
+.nav{height:60px; display:flex; align-items:center; gap:16px}
+.brand{display:flex; align-items:baseline; gap:9px}
+.brand .mark{font-family:var(--display); font-weight:700; font-size:20px; letter-spacing:-.04em}
+.brand .mark span{color:var(--accent)}
+.brand .sub{font-size:12px; color:var(--ink-3); font-weight:500}
+.spacer{flex:1}
+.navmeta{font-family:var(--mono); font-size:11px; color:var(--ink-3); letter-spacing:.02em}
 
-/* ---- Intro ---- */
-.intro{padding:54px 0 30px}
-.eyebrow{font-family:var(--mono); font-size:11px; letter-spacing:.22em; text-transform:uppercase;
-  color:var(--gold); font-weight:700; display:inline-flex; align-items:center; gap:9px}
-.eyebrow::before{content:""; width:22px; height:1px; background:var(--gold); opacity:.7}
-.intro h1{font-size:clamp(30px,4.6vw,52px); line-height:1.02; letter-spacing:-.045em;
-  font-weight:800; margin:18px 0 0; max-width:18ch}
-.intro h1 em{font-style:normal; color:var(--gold)}
-.lede{color:var(--muted); font-size:16px; line-height:1.6; margin:18px 0 0; max-width:62ch}
-.lede b{color:var(--text); font-weight:600}
-.intro-actions{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-top:26px}
-.run-note{color:var(--faint); font-size:12px; font-weight:600; font-family:var(--mono)}
+/* ---- header ---- */
+.head{padding:52px 0 30px}
+.head-grid{display:grid; grid-template-columns:minmax(0,1fr) 320px; gap:40px; align-items:center}
+.eyebrow{font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--accent);
+  font-weight:600; display:flex; align-items:center; gap:8px; flex-wrap:wrap}
+.eyebrow .sep{color:var(--rule-2)}
+.head h1{font-family:var(--display); font-size:clamp(30px,4.3vw,48px); line-height:1.04; letter-spacing:-.03em;
+  font-weight:600; margin:16px 0 0; max-width:16ch}
+.lede{color:var(--ink-2); font-size:16px; line-height:1.62; margin:16px 0 0; max-width:60ch}
+.lede b{color:var(--ink); font-weight:600}
+.head-actions{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-top:24px}
 
-/* ---- Layout ---- */
-.section{padding:8px 0 64px}
-.workspace{display:grid; grid-template-columns:minmax(420px,.92fr) minmax(520px,1.08fr); gap:18px; align-items:start}
-.panel{border:1px solid rgba(255,255,255,.12); border-radius:24px; background:var(--surface);
-  box-shadow:var(--shadow); overflow:hidden; backdrop-filter:blur(16px)}
+/* signature: dominating-set motif */
+.motif{background:var(--panel); border:1px solid var(--rule); border-radius:var(--r); box-shadow:var(--shadow);
+  padding:16px}
+.motif svg{display:block; width:100%; height:auto}
+.motif .edge{stroke:var(--rule-2); stroke-width:1.4}
+.motif .domd{fill:var(--panel); stroke:var(--ink-3); stroke-width:1.6}
+.motif .dom{fill:var(--accent); stroke:var(--accent); stroke-width:1.6}
+.motif .domhalo{fill:var(--accent); opacity:.1}
+.motif-key{display:flex; gap:16px; margin-top:10px; font-family:var(--mono); font-size:10.5px; color:var(--ink-3)}
+.motif-key i{width:9px; height:9px; border-radius:50%; display:inline-block; margin-right:6px; vertical-align:middle}
+.motif-key i.dom{background:var(--accent)}
+.motif-key i.domd{background:var(--panel); border:1.5px solid var(--ink-3)}
 
-/* ---- Code panel ---- */
-.code-panel{position:sticky; top:84px}
-.panelbar{height:50px; display:flex; align-items:center; gap:8px; padding:0 16px;
-  border-bottom:1px solid var(--line); background:var(--surface-2)}
-.panelbar .traffic{width:11px; height:11px; border-radius:50%}
-.traffic.r{background:#FF6A61}.traffic.y{background:#FFC861}.traffic.g{background:#3CE17F}
-.panelbar .title{font-family:var(--mono); font-size:12px; font-weight:700; color:#DCE5F6; margin-left:7px}
-.status{margin-left:auto; font-size:11px; font-family:var(--mono); font-weight:700; color:var(--faint);
-  display:flex; align-items:center; gap:8px; text-transform:uppercase; letter-spacing:.06em}
-.status::before{content:""; width:7px; height:7px; border-radius:50%; background:var(--faint)}
-.status.live{color:var(--gold)} .status.live::before{background:var(--gold); box-shadow:0 0 14px rgba(246,185,91,.55)}
-.status.done{color:var(--cyan)} .status.done::before{background:var(--cyan); box-shadow:0 0 14px rgba(69,224,193,.55)}
-.code-intro{display:flex; align-items:center; justify-content:space-between; gap:12px;
-  padding:11px 16px; border-bottom:1px solid var(--line); background:rgba(255,255,255,.022)}
-.code-intro span{font-size:12px; color:var(--muted); font-weight:600}
-.code-intro b{color:#fff}
-.managed-badge{font-family:var(--mono); font-size:11px; color:var(--gold); background:rgba(246,185,91,.1);
-  border:1px solid rgba(246,185,91,.22); border-radius:999px; padding:5px 9px; white-space:nowrap}
+/* result strip */
+.strip{display:grid; grid-template-columns:repeat(4,1fr); gap:0; border:1px solid var(--rule); border-radius:var(--r);
+  background:var(--panel); box-shadow:var(--shadow); margin-top:30px; overflow:hidden}
+.stat{padding:16px 18px; border-right:1px solid var(--rule)}
+.stat:last-child{border-right:none}
+.stat .v{font-family:var(--display); font-size:26px; font-weight:600; letter-spacing:-.02em; line-height:1; font-variant-numeric:tabular-nums}
+.stat .v.pass{color:var(--pass)} .stat .v.warn{color:var(--amber)}
+.stat .l{font-size:12px; color:var(--ink-2); margin-top:7px}
+.stat .l .mono{color:var(--ink-3); font-size:11px}
 
-.codebox{max-height:700px; overflow:auto; font-family:var(--mono); font-size:12px; line-height:1.62;
-  background:var(--card-ink); white-space:pre; tab-size:2; padding:18px}
+/* ---- workspace ---- */
+.work{padding:30px 0 60px}
+.work-grid{display:grid; grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr); gap:20px; align-items:start}
+.card{background:var(--panel); border:1px solid var(--rule); border-radius:var(--r); box-shadow:var(--shadow)}
+.card-h{display:flex; align-items:center; gap:10px; padding:13px 16px; border-bottom:1px solid var(--rule)}
+.card-h h3{margin:0; font-size:11px; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-3); font-weight:600}
+.card-h .meta{margin-left:auto; font-family:var(--mono); font-size:11px; color:var(--ink-3)}
+
+/* code panel (dark figure) */
+.code{position:sticky; top:76px; background:var(--code-bg); border:1px solid #232732; border-radius:var(--r);
+  overflow:hidden; box-shadow:var(--shadow)}
+.code-h{display:flex; align-items:center; gap:9px; padding:11px 15px; border-bottom:1px solid #232732; background:#171A21}
+.code-h .title{font-family:var(--mono); font-size:12px; font-weight:600; color:#C6CCD8}
+.code-h .status{margin-left:auto; font-family:var(--mono); font-size:10.5px; font-weight:600; color:#7C8494;
+  text-transform:uppercase; letter-spacing:.05em; display:flex; align-items:center; gap:7px}
+.code-h .status::before{content:""; width:6px; height:6px; border-radius:50%; background:#7C8494}
+.code-h .status.live{color:#E6B566} .code-h .status.live::before{background:#E6B566}
+.code-h .status.done{color:#7FD6A8} .code-h .status.done::before{background:#7FD6A8}
+.code-note{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 15px;
+  border-bottom:1px solid #232732; background:#13151A}
+.code-note span{font-size:11.5px; color:#8C94A3} .code-note b{color:#C6CCD8; font-weight:600}
+.region{font-family:var(--mono); font-size:10.5px; color:#E6B566; border:1px solid #3a3424; background:#211e15;
+  border-radius:999px; padding:4px 9px; white-space:nowrap}
+.codebox{max-height:640px; overflow:auto; font-family:var(--mono); font-size:11.5px; line-height:1.62;
+  color:#D6DBE4; white-space:pre; tab-size:2; padding:16px}
 .codebox.deployed{padding:0; white-space:normal}
-.codebox .c{color:#6E7A91}.codebox .k{color:#B59CFF}.codebox .s{color:#45E0C1}
-.codebox .f{color:#7FB6FF}.codebox .dec{color:#F6B95B}.codebox code{font-family:inherit}
-.ln{display:flex; min-height:19.4px; padding-right:14px}
-.ln:hover{background:rgba(255,255,255,.025)}
-.ln.flash{background:rgba(246,185,91,.12)}
-.gut{flex:none; width:52px; text-align:right; padding-right:16px; margin-right:14px;
-  color:#465165; border-right:1px solid rgba(148,163,184,.13); user-select:none}
+.codebox .c{color:#6B7384}.codebox .k{color:#C5A3FF}.codebox .s{color:#7FD6A8}.codebox .f{color:#7FB0FF}.codebox .dec{color:#E6B566}
+.ln{display:flex; min-height:18.6px}
+.ln:hover{background:rgba(255,255,255,.03)}
+.ln.flash{background:rgba(35,72,200,.22)}
+.gut{flex:none; width:38px; text-align:right; padding-right:14px; margin-right:14px; color:#4A515E;
+  border-right:1px solid #232732; user-select:none}
 .src{white-space:pre}
+.deploy-note{display:none; padding:11px 15px; border-top:1px solid #232732; background:#13211b; color:#9fb4a8; font-size:11.5px}
+.deploy-note b{color:#7FD6A8}
+.code.deployed .deploy-note{display:block}
+.code-nav{display:none; gap:7px; flex-wrap:wrap; padding:11px 15px; border-top:1px solid #232732; background:#171A21}
+.code.deployed .code-nav{display:flex}
+.stepchip{font-family:var(--mono); font-size:10.5px; font-weight:600; color:#9aa2b1; background:#1C1F26;
+  border:1px solid #2a2f3a; border-radius:999px; padding:6px 10px; cursor:pointer; transition:.15s}
+.stepchip:hover{color:#fff; border-color:#3a4250; background:#222732}
+.stepchip b{color:#E6B566; margin-right:6px}
 
-.deploy-banner{display:none; padding:12px 16px; border-top:1px solid var(--line);
-  background:linear-gradient(90deg, rgba(69,224,193,.12), rgba(69,224,193,.03));
-  color:var(--muted); font-size:12px; font-weight:600}
-.deploy-banner b{color:var(--cyan)}
-.code-panel.deployed .deploy-banner{display:block}
-.code-nav{display:none; gap:8px; flex-wrap:wrap; padding:12px 16px; border-top:1px solid var(--line);
-  background:var(--surface-2)}
-.code-panel.deployed .code-nav{display:flex}
-.stepchip{font-family:var(--mono); font-size:11px; font-weight:700; color:var(--muted);
-  background:rgba(255,255,255,.04); border:1px solid var(--line); border-radius:999px;
-  padding:8px 11px; cursor:pointer; transition:.16s}
-.stepchip:hover{color:#fff; border-color:rgba(246,185,91,.6); background:rgba(246,185,91,.08)}
-.stepchip b{color:var(--gold); margin-right:6px}
+/* pipeline */
+.demo{display:grid; gap:16px}
+.flow{display:grid; grid-template-columns:repeat(4,1fr); gap:0; background:var(--panel); border:1px solid var(--rule);
+  border-radius:var(--r); box-shadow:var(--shadow); overflow:hidden}
+.flowstep{padding:14px 14px; border-right:1px solid var(--rule); transition:background .2s}
+.flowstep:last-child{border-right:none}
+.flowstep .n{font-family:var(--mono); font-size:10.5px; font-weight:600; color:var(--ink-3); letter-spacing:.04em}
+.flowstep strong{display:block; font-family:var(--display); font-size:13.5px; font-weight:500; letter-spacing:-.01em; margin-top:6px}
+.flowstep span{display:block; color:var(--ink-2); font-size:11.5px; line-height:1.4; margin-top:3px}
+.flowstep.active{background:var(--accent-soft)}
+.flowstep.active .n{color:var(--accent)}
+.flowstep.done{background:var(--pass-soft)}
+.flowstep.done .n{color:var(--pass)}
+.flowstep.done .n::after{content:" ✓"}
 
-/* ---- Process flow ---- */
-.demo{display:grid; gap:14px}
-.flowline{display:grid; grid-template-columns:repeat(4,1fr); gap:8px}
-.flowstep{border:1px solid var(--line); border-radius:var(--radius-sm); padding:11px 12px;
-  background:rgba(255,255,255,.026); transition:.22s ease}
-.flowstep .n{width:21px; height:21px; border-radius:999px; display:grid; place-items:center;
-  font-size:10px; font-weight:800; color:var(--faint); background:rgba(255,255,255,.04);
-  border:1px solid var(--line); margin-bottom:8px}
-.flowstep strong{display:block; font-size:12.5px; line-height:1.15; letter-spacing:-.02em}
-.flowstep span{display:block; color:var(--muted); font-size:11px; line-height:1.35; margin-top:3px}
-.flowstep.active{border-color:rgba(246,185,91,.6); background:rgba(246,185,91,.08)}
-.flowstep.active .n{border-color:rgba(246,185,91,.8); color:var(--gold); background:rgba(246,185,91,.1)}
-.flowstep.done{border-color:rgba(69,224,193,.34); background:rgba(69,224,193,.06)}
-.flowstep.done .n{border-color:var(--cyan); background:var(--cyan); color:#03231C}
+.console-top{display:grid; grid-template-columns:.82fr 1.18fr; gap:16px}
 
-/* ---- Console ---- */
-.console{display:grid; gap:14px}
-.console-top{display:grid; grid-template-columns:.84fr 1.16fr; gap:14px}
-.info-card, .chart-card, .candidate-card, .ledger{
-  border:1px solid var(--line); border-radius:var(--radius); background:var(--surface-2)}
-.info-card{padding:15px}
-.info-card h3, .chart-head h3, .candidate-head h3{
-  margin:0; font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--faint); font-weight:800}
-.workload-title{font-size:18px; line-height:1.05; letter-spacing:-.035em; font-weight:800; margin:11px 0 4px}
-.workload-sub{color:var(--muted); font-size:12.5px; font-weight:600}
-.workload-facts{display:flex; flex-wrap:wrap; gap:6px; margin-top:13px}
-.workload-facts span{font-family:var(--mono); font-size:10px; font-weight:800; letter-spacing:.035em;
-  text-transform:uppercase; color:var(--muted); border:1px solid var(--line); border-radius:999px;
-  padding:5px 8px; background:rgba(0,0,0,.14)}
-.champion{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px}
-.champ{border:1px solid var(--line); border-radius:var(--radius-sm); background:rgba(0,0,0,.15); padding:12px}
-.champ .label{font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:var(--faint); font-weight:800}
-.champ .value{font-size:25px; line-height:1; letter-spacing:-.05em; font-weight:800; margin-top:7px;
-  font-variant-numeric:tabular-nums}
-.champ .value.good{color:var(--cyan)} .champ .value.gold{color:var(--gold)}
-.counters{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:11px}
-.count{font-family:var(--mono); font-size:10px; color:var(--faint); text-transform:uppercase;
-  letter-spacing:.05em; font-weight:800; border:1px solid var(--line); border-radius:12px;
-  padding:9px; background:rgba(0,0,0,.12); text-align:center}
-.count b{display:block; color:#fff; font-size:16px; font-variant-numeric:tabular-nums; margin-bottom:2px}
+/* observed + champion */
+.obs{padding:16px}
+.obs h3{margin:0; font-size:11px; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-3); font-weight:600}
+.obs .wl{font-family:var(--display); font-size:17px; font-weight:600; letter-spacing:-.02em; margin:10px 0 3px}
+.obs .wl-sub{color:var(--ink-2); font-size:12.5px}
+.facts{display:flex; flex-wrap:wrap; gap:6px; margin-top:13px}
+.facts span{font-family:var(--mono); font-size:10px; color:var(--ink-2); border:1px solid var(--rule); border-radius:999px;
+  padding:4px 8px; background:var(--panel-2)}
+.champ-grid{display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:14px}
+.cw{border:1px solid var(--rule); border-radius:var(--r-sm); padding:11px; background:var(--panel-2)}
+.cw .l{font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3); font-weight:600}
+.cw .v{font-family:var(--display); font-size:23px; font-weight:600; letter-spacing:-.03em; margin-top:6px; font-variant-numeric:tabular-nums}
+.cw .v.pass{color:var(--pass)} .cw .v.warn{color:var(--amber)}
+.counters{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:10px}
+.count{font-family:var(--mono); font-size:9.5px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-3);
+  border:1px solid var(--rule); border-radius:var(--r-sm); padding:8px; background:var(--panel-2); text-align:center; font-weight:600}
+.count b{display:block; font-family:var(--display); color:var(--ink); font-size:16px; margin-bottom:2px}
 
-.chart-card{padding:14px}
-.chart-head{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:6px}
-.phase{font-family:var(--mono); font-size:11px; color:var(--gold); font-weight:800;
-  text-transform:uppercase; letter-spacing:.08em}
+/* chart */
+.chart{padding:14px 16px 8px}
+.chart-h{display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:4px}
+.chart-h h3{margin:0; font-size:11px; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-3); font-weight:600}
+.phase{font-family:var(--mono); font-size:11px; color:var(--accent); font-weight:600}
 .plot{width:100%; height:auto; display:block}
-.gridline{stroke:rgba(148,163,184,.18); stroke-width:1}
-.shipline{stroke:rgba(69,224,193,.62); stroke-width:1; stroke-dasharray:6 5}
-.axislbl{fill:#6E7A91; font-size:10px; font-family:var(--mono)}
-.axisttl{fill:#A8B3C7; font-size:11px; font-family:var(--mono)}
-.pt{transition:r .35s ease, opacity .35s ease}
-.lbl{font-family:var(--mono); font-size:10.5px; font-weight:800; opacity:0; transition:opacity .4s ease}
-.lbl.on{opacity:1}
+.gridline{stroke:var(--rule); stroke-width:1}
+.gridline.tick{stroke:var(--rule); stroke-dasharray:2 4}
+.refline{stroke:var(--rule-2); stroke-width:1; stroke-dasharray:5 4}
+.axislbl{fill:var(--ink-3); font-size:10px; font-family:var(--mono)}
+.axisttl{fill:var(--ink-3); font-size:10.5px; font-family:var(--mono)}
+.reflbl{fill:var(--ink-3); font-size:10px; font-family:var(--mono)}
+.pt{transition:r .3s ease}
+.pt-cand{fill:var(--ink-3)}
+.pt-sel{fill:var(--accent)}
+.pt-test{fill:var(--panel); stroke:var(--accent); stroke-width:1.6; stroke-dasharray:3 2}
+.halo{fill:none; stroke:var(--accent); stroke-width:1.4; opacity:.4; transition:r .4s ease}
+.gaplink{stroke:var(--accent); stroke-width:1.2; stroke-dasharray:3 3; opacity:.5}
+.plbl{font-family:var(--mono); font-size:10px; font-weight:600; opacity:0; transition:opacity .35s ease}
+.plbl.sel{fill:var(--accent)} .plbl.test{fill:var(--ink-2)} .plbl.on{opacity:1}
 
-.candidate-card{overflow:hidden}
-.candidate-head{display:flex; align-items:center; justify-content:space-between; padding:13px 16px;
-  border-bottom:1px solid var(--line)}
-.candidate-head span{font-family:var(--mono); font-size:11px; color:var(--muted)}
-.candidate-list{display:grid; gap:8px; max-height:230px; overflow:auto; padding:12px}
-.cand{display:grid; grid-template-columns:52px 1fr auto; gap:11px; align-items:center;
-  border:1px solid transparent; border-radius:var(--radius-sm); padding:10px 12px; background:rgba(0,0,0,.16);
-  opacity:.32; transition:opacity .25s ease, border-color .2s ease, background .2s ease, transform .2s ease}
+/* candidate queue */
+.qlist{display:grid; gap:8px; max-height:236px; overflow:auto; padding:12px 14px}
+.cand{display:grid; grid-template-columns:50px 1fr auto; gap:11px; align-items:center; border:1px solid var(--rule);
+  border-radius:var(--r-sm); padding:10px 12px; background:var(--panel-2); opacity:.4;
+  transition:opacity .25s, border-color .2s, background .2s, transform .2s}
 .cand.shown{opacity:1}
-.cand.active{border-color:rgba(246,185,91,.64); background:rgba(246,185,91,.08); transform:translateY(-1px)}
-.cand .id{font-family:var(--mono); font-size:11px; color:var(--faint); font-weight:800}
-.cand .ti{font-weight:700; letter-spacing:-.02em; font-size:12.5px; line-height:1.18}
-.cand .num{font-family:var(--mono); font-size:10.5px; color:var(--muted); margin-top:4px}
-.tag{font-family:var(--mono); font-size:9.5px; letter-spacing:.04em; text-transform:uppercase;
-  border-radius:999px; padding:5px 8px; font-weight:800; white-space:nowrap}
-.st-opt{background:rgba(69,224,193,.12); color:var(--cyan); border:1px solid rgba(69,224,193,.22)}
-.st-rej{background:rgba(255,116,116,.12); color:var(--red); border:1px solid rgba(255,116,116,.2)}
-.st-dep{background:var(--cyan); color:#03231C; border:1px solid var(--cyan)}
+.cand.active{border-color:var(--accent); background:var(--accent-soft)}
+.cand-id{font-family:var(--mono); font-size:11px; color:var(--ink-3); font-weight:600}
+.cand-ti{font-size:12.5px; font-weight:550; letter-spacing:-.01em; line-height:1.25; color:var(--ink)}
+.cand-meta{display:flex; gap:10px; margin-top:5px}
+.cand-meta .kv{font-family:var(--mono); font-size:10.5px; color:var(--ink-2)}
+.cand-meta .kv.ok{color:var(--pass)}
+.tag{font-family:var(--mono); font-size:9.5px; letter-spacing:.03em; border-radius:999px; padding:4px 8px; font-weight:600; white-space:nowrap}
+.st-sel{background:var(--pass-soft); color:var(--pass); border:1px solid #bfe2d2}
+.st-rej{background:var(--panel-2); color:var(--ink-2); border:1px solid var(--rule-2)}
+.st-sup{background:var(--panel-2); color:var(--ink-3); border:1px solid var(--rule)}
 
-.ledger{overflow:hidden}
+/* ledger */
 .ledger table{width:100%; border-collapse:collapse; font-size:12px}
-.ledger th{text-align:left; color:var(--faint); font-size:10px; letter-spacing:.09em; text-transform:uppercase;
-  font-weight:800; padding:11px 14px; border-bottom:1px solid var(--line)}
-.ledger td{padding:10px 14px; border-bottom:1px solid var(--line); color:#DCE5F6}
+.ledger th{text-align:left; color:var(--ink-3); font-size:10px; letter-spacing:.07em; text-transform:uppercase;
+  font-weight:600; padding:10px 14px; border-bottom:1px solid var(--rule)}
+.ledger td{padding:10px 14px; border-bottom:1px solid var(--rule); color:var(--ink)}
+.ledger td.num{text-align:right}
+.ledger td.ok{color:var(--pass); text-align:center}
+.ledger td.idea{color:var(--ink-2)}
 .ledger tbody tr{opacity:0; transition:opacity .35s ease}
 .ledger tbody tr.shown{opacity:1}
 .ledger tbody tr:last-child td{border-bottom:none}
-.ledger tr.dep td{background:rgba(69,224,193,.055)}
-.ledger .num{font-family:var(--mono); font-variant-numeric:tabular-nums}
-.ledger .hyp{color:var(--muted)}
+.ledger tr.sel td{background:var(--pass-soft)}
 
-/* ---- Footer ---- */
-.footer{padding:28px 0 56px; color:var(--faint); font-size:12px; border-top:1px solid var(--line); margin-top:8px}
-.footer b{color:var(--muted)}
-.footer a{color:#DCE5F6; text-decoration:underline; text-decoration-color:rgba(255,255,255,.24); text-underline-offset:3px}
+/* footer */
+.foot{padding:24px 0 50px; border-top:1px solid var(--rule); color:var(--ink-3); font-size:12px}
+.foot b{color:var(--ink-2)}
+.foot .mono{font-size:11px}
 
-/* ---- Scrollbars ---- */
-.codebox::-webkit-scrollbar, .candidate-list::-webkit-scrollbar{width:10px; height:10px}
-.codebox::-webkit-scrollbar-thumb, .candidate-list::-webkit-scrollbar-thumb{
-  background:rgba(148,163,184,.22); border-radius:999px; border:3px solid transparent; background-clip:content-box}
-.codebox::-webkit-scrollbar-track, .candidate-list::-webkit-scrollbar-track{background:transparent}
+/* scrollbars */
+.codebox::-webkit-scrollbar, .qlist::-webkit-scrollbar{width:9px; height:9px}
+.codebox::-webkit-scrollbar-thumb{background:#2a2f3a; border-radius:999px}
+.qlist::-webkit-scrollbar-thumb{background:var(--rule-2); border-radius:999px}
 
-/* ---- Responsive ---- */
-@media(max-width:1120px){
-  .workspace{grid-template-columns:1fr}
-  .code-panel{position:relative; top:auto}
+/* responsive */
+@media(max-width:1080px){
+  .head-grid{grid-template-columns:1fr} .motif{max-width:360px}
+  .work-grid{grid-template-columns:1fr} .code{position:relative; top:auto}
   .console-top{grid-template-columns:1fr}
 }
-@media(max-width:720px){
-  .wrap{width:min(100% - 28px, 1180px)}
-  .intro{padding-top:38px}
+@media(max-width:680px){
+  .wrap{width:min(100% - 28px, 1160px)}
+  .head{padding-top:36px}
   .navmeta{display:none}
-  .flowline{grid-template-columns:repeat(2,1fr)}
-  .champion, .counters{grid-template-columns:1fr 1fr}
-  .cand{grid-template-columns:44px 1fr}
-  .cand .tag{grid-column:2; justify-self:start}
-  .ledger .hyp{display:none}
-  .codebox{font-size:11px}
-  .gut{width:42px; margin-right:10px; padding-right:10px}
+  .strip{grid-template-columns:1fr 1fr} .stat:nth-child(2){border-right:none}
+  .stat:nth-child(1),.stat:nth-child(2){border-bottom:1px solid var(--rule)}
+  .flow{grid-template-columns:1fr 1fr} .flowstep:nth-child(2){border-right:none}
+  .flowstep:nth-child(1),.flowstep:nth-child(2){border-bottom:1px solid var(--rule)}
+  .champ-grid,.counters{grid-template-columns:1fr 1fr}
+  .cand{grid-template-columns:42px 1fr} .cand .tag{grid-column:2; justify-self:start; margin-top:2px}
+  .ledger .idea{display:none}
 }
-@media(prefers-reduced-motion:reduce){
-  *{animation:none!important; transition:none!important; scroll-behavior:auto!important}
-}
+@media(prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important; scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
-<nav class="topbar">
-  <div class="wrap nav">
-    <div class="logo"><div class="mark"><span>p</span>AI</div><div class="sub">distribution-aware programming</div></div>
-    <div class="navspacer"></div>
-    <div class="navmeta"><span class="dot-live"></span><span>replay from a real run</span></div>
-    <button class="btn btn-primary" id="runTop">▶ Run demo</button>
-  </div>
-</nav>
+<nav class="topbar"><div class="wrap nav">
+  <div class="brand"><span class="mark"><span>p</span>AI</span><span class="sub">automated solver synthesis</span></div>
+  <div class="spacer"></div>
+  <div class="navmeta">replay · pace2025_ds · heuristic track</div>
+  <button class="btn btn-primary" id="runTop">Run replay</button>
+</div></nav>
 
-<header class="intro">
-  <div class="wrap">
-    <span class="eyebrow">Solver specialization, replayed</span>
-    <h1>The same function call, quietly made <em>faster</em>.</h1>
-    <p class="lede">A workflow keeps solving the same kind of problem over and over. pAI watches those calls, writes candidate solvers tuned to <b>that exact distribution</b>, throws out any that lose quality, and patches in the fastest one that stays optimal. Your code never changes — it still calls <b>solve()</b>.</p>
-    <div class="intro-actions">
-      <button class="btn btn-primary" id="runMain">▶ Run demo</button>
-      <span class="run-note">9 candidates evaluated · 1 deployed · 176 ms</span>
+<header class="head"><div class="wrap">
+  <div class="head-grid">
+    <div>
+      <div class="eyebrow">PACE 2025 <span class="sep">/</span> Dominating Set <span class="sep">/</span> heuristic track</div>
+      <h1>Three solvers proposed, one selected, every number shown.</h1>
+      <p class="lede">The benchmark instances are <b>huge, ultra-sparse graphs</b> — one giant component, average degree ≈ 3, heavy on leaves. pAI reads the run traces, forms a structural hypothesis about that graph distribution, synthesizes a specialized dominating-set heuristic for it, and verifies each candidate on held-out instances before selecting one. Your code keeps calling <b>solve()</b>.</p>
+      <div class="head-actions">
+        <button class="btn btn-primary" id="runMain">Run replay</button>
+        <span class="navmeta">3 candidates · 5 validation graphs · 100 private-test graphs</span>
+      </div>
+    </div>
+    <div class="motif">
+      <svg viewBox="0 0 320 210" role="img" aria-label="A dominating set: filled vertices cover all others">
+        <g>
+          <line class="edge" x1="70" y1="62" x2="40" y2="40"/><line class="edge" x1="70" y1="62" x2="96" y2="36"/>
+          <line class="edge" x1="70" y1="62" x2="44" y2="92"/><line class="edge" x1="70" y1="62" x2="168" y2="52"/>
+          <line class="edge" x1="168" y1="52" x2="150" y2="26"/><line class="edge" x1="168" y1="52" x2="202" y2="38"/>
+          <line class="edge" x1="168" y1="52" x2="196" y2="78"/><line class="edge" x1="168" y1="52" x2="232" y2="136"/>
+          <line class="edge" x1="112" y1="142" x2="76" y2="150"/><line class="edge" x1="112" y1="142" x2="136" y2="166"/>
+          <line class="edge" x1="112" y1="142" x2="96" y2="110"/><line class="edge" x1="112" y1="142" x2="70" y2="62"/>
+          <line class="edge" x1="232" y1="136" x2="256" y2="110"/><line class="edge" x1="232" y1="136" x2="260" y2="166"/>
+          <line class="edge" x1="232" y1="136" x2="214" y2="172"/><line class="edge" x1="232" y1="136" x2="112" y2="142"/>
+        </g>
+        <g>
+          <circle class="domd" cx="40" cy="40" r="6"/><circle class="domd" cx="96" cy="36" r="6"/><circle class="domd" cx="44" cy="92" r="6"/>
+          <circle class="domd" cx="150" cy="26" r="6"/><circle class="domd" cx="202" cy="38" r="6"/><circle class="domd" cx="196" cy="78" r="6"/>
+          <circle class="domd" cx="76" cy="150" r="6"/><circle class="domd" cx="136" cy="166" r="6"/><circle class="domd" cx="96" cy="110" r="6"/>
+          <circle class="domd" cx="256" cy="110" r="6"/><circle class="domd" cx="260" cy="166" r="6"/><circle class="domd" cx="214" cy="172" r="6"/>
+        </g>
+        <g>
+          <circle class="domhalo" cx="70" cy="62" r="14"/><circle class="dom" cx="70" cy="62" r="7.5"/>
+          <circle class="domhalo" cx="168" cy="52" r="14"/><circle class="dom" cx="168" cy="52" r="7.5"/>
+          <circle class="domhalo" cx="112" cy="142" r="14"/><circle class="dom" cx="112" cy="142" r="7.5"/>
+          <circle class="domhalo" cx="232" cy="136" r="14"/><circle class="dom" cx="232" cy="136" r="7.5"/>
+        </g>
+      </svg>
+      <div class="motif-key"><span><i class="dom"></i>dominator</span><span><i class="domd"></i>dominated</span></div>
     </div>
   </div>
-</header>
 
-<main id="demo" class="section">
-  <div class="wrap">
-    <div class="workspace">
-      <section class="panel code-panel" id="codePanel" aria-label="Codebase with pAI managed region">
-        <div class="panelbar"><span class="traffic r"></span><span class="traffic y"></span><span class="traffic g"></span><span class="title" id="codeTitle">workflow.py</span><span class="status" id="codeStatus">generic solver</span></div>
-        <div class="code-intro"><span><b>Application code</b> calls a stable API. pAI owns only the decorated block.</span><span class="managed-badge">managed region: solve()</span></div>
-        <div class="codebox" id="codeBox"></div>
-        <div class="deploy-banner"><b>Patch applied:</b> the app still calls <code>solve()</code>. The managed region now holds a verified specialized solver, with the original generic solver kept as fallback.</div>
-        <div class="code-nav" id="codeNav">
-          <button class="stepchip" data-def="_choose_bottleneck"><b>1</b>choose bottleneck</button>
-          <button class="stepchip" data-def="_knap_dp_1d"><b>2</b>1-D DP core</button>
-          <button class="stepchip" data-def="_compute_used_and_value"><b>3</b>check feasibility</button>
-          <button class="stepchip" data-def="_repair_to_feasible"><b>4</b>repair / fallback</button>
-          <button class="stepchip" data-def="solve"><b>→</b>solve()</button>
-        </div>
-      </section>
-
-      <aside class="demo" aria-label="Specialization process">
-        <div class="flowline">
-          <div class="flowstep" id="flow0"><div class="n">1</div><strong>Observe calls</strong><span>Repeated instances from one workflow.</span></div>
-          <div class="flowstep" id="flow1"><div class="n">2</div><strong>Synthesize</strong><span>Candidates tuned to this distribution.</span></div>
-          <div class="flowstep" id="flow2"><div class="n">3</div><strong>Verify</strong><span>Reject anything that loses quality.</span></div>
-          <div class="flowstep" id="flow3"><div class="n">4</div><strong>Patch</strong><span>Deploy the fastest safe replacement.</span></div>
-        </div>
-
-        <section class="panel console">
-          <div class="console-top">
-            <div class="info-card">
-              <h3>Observed workload</h3>
-              <div class="workload-title">Repeated knapsack decisions</div>
-              <div class="workload-sub">same workflow, many drawn instances</div>
-              <div class="workload-facts">
-                <span>64 train traces</span>
-                <span>32 validation traces</span>
-                <span>500 held-out checks</span>
-              </div>
-              <div class="champion">
-                <div class="champ"><div class="label">Quality</div><div class="value good" id="roOpt">—</div></div>
-                <div class="champ"><div class="label">Runtime</div><div class="value gold" id="roMs">—</div></div>
-              </div>
-              <div class="counters">
-                <div class="count"><b id="cProp">0</b>proposed</div>
-                <div class="count"><b id="cEval">0</b>evaluated</div>
-                <div class="count"><b id="cRej" style="color:var(--red)">0</b>rejected</div>
-                <div class="count"><b id="cDep" style="color:var(--cyan)">0</b>deployed</div>
-              </div>
-            </div>
-            <div class="chart-card">
-              <div class="chart-head"><h3>Validation</h3><span class="phase" id="phase">idle</span></div>
-              <svg class="plot" id="plot" viewBox="0 0 700 410" role="img" aria-label="Candidate quality versus runtime"></svg>
-            </div>
-          </div>
-
-          <div class="candidate-card">
-            <div class="candidate-head"><h3>Candidate queue</h3><span>replay</span></div>
-            <div class="candidate-list" id="stream"></div>
-          </div>
-
-          <div class="ledger">
-            <table>
-              <thead><tr><th>Candidate</th><th class="hyp">Idea</th><th>Quality</th><th>Runtime</th><th>Outcome</th></tr></thead>
-              <tbody id="evalBody"></tbody>
-            </table>
-          </div>
-        </section>
-      </aside>
-    </div>
+  <div class="strip">
+    <div class="stat"><div class="v">3</div><div class="l">solvers synthesized<br><span class="mono">2 iterations</span></div></div>
+    <div class="stat"><div class="v pass">100%</div><div class="l">outputs feasible<br><span class="mono">valid dominating sets</span></div></div>
+    <div class="stat"><div class="v">0.50</div><div class="l">selected quality<br><span class="mono">validation · higher better</span></div></div>
+    <div class="stat"><div class="v warn">0.23</div><div class="l">private-test quality<br><span class="mono">generalization gap</span></div></div>
   </div>
-</main>
+</div></header>
 
-<footer class="footer"><div class="wrap">
-  <b>Run source:</b> second_scale_benchmark_v2 / 20260427, mdkp / single_resource_density. Method: <a href="https://arxiv.org/abs/2605.14141">arxiv.org/abs/2605.14141</a>.
+<main class="work"><div class="wrap">
+  <div class="work-grid">
+    <section class="code" id="codePanel" aria-label="Selected solver">
+      <div class="code-h"><span class="title" id="codeTitle">run.py</span><span class="status" id="codeStatus">generic baseline</span></div>
+      <div class="code-note"><span><b>Your code</b> calls a stable API. pAI owns only the decorated block.</span><span class="region">managed: solve()</span></div>
+      <div class="codebox" id="codeBox"></div>
+      <div class="deploy-note"><b>Patch applied:</b> the app still calls <code>solve()</code>. The managed region now holds the verified bucketed-greedy solver, with the generic redundancy-aware greedy kept as fallback.</div>
+      <div class="code-nav" id="codeNav">
+        <button class="stepchip" data-def="build_graph"><b>1</b>build CSR</button>
+        <button class="stepchip" data-def="dominating_set_greedy"><b>2</b>forced + bucket greedy</button>
+        <button class="stepchip" data-def="prune_and_repair"><b>3</b>repair / prune</button>
+        <button class="stepchip" data-def="solve"><b>→</b>solve()</button>
+      </div>
+    </section>
+
+    <aside class="demo" aria-label="Synthesis pipeline">
+      <div class="flow">
+        <div class="flowstep" id="flow0"><div class="n">step 1</div><strong>Observe</strong><span>Run traces from one workload.</span></div>
+        <div class="flowstep" id="flow1"><div class="n">step 2</div><strong>Hypothesize</strong><span>A structural claim about the graphs.</span></div>
+        <div class="flowstep" id="flow2"><div class="n">step 3</div><strong>Synthesize</strong><span>A solver tuned to that structure.</span></div>
+        <div class="flowstep" id="flow3"><div class="n">step 4</div><strong>Verify &amp; select</strong><span>Held-out checks, then pick one.</span></div>
+      </div>
+
+      <div class="console-top">
+        <div class="card obs">
+          <h3>Observed workload</h3>
+          <div class="wl">Minimum dominating set</div>
+          <div class="wl-sub">PACE 2025 · same generator, many graphs</div>
+          <div class="facts"><span>giant component</span><span>avg degree ≈ 3</span><span>leaf-heavy</span><span>millions of vertices</span></div>
+          <div class="champ-grid">
+            <div class="cw"><div class="l">Quality</div><div class="v" id="roQ">—</div></div>
+            <div class="cw"><div class="l">Runtime</div><div class="v" id="roMs">—</div></div>
+            <div class="cw"><div class="l">Feasible</div><div class="v pass" id="roFeas">—</div></div>
+            <div class="cw"><div class="l">Private test</div><div class="v warn" id="roTest">—</div></div>
+          </div>
+          <div class="counters">
+            <div class="count"><b id="cSyn">0</b>synth</div>
+            <div class="count"><b id="cFeas">0</b>feasible</div>
+            <div class="count"><b id="cOpt">0</b>optimal</div>
+            <div class="count"><b id="cSel">0</b>selected</div>
+          </div>
+        </div>
+        <div class="card chart">
+          <div class="chart-h"><h3>Quality vs runtime</h3><span class="phase" id="phase">idle</span></div>
+          <svg class="plot" id="plot" viewBox="0 0 680 360" role="img" aria-label="Candidate quality versus runtime"></svg>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-h"><h3>Candidate queue</h3><span class="meta">replay</span></div>
+        <div class="qlist" id="stream"></div>
+      </div>
+
+      <div class="card ledger">
+        <div class="card-h"><h3>Evaluation ledger</h3><span class="meta">validation · 5 graphs</span></div>
+        <table>
+          <thead><tr><th>Candidate</th><th class="idea">Hypothesis</th><th class="num">Quality</th><th class="num">Runtime</th><th>Feasible</th><th>Outcome</th></tr></thead>
+          <tbody id="evalBody"></tbody>
+        </table>
+      </div>
+    </aside>
+  </div>
+</div></main>
+
+<footer class="foot"><div class="wrap">
+  <b>Source:</b> <span class="mono">pace2025_dominating_set / pace2025_ds_heuristic_llm_01</span> · heuristic track. Quality is normalized (higher is better); feasibility means every output is a valid dominating set; optimality is not claimed. Numbers are from the recorded run: 3 candidates, 5 validation graphs, 100 private-test graphs.
 </div></footer>
 
-<script id="realsrc" type="text/plain">import math
-from typing import Any, Dict, List, Optional, Sequence, Tuple
-
-def _get_field(inst: Any, names: Sequence[str]) -> Any:
-    if isinstance(inst, dict):
-        for n in names:
-            if n in inst:
-                return inst[n]
-        return None
-    for n in names:
-        if hasattr(inst, n):
-            return getattr(inst, n)
-    return None
-
-def _as_list(x: Any) -> List[Any]:
-    if x is None:
-        return []
-    if isinstance(x, list):
-        return x
-    return list(x)
-
-def _extract_instance(inst: Any) -> Tuple[List[int], List[List[int]], List[int]]:
-    """Return (values, weights_rows[item][res], capacities) as Python ints."""
-
-    # Allow tuple/list container: (values, weights, capacities)
-    if isinstance(inst, (list, tuple)) and len(inst) == 3:
-        values_raw, weights_raw, caps_raw = inst
-    else:
-        values_raw = _get_field(
-            inst,
-            [
-                "values",
-                "value_vector",
-                "profits",
-                "profit_vector",
-                "p",
-                "v",
-                "value",
-            ],
-        )
-        weights_raw = _get_field(inst, ["weights", "weight_matrix", "w", "weight"])
-        caps_raw = _get_field(inst, ["capacities", "capacity_vector", "c", "capacity"])
-
-    if values_raw is None or weights_raw is None or caps_raw is None:
-        raise ValueError("Instance missing one of values/weights/capacities")
-
-    values = [int(x) for x in _as_list(values_raw)]
-    caps = [int(x) for x in _as_list(caps_raw)]
-    n = len(values)
-    m = len(caps)
-
-    w_obj = weights_raw
-    shape = getattr(w_obj, "shape", None)
-
-    def _row_to_ints(row: Any) -> List[int]:
-        return [int(x) for x in _as_list(row)]
-
-    if shape is not None and isinstance(shape, (tuple, list)) and len(shape) == 2:
-        r, c = int(shape[0]), int(shape[1])
-        if r == n and c == m:
-            weights_rows = [_row_to_ints(w_obj[i]) for i in range(n)]
-        elif r == m and c == n:
-            weights_rows = [[int(w_obj[j][i]) for j in range(m)] for i in range(n)]
-        else:
-            raise ValueError(f"Unrecognized weights shape {shape} for n={n}, m={m}")
-    else:
-        w_list = _as_list(w_obj)
-        if len(w_list) == n and (n == 0 or len(_as_list(w_list[0])) == m):
-            weights_rows = [_row_to_ints(row) for row in w_list]
-        elif len(w_list) == m and (m == 0 or len(_as_list(w_list[0])) == n):
-            w_ll = [_as_list(row) for row in w_list]
-            weights_rows = [[int(w_ll[j][i]) for j in range(m)] for i in range(n)]
-        else:
-            raise ValueError(
-                f"Unrecognized weights container: len={len(w_list)} for n={n}, m={m}"
-            )
-
-    return values, weights_rows, caps
-
-def _compute_sum_w(weights_rows: List[List[int]], m: int) -> List[int]:
-    sum_w = [0] * m
-    for row in weights_rows:
-        for j in range(m):
-            sum_w[j] += row[j]
-    return sum_w
-
-def _argmin_and_second(t: List[float]) -> Tuple[int, float, float]:
-    m = len(t)
-    if m == 0:
-        return 0, float("inf"), float("inf")
-    best_j = 0
-    best_t = t[0]
-    second_t = float("inf")
-
-    # First pass: argmin
-    for j in range(1, m):
-        tj = t[j]
-        if tj < best_t:
-            best_t = tj
-            best_j = j
-
-    # Second pass: second min
-    for j in range(m):
-        if j == best_j:
-            continue
-        tj = t[j]
-        if tj < second_t:
-            second_t = tj
-
-    return best_j, best_t, second_t
-
-def _choose_bottleneck(
-    caps: List[int],
-    weights_rows: List[List[int]],
-    analysis: Optional[Dict[str, Any]],
-) -> Tuple[int, float, float, List[int]]:
-    """Return (bottleneck_index, min_t, second_t, sum_w)."""
-    m = len(caps)
-    sum_w = _compute_sum_w(weights_rows, m)
-
-    t = [float("inf")] * m
-    for j in range(m):
-        sw = sum_w[j]
-        if sw > 0:
-            t[j] = caps[j] / sw
-
-    b_hat, min_t, second_t = _argmin_and_second(t)
-
-    ana = analysis if isinstance(analysis, dict) else {}
-    sp = ana.get("suggested_params") or {}
-
-    b_ana = sp.get("global_bottleneck_index")
-    if b_ana is None:
-        bc = ana.get("bottleneck_consistency") or ana.get("bottleneck_tightness") or {}
-        b_ana = bc.get("mode_bottleneck_index")
-
-    trust = sp.get("trust_global_bottleneck_if_t_within_factor", 1.05)
-    try:
-        trust_f = float(trust)
-    except Exception:
-        trust_f = 1.05
-
-    b = b_hat
-    if b_ana is not None:
-        try:
-            b_ai = int(b_ana)
-        except Exception:
-            b_ai = -1
-        if 0 <= b_ai < m:
-            tb = t[b_ai]
-            if math.isfinite(tb) and (not math.isfinite(min_t) or tb <= trust_f * min_t):
-                b = b_ai
-
-    # Recompute min/second wrt chosen b? (not necessary; keep detection stats)
-    return b, float(min_t), float(second_t), sum_w
-
-def _order_by_bottleneck_density(values: List[int], w_b: List[int]) -> List[int]:
-    n = len(values)
-    dens_pairs = []
-    append = dens_pairs.append
-    for i in range(n):
-        vi = values[i]
-        wi = w_b[i]
-        if wi > 0:
-            d = vi / wi
-        else:
-            d = float("inf") if vi > 0 else float("-inf")
-        append((d, i))
-    dens_pairs.sort(reverse=True)
-    return [i for _, i in dens_pairs]
-
-def _order_by_weighted_surrogate_density(
-    values: List[int],
-    weights_rows: List[List[int]],
-    caps: List[int],
-    b: int,
-    gamma: float,
-) -> List[int]:
-    n = len(values)
-    m = len(caps)
-    inv_caps = [1.0 / c if c > 0 else 0.0 for c in caps]
-    inv_b = inv_caps[b] if 0 <= b < m else 0.0
-
-    dens_pairs = []
-    append = dens_pairs.append
-
-    for i in range(n):
-        row = weights_rows[i]
-        # denom = wb/cb + gamma * sum_{j!=b} wj/cj
-        base = row[b] * inv_b if 0 <= b < m else 0.0
-        other = 0.0
-        for j in range(m):
-            if j == b:
-                continue
-            other += row[j] * inv_caps[j]
-        denom = base + gamma * other
-        vi = values[i]
-        if denom > 0.0:
-            d = vi / denom
-        else:
-            d = float("inf") if vi > 0 else float("-inf")
-        append((d, i))
-
-    dens_pairs.sort(reverse=True)
-    return [i for _, i in dens_pairs]
-
-def _order_by_value(values: List[int]) -> List[int]:
-    pairs = [(values[i], i) for i in range(len(values))]
-    pairs.sort(reverse=True)
-    return [i for _, i in pairs]
-
-def _pick_candidates(
-    n: int,
-    order_b: List[int],
-    order_val: List[int],
-    order_sur: List[int],
-    k_density: int,
-    k_limit: int,
-    k_value: int,
-    k_sur: int,
-) -> List[int]:
-    k_density = max(0, min(n, int(k_density)))
-    k_limit = max(0, min(n, int(k_limit)))
-    k_value = max(0, min(n, int(k_value)))
-    k_sur = max(0, min(n, int(k_sur)))
-
-    marked = bytearray(n)
-    cand: List[int] = []
-    add = cand.append
-
-    for i in order_b[:k_density]:
-        if not marked[i]:
-            marked[i] = 1
-            add(i)
-    # Enrich with high-value items
-    for i in order_val[:k_value]:
-        if len(cand) >= k_limit:
-            break
-        if not marked[i]:
-            marked[i] = 1
-            add(i)
-    # Enrich with surrogate-dense items
-    for i in order_sur[:k_sur]:
-        if len(cand) >= k_limit:
-            break
-        if not marked[i]:
-            marked[i] = 1
-            add(i)
-
-    return cand
-
-def _knap_dp_1d(
-    candidates: List[int], values: List[int], weights_b: List[int], cap: int
-) -> List[int]:
-    """0/1 knapsack DP on a single weight vector with backtracking."""
-    if cap <= 0 or not candidates:
-        return []
-
-    dp = [0] * (cap + 1)
-    choice = [-1] * (cap + 1)
-    prev = [-1] * (cap + 1)
-
-    dpl = dp
-    cho = choice
-    pre = prev
-    v = values
-    w = weights_b
-
-    for i in candidates:
-        vi = v[i]
-        if vi <= 0:
-            continue
-        wi = w[i]
-        if wi <= 0 or wi > cap:
-            continue
-        for c in range(cap, wi - 1, -1):
-            nv = dpl[c - wi] + vi
-            if nv > dpl[c]:
-                dpl[c] = nv
-                cho[c] = i
-                pre[c] = c - wi
-
-    # smallest capacity achieving best value (leaves slack for later fill)
-    best_v = dpl[0]
-    best_c = 0
-    for c in range(1, cap + 1):
-        val = dpl[c]
-        if val > best_v:
-            best_v = val
-            best_c = c
-
-    sel: List[int] = []
-    c = best_c
-    while c >= 0:
-        i = cho[c]
-        if i < 0:
-            break
-        sel.append(i)
-        nc = pre[c]
-        if nc == c:
-            # safety (should not happen with wi>0)
-            break
-        c = nc
-
-    return sel
-
-def _compute_used_and_value(
-    sel_iter: Sequence[int],
-    values: List[int],
-    weights_rows: List[List[int]],
-    m: int,
-) -> Tuple[List[int], int]:
-    used = [0] * m
-    total = 0
-    for i in sel_iter:
-        total += values[i]
-        row = weights_rows[i]
-        for j in range(m):
-            used[j] += row[j]
-    return used, int(total)
-
-def _greedy_from_order(
-    order: List[int],
-    values: List[int],
-    weights_rows: List[List[int]],
-    caps: List[int],
-) -> Tuple[List[int], List[int], int]:
-    m = len(caps)
-    used = [0] * m
-    sel: List[int] = []
-    total = 0
-
-    for i in order:
-        vi = values[i]
-        if vi <= 0:
-            continue
-        row = weights_rows[i]
-        feasible = True
-        for j in range(m):
-            if used[j] + row[j] > caps[j]:
-                feasible = False
-                break
-        if not feasible:
-            continue
-        for j in range(m):
-            used[j] += row[j]
-        sel.append(i)
-        total += vi
-
-    return sel, used, int(total)
-
-def _repair_to_feasible(
-    sel_set: set,
-    used: List[int],
-    values: List[int],
-    weights_rows: List[List[int]],
-    caps: List[int],
-    max_drops: int,
-) -> bool:
-    m = len(caps)
-
-    for _ in range(max_drops):
-        viol = [j for j in range(m) if used[j] > caps[j]]
-        if not viol:
-            return True
-
-        worst_i = None
-        worst_metric = -1.0
-        for i in sel_set:
-            vi = values[i]
-            if vi <= 0:
-                worst_i = i
-                worst_metric = float("inf")
-                break
-            row = weights_rows[i]
-            pen = 0.0
-            for j in viol:
-                cj = caps[j]
-                if cj > 0:
-                    pen += row[j] / cj
-                else:
-                    pen += row[j]
-            if pen <= 0.0:
-                continue
-            metric = pen / (vi + 1e-12)
-            if metric > worst_metric:
-                worst_metric = metric
-                worst_i = i
-
-        if worst_i is None:
-            return False
-
-        sel_set.remove(worst_i)
-        row = weights_rows[worst_i]
-        for j in range(m):
-            used[j] -= row[j]
-
-    return False
-
-def _fill_greedy(
-    sel_set: set,
-    used: List[int],
-    order: List[int],
-    values: List[int],
-    weights_rows: List[List[int]],
-    caps: List[int],
-) -> int:
-    m = len(caps)
-    added = 0
-
-    for i in order:
-        if i in sel_set:
-            continue
-        vi = values[i]
-        if vi <= 0:
-            continue
-        row = weights_rows[i]
-        feasible = True
-        for j in range(m):
-            if used[j] + row[j] > caps[j]:
-                feasible = False
-                break
-        if not feasible:
-            continue
-        for j in range(m):
-            used[j] += row[j]
-        sel_set.add(i)
-        added += vi
-
-    return int(added)
-
-def solve(instance: Any, analysis: Optional[Dict[str, Any]] = None, manifest: Any = None) -> Any:
-    try:
-        values, weights_rows, caps = _extract_instance(instance)
-    except Exception:
-        return []
-
-    n = len(values)
-    m = len(caps)
-    if n == 0 or m == 0:
-        return []
-
-    ana = analysis if isinstance(analysis, dict) else {}
-    sp = ana.get("suggested_params") or {}
-
-    # ---- Identify bottleneck ----
-    b, min_t, second_t, _ = _choose_bottleneck(caps, weights_rows, ana)
-    cap_b = caps[b]
-
-    # If no clear bottleneck or DP would be too big, we will just use greedy.
-    ratio = (min_t / second_t) if (second_t > 0 and math.isfinite(second_t) and math.isfinite(min_t)) else 1.0
-    strong_bottleneck = ratio <= 0.80
-
-    # ---- Orders ----
-    w_b = [row[b] for row in weights_rows]
-    order_b = _order_by_bottleneck_density(values, w_b)
-
-    # Weighted surrogate order (for robustness / candidate enrichment)
-    gamma = max(0.05, min(1.0, ratio))
-    order_sur = _order_by_weighted_surrogate_density(values, weights_rows, caps, b, gamma)
-
-    # Greedy baseline(s)
-    sel_gb, used_gb, val_gb = _greedy_from_order(order_b, values, weights_rows, caps)
-    sel_gs, used_gs, val_gs = _greedy_from_order(order_sur, values, weights_rows, caps)
-    if val_gs > val_gb:
-        best_greedy_sel = sel_gs
-        best_greedy_val = val_gs
-    else:
-        best_greedy_sel = sel_gb
-        best_greedy_val = val_gb
-
-    # ---- DP parameters from analysis ----
-    dp_topk = sp.get("dp_topk")
-    if dp_topk is None:
-        dp_topk = (ana.get("dp_eval") or {}).get("params", {}).get("topk")
-    if dp_topk is None:
-        dp_topk = 300
-    try:
-        k_base = int(dp_topk)
-    except Exception:
-        k_base = 300
-
-    rmax = (
-        (ana.get("dp_eval") or {})
-        .get("topk_loss_explainer", {})
-        .get("full_selected_rank_max", {})
-        .get("max")
-    )
-    try:
-        rmax_i = int(rmax) if rmax is not None else 0
-    except Exception:
-        rmax_i = 0
-
-    # Candidate sizing: tuned for this distribution (but capped for runtime)
-    k_density = max(k_base, rmax_i + 20, n // 2)
-    k_limit = min(n, max(k_density, int(k_density * 1.25)))
-    k_value = max(50, k_base // 2)
-    k_sur = max(50, k_base // 2)
-
-    # Safety cap on DP work
-    max_ops = 6_000_000
-    if cap_b > 0 and k_limit * cap_b > max_ops:
-        k_limit = max(k_base, int(max_ops / max(1, cap_b)))
-        k_limit = min(n, max(100, k_limit))
-        k_density = min(k_density, k_limit)
-
-    # If bottleneck not strong, skip DP and return best greedy
-    if (not strong_bottleneck) or cap_b <= 0 or k_limit <= 0:
-        return sorted(best_greedy_sel)
-
-    order_val = _order_by_value(values)
-    candidates = _pick_candidates(
-        n=n,
-        order_b=order_b,
-        order_val=order_val,
-        order_sur=order_sur,
-        k_density=k_density,
-        k_limit=k_limit,
-        k_value=k_value,
-        k_sur=k_sur,
-    )
-
-    # ---- Bottleneck DP ----
-    sel_dp_list = _knap_dp_1d(candidates, values, w_b, cap_b)
-    if not sel_dp_list:
-        return sorted(best_greedy_sel)
-
-    sel_dp_set = set(sel_dp_list)
-
-    # Add any positive-value items with zero bottleneck weight (rare), if feasible.
-    # (Keep it cheap: only consider the best few by value.)
-    zero_b = [i for i in range(n) if values[i] > 0 and w_b[i] <= 0 and i not in sel_dp_set]
-    if zero_b:
-        zero_b.sort(key=lambda i: values[i], reverse=True)
-        used_tmp, _ = _compute_used_and_value(list(sel_dp_set), values, weights_rows, m)
-        for i in zero_b[:50]:
-            row = weights_rows[i]
-            ok = True
-            for j in range(m):
-                if used_tmp[j] + row[j] > caps[j]:
-                    ok = False
-                    break
-            if ok:
-                for j in range(m):
-                    used_tmp[j] += row[j]
-                sel_dp_set.add(i)
-        # overwrite used/value below
-
-    used_dp, val_dp = _compute_used_and_value(list(sel_dp_set), values, weights_rows, m)
-
-    # ---- Repair if needed ----
-    max_drops = sp.get("repair_max_drops")
-    if max_drops is None:
-        max_drops = 300
-    try:
-        max_drops_i = int(max_drops)
-    except Exception:
-        max_drops_i = 300
-
-    if any(used_dp[j] > caps[j] for j in range(m)):
-        ok = _repair_to_feasible(sel_dp_set, used_dp, values, weights_rows, caps, max_drops=max_drops_i)
-        if not ok:
-            return sorted(best_greedy_sel)
-        # Re-fill after drops using surrogate order (more balanced)
-        _fill_greedy(sel_dp_set, used_dp, order_sur, values, weights_rows, caps)
-        val_dp = int(sum(values[i] for i in sel_dp_set))
-
-    # Optional tiny fill attempt (usually no effect, but cheap)
-    _fill_greedy(sel_dp_set, used_dp, order_sur, values, weights_rows, caps)
-    val_dp = int(sum(values[i] for i in sel_dp_set))
-
-    # Choose best feasible between DP-based and greedy baseline
-    if val_dp >= best_greedy_val:
-        return sorted(sel_dp_set)
-    return sorted(best_greedy_sel)
+<script id="realsrc" type="text/plain">import heapq
+from array import array
+
+# pAI-selected solver — PACE 2025 Dominating Set (heuristic track)
+# Hypothesis: a bounded-degree, near-3/4-regular giant core with many
+# forced leaf-supports, where a bucketed marginal-gain greedy is near-optimal.
+
+def build_graph(instance):
+    """Parse edges (list / PACE file / adjacency) into a CSR graph."""
+    n, deg, off, adj = _parse_to_csr(instance)
+    return n, deg, off, adj
+
+def dominating_set_greedy(n, deg, off, adj, params):
+    use_leaf_forcing = params.get("use_leaf_forcing", True)
+    use_bucket_greedy = params.get("use_bucket_greedy", True)
+    cap = int(params.get("bucket_gain_cap", 64))
+
+    undom = bytearray(b"\x01") * n      # 1 = still undominated
+    in_ds = bytearray(n)
+    ds = []
+    undom_left = n
+
+    def add_dominator(v):
+        nonlocal undom_left
+        if in_ds[v]:
+            return
+        in_ds[v] = 1
+        ds.append(v)
+        for u in (v, *adj[off[v]:off[v + 1]]):
+            if undom[u]:
+                undom[u] = 0
+                undom_left -= 1
+
+    # ---- Forced phase: isolated vertices and leaf supports ----
+    if use_leaf_forcing:
+        leaves = []
+        for v in range(n):
+            d = deg[v]
+            if d == 0:
+                add_dominator(v)            # isolated vertex must pick itself
+            elif d == 1:
+                leaves.append(v)
+        for v in leaves:                    # leaf -> take its single neighbor
+            if undom[v]:
+                add_dominator(adj[off[v]])
+
+    # ---- Core phase: bucketed marginal-gain greedy ----
+    # Gains live in a tiny integer range (1..max_degree+1), so an O(m)
+    # bucket queue replaces a heap and avoids expensive rescans.
+    if use_bucket_greedy and undom_left > 0:
+        buckets = _init_gain_buckets(n, deg, off, adj, undom, cap)
+        while undom_left > 0:
+            v = _pop_max_gain(buckets)      # covers the most undominated N[v]
+            add_dominator(v)
+            _update_local_gains(buckets, v, off, adj, undom)
+
+    return ds
+
+def prune_and_repair(n, deg, off, adj, ds):
+    """Guarantee feasibility first, then drop redundant dominators."""
+    ds = _repair_undominated(n, off, adj, ds)     # add best vertex in N[v]+{v}
+    ds = _prune_redundant(n, off, adj, ds)        # remove if N[v] stays covered
+    return ds, True
+
+# pAI owns only this region. The application keeps calling solve().
+@pai.optimize(
+    objective="maximize_quality",
+    constraint="output is a valid dominating set",
+    fallback="redundancy_aware_greedy",
+    observe="run.trace",
+)
+def solve(instance, analysis=None, manifest=None):
+    params = (analysis or {}).get("params", {})
+    params.setdefault("use_leaf_forcing", True)
+    params.setdefault("use_bucket_greedy", True)
+    params.setdefault("bucket_gain_cap", 64)
+
+    n, deg, off, adj = build_graph(instance)
+    ds = dominating_set_greedy(n, deg, off, adj, params)
+    ds, _ = prune_and_repair(n, deg, off, adj, ds)
+    return ds
 </script>
-<script>const HERO=[
- {id:'it0·s0',title:'assume one fixed bottleneck',opt:0.0,ms:156.9,dec:'rej',decTxt:'Rejected · not optimal'},
- {id:'it0·s1',title:'reduce to 1-D knapsack',opt:1.0,ms:198.0,dec:'opt',decTxt:'Correct'},
- {id:'it0·s2',title:'add bounded repair',opt:0.0,ms:320.2,dec:'rej',decTxt:'Rejected · unsafe'},
- {id:'it1·s0',title:'treat other constraints as slack',opt:0.0,ms:354.8,dec:'rej',decTxt:'Rejected · unsafe'},
- {id:'it1·s1',title:'fixed bottleneck + feasibility guard',opt:1.0,ms:176.2,dec:'dep',decTxt:'Deployed',deployed:true},
- {id:'it1·s2',title:'exchangeable-constraint shortcut',opt:0.344,ms:342.5,dec:'rej',decTxt:'Rejected · misses optimum'},
- {id:'it2·s0',title:'shortlist only dense items',opt:0.719,ms:142.1,dec:'rej',decTxt:'Rejected · misses optimum'},
- {id:'it2·s1',title:'dominant-resource variant',opt:1.0,ms:229.6,dec:'opt',decTxt:'Correct'},
- {id:'it2·s2',title:'fast density-only heuristic',opt:0.344,ms:2.90,dec:'rej',decTxt:'Rejected · fastest but wrong',fast:true},
+<script>// Three real synthesized candidates for PACE 2025 Dominating Set (heuristic track).
+const CAND=[
+ {id:'it0·s2', title:'Tree-like sparse core — leaf/path rules + bounded repair',
+  key:'sparse_tree_like_core', q:0.489, ms:1480, feas:true,
+  dec:'sup', tag:'superseded', note:'Superseded by iteration 1'},
+ {id:'it1·s2', title:'Pendant-heavy — forced leaf supports + O(m) local gain',
+  key:'leaf-core-decomposition', q:0.500, ms:1251, feas:true,
+  dec:'rej', tag:'runner-up', note:'Not selected — 0.0002 below, but ~2× faster'},
+ {id:'it1·s0', title:'Bounded-degree core — bucketed marginal-gain greedy',
+  key:'sparse_tree_like_core', q:0.501, ms:2456, feas:true, selected:true,
+  dec:'sel', tag:'selected', note:'Selected — highest validation quality',
+  testQ:0.229, testMs:2900},
 ];
+
 const SVG='http://www.w3.org/2000/svg';
-const PL={l:54,r:24,t:20,b:48,W:700,H:410};
-const xdom=[0.30,2.62];
+const PL={l:46,r:88,t:18,b:42,W:680,H:360};
+const xdom=[2.95,3.55];                              // log10(ms): ~890ms .. ~3550ms
 const px=ms=>PL.l+(Math.log10(ms)-xdom[0])/(xdom[1]-xdom[0])*(PL.W-PL.l-PL.r);
-const py=o=>PL.t+(1.08-o)/1.08*(PL.H-PL.t-PL.b);
+const py=q=>PL.t+(1.06-q)/1.06*(PL.H-PL.t-PL.b);
 const $=id=>document.getElementById(id);
 const el=(t,a)=>{const e=document.createElementNS(SVG,t);for(const k in a)e.setAttribute(k,a[k]);return e;};
+function txt(node,s){node.textContent=s;return node;}
+
 function axes(){
-  const svg=$('plot');
-  if(!svg) return;
-  svg.innerHTML='';
-  [[0,'0'],[0.5,'50%'],[1.0,'100%']].forEach(([o,l])=>{
-    svg.appendChild(el('line',{class:o===1?'shipline':'gridline',x1:PL.l,y1:py(o),x2:PL.W-PL.r,y2:py(o),'stroke-dasharray':o===0?'0':(o===1?'6 5':'2 4')}));
-    const t=el('text',{class:'axislbl',x:PL.l-8,y:py(o)+3,'text-anchor':'end'});t.textContent=l;svg.appendChild(t);
+  const svg=$('plot'); if(!svg) return; svg.innerHTML='';
+  // y gridlines: quality 0, 0.5, 1.0 (1.0 = best known)
+  [[0,'0'],[0.5,'0.5'],[1.0,'1.0']].forEach(([q,l])=>{
+    svg.appendChild(el('line',{class:q===1?'refline':'gridline',x1:PL.l,y1:py(q),x2:PL.W-PL.r,y2:py(q)}));
+    svg.appendChild(txt(el('text',{class:'axislbl',x:PL.l-8,y:py(q)+3,'text-anchor':'end'}),l));
   });
-  const sl=el('text',{class:'axislbl',x:PL.W-PL.r,y:py(1.0)-7,'text-anchor':'end',fill:'var(--cyan)'});sl.textContent='100% optimal';svg.appendChild(sl);
-  [3,10,30,100,300].forEach(ms=>{
-    svg.appendChild(el('line',{class:'gridline',x1:px(ms),y1:PL.t,x2:px(ms),y2:PL.H-PL.b,'stroke-dasharray':'2 4',opacity:.75}));
-    const t=el('text',{class:'axislbl',x:px(ms),y:PL.H-PL.b+15,'text-anchor':'middle'});t.textContent=ms;svg.appendChild(t);
+  svg.appendChild(txt(el('text',{class:'reflbl',x:PL.W-PL.r,y:py(1.0)-7,'text-anchor':'end'}),'best known'));
+  // x ticks: runtime ms (log)
+  [[1000,'1.0s'],[1500,'1.5s'],[2000,'2.0s'],[3000,'3.0s']].forEach(([ms,l])=>{
+    svg.appendChild(el('line',{class:'gridline tick',x1:px(ms),y1:PL.t,x2:px(ms),y2:PL.H-PL.b}));
+    svg.appendChild(txt(el('text',{class:'axislbl',x:px(ms),y:PL.H-PL.b+15,'text-anchor':'middle'}),l));
   });
-  const xt=el('text',{class:'axisttl',x:(PL.l+PL.W-PL.r)/2,y:PL.H-8,'text-anchor':'middle'});xt.textContent='runtime (ms, log scale)';svg.appendChild(xt);
+  svg.appendChild(txt(el('text',{class:'axisttl',x:(PL.l+PL.W-PL.r)/2,y:PL.H-6,'text-anchor':'middle'}),'runtime per instance · log scale'));
   svg.appendChild(el('g',{id:'pts'}));
 }
-const stCls={opt:'st-opt',rej:'st-rej',dep:'st-dep'}, stWord={opt:'correct',rej:'rejected',dep:'deployed'};
+
+const stCls={sel:'st-sel',rej:'st-rej',sup:'st-sup'};
 function build(){
-  const s=$('stream'), b=$('evalBody');
-  s.innerHTML=''; b.innerHTML='';
-  HERO.forEach((c,i)=>{
-    const card=document.createElement('div');card.className='cand';card.id='cand'+i;
-    card.innerHTML='<div class="id">'+c.id+'</div><div><div class="ti">'+c.title+'</div><div class="num">'+Math.round(c.opt*100)+'% optimal · '+c.ms.toFixed(c.ms<10?2:1)+' ms</div></div><div class="tag '+stCls[c.dec]+'">'+stWord[c.dec]+'</div>';
+  const s=$('stream'), b=$('evalBody'); s.innerHTML=''; b.innerHTML='';
+  CAND.forEach((c,i)=>{
+    const card=document.createElement('div'); card.className='cand'; card.id='cand'+i;
+    card.innerHTML='<div class="cand-id">'+c.id+'</div>'+
+      '<div class="cand-main"><div class="cand-ti">'+c.title+'</div>'+
+      '<div class="cand-meta"><span class="kv">Q '+c.q.toFixed(3)+'</span>'+
+      '<span class="kv">'+(c.ms/1000).toFixed(2)+'s</span>'+
+      '<span class="kv ok">feasible</span></div></div>'+
+      '<div class="tag '+stCls[c.dec]+'">'+c.tag+'</div>';
     s.appendChild(card);
-    const tr=document.createElement('tr');tr.id='row'+i;if(c.deployed)tr.className='dep';
-    const ocol=c.opt>=1?'color:var(--cyan)':(c.opt<0.5?'color:var(--red)':'color:var(--gold)');
-    tr.innerHTML='<td><b>'+c.id+'</b></td><td class="hyp">'+c.title+'</td><td class="num" style="'+ocol+'">'+Math.round(c.opt*100)+'%</td><td class="num">'+c.ms.toFixed(c.ms<10?2:1)+' ms</td><td><span class="tag '+stCls[c.dec]+'">'+c.decTxt+'</span></td>';
+    const tr=document.createElement('tr'); tr.id='row'+i; if(c.selected)tr.className='sel';
+    tr.innerHTML='<td class="mono"><b>'+c.id+'</b></td>'+
+      '<td class="idea">'+c.title+'</td>'+
+      '<td class="mono num">'+c.q.toFixed(3)+'</td>'+
+      '<td class="mono num">'+(c.ms/1000).toFixed(2)+'s</td>'+
+      '<td class="mono ok">✓</td>'+
+      '<td><span class="tag '+stCls[c.dec]+'">'+c.tag+'</span></td>';
     b.appendChild(tr);
   });
 }
-function dot(c){
-  const g=$('pts'), x=px(c.ms), y=py(c.opt);
-  const col=c.opt>=1?'var(--cyan)':'var(--red)';
-  if(c.deployed){const halo=el('circle',{cx:x,cy:y,r:0,fill:'none',stroke:'var(--cyan)','stroke-width':1.8,opacity:0,class:'pt'});g.appendChild(halo);requestAnimationFrame(()=>{halo.setAttribute('r',17);halo.setAttribute('opacity','.95');});}
-  const point=el('circle',{cx:x,cy:y,r:0,fill:col,opacity:0,class:'pt'});g.appendChild(point);
-  requestAnimationFrame(()=>{point.setAttribute('r',c.deployed?7:5.5);point.setAttribute('opacity','.96');});
-  if(c.deployed){const t=el('text',{class:'lbl',x:x+20,y:y+5,fill:'var(--cyan)'});t.textContent='DEPLOYED · 176ms';g.appendChild(t);setTimeout(()=>t.classList.add('on'),230);}
-  if(c.fast){const t=el('text',{class:'lbl',x:x+12,y:y-12,fill:'var(--red)'});t.textContent='fastest — rejected';g.appendChild(t);setTimeout(()=>t.classList.add('on'),230);}
+
+function dot(c,selected){
+  const g=$('pts'), x=px(c.ms), y=py(c.q);
+  const point=el('circle',{cx:x,cy:y,r:0,class:'pt'+(selected?' pt-sel':' pt-cand')});
+  g.appendChild(point);
+  requestAnimationFrame(()=>{point.setAttribute('r',selected?6:5);});
+  if(selected){
+    const halo=el('circle',{cx:x,cy:y,r:6,class:'halo'}); g.insertBefore(halo,point);
+    requestAnimationFrame(()=>{halo.setAttribute('r',15);});
+    const lb=txt(el('text',{class:'plbl sel',x:x+12,y:y+4}),'selected · 0.50'); g.appendChild(lb);
+    setTimeout(()=>lb.classList.add('on'),180);
+  }
 }
-let running=false,demoState='idle';
-function setBtns(label,disabled,icon='▶'){
-  ['runTop','runMain'].forEach(id=>{
-    const b=$(id);if(!b)return;
-    b.innerHTML=icon+' '+label;
-    b.disabled=disabled;
-    b.style.opacity=disabled?.62:1;
-  });
+function testDot(c){                                  // honest generalization-gap marker
+  const g=$('pts'), x1=px(c.ms),y1=py(c.q), x2=px(c.testMs),y2=py(c.testQ);
+  const link=el('line',{x1,y1,x2,y2,class:'gaplink'}); g.appendChild(link);
+  const hollow=el('circle',{cx:x2,cy:y2,r:0,class:'pt pt-test'}); g.appendChild(hollow);
+  requestAnimationFrame(()=>{hollow.setAttribute('r',5.5);});
+  const lb=txt(el('text',{class:'plbl test',x:x2+12,y:y2+4}),'private test · 0.23'); g.appendChild(lb);
+  setTimeout(()=>lb.classList.add('on'),180);
 }
-function setIdleButtons(){setBtns('Run demo',false,'▶');}
-function setRunningButtons(){setBtns('Running…',true,'');}
-function setRestartButtons(){setBtns('Restart',false,'↺');}
-function setStatus(mode){const st=$('codeStatus');st.className='status '+(mode||'');}
-const INITIAL_CODE=`<span class="c"># workflow.py — normal application code</span>
+
+let running=false, state='idle';
+function setBtns(label,disabled){
+  ['runTop','runMain'].forEach(id=>{const b=$(id); if(!b)return; b.textContent=label; b.disabled=disabled;});
+}
+function setStatus(mode,word){const st=$('codeStatus'); st.className='status '+(mode||''); st.textContent=word;}
+function setPhase(w){$('phase').textContent=w;}
+
+const INITIAL_CODE=`<span class="c"># run.py — your code calls a stable API</span>
 <span class="k">import</span> pai
 
-<span class="k">def</span> <span class="f">run_day</span>(workload, ctx):
-    <span class="k">for</span> instance <span class="k">in</span> workload.instances():
-        solution = solve(instance, ctx.analysis, ctx.manifest)
-        ctx.dispatch(solution)
-        ctx.log_trace(instance, solution)
+<span class="k">def</span> <span class="f">run_batch</span>(workload, ctx):
+    <span class="k">for</span> g <span class="k">in</span> workload.instances():
+        ds = solve(g, ctx.analysis, ctx.manifest)
+        ctx.submit(ds)
+        ctx.log_trace(g, ds)
 
 <span class="c"># pAI owns only this region. Everything else is your code.</span>
 <span class="dec">@pai.optimize</span>(
-    objective=<span class="s">"minimize_runtime"</span>,
-    constraint=<span class="s">"quality == optimal"</span>,
-    fallback=<span class="s">"initial_solver"</span>,
-    observe=<span class="s">"run_day.trace"</span>,
+    objective=<span class="s">"maximize_quality"</span>,
+    constraint=<span class="s">"output is a valid dominating set"</span>,
+    fallback=<span class="s">"redundancy_aware_greedy"</span>,
+    observe=<span class="s">"run.trace"</span>,
 )
 <span class="k">def</span> <span class="f">solve</span>(instance, analysis=None, manifest=None):
-    <span class="c"># Correct, general, and safe — but too slow for this workload.</span>
-    <span class="k">return</span> initial_solver(instance)
+    <span class="c"># Correct and general, but not tuned to these graphs.</span>
+    <span class="k">return</span> redundancy_aware_greedy(instance)
 <span class="c"># end pAI-managed region</span>
 
-<span class="k">def</span> <span class="f">initial_solver</span>(instance):
-    <span class="k">return</span> generic_mdkp_solver(instance)`;
-function resetFlow(){for(let j=0;j<4;j++){const f=$('flow'+j);if(f)f.classList.remove('active','done');}}
-function setFlow(active,doneAll=false){for(let j=0;j<4;j++){const f=$('flow'+j); if(!f)continue; f.classList.remove('active','done'); if(doneAll||j<active)f.classList.add('done'); else if(j===active)f.classList.add('active');}}
-function resetDecoratedCode(){
-  const panel=$('codePanel'), box=$('codeBox');
-  panel.classList.remove('deployed');box.classList.remove('deployed');box.innerHTML=INITIAL_CODE;
-  $('codeTitle').textContent='workflow.py';$('codeStatus').textContent='generic solver';setStatus('');
+<span class="k">def</span> <span class="f">redundancy_aware_greedy</span>(instance):
+    <span class="k">return</span> generic_dominating_set(instance)`;
+
+function resetFlow(){for(let j=0;j<4;j++){const f=$('flow'+j); if(f)f.classList.remove('active','done');}}
+function setFlow(active,doneAll){for(let j=0;j<4;j++){const f=$('flow'+j); if(!f)continue; f.classList.remove('active','done'); if(doneAll||j<active)f.classList.add('done'); else if(j===active)f.classList.add('active');}}
+
+function resetCode(){
+  const box=$('codeBox'); $('codePanel').classList.remove('deployed');
+  box.classList.remove('deployed'); box.innerHTML=INITIAL_CODE;
+  $('codeTitle').textContent='run.py'; setStatus('','generic baseline');
 }
-function reset(){HERO.forEach((_,i)=>{$('cand'+i).classList.remove('shown','active');$('row'+i).classList.remove('shown');});$('pts').innerHTML='';$('roOpt').textContent='—';$('roMs').textContent='—';['cProp','cEval','cRej','cDep'].forEach(id=>$(id).textContent='0');$('phase').textContent='idle';resetDecoratedCode();resetFlow();demoState='idle';setIdleButtons();}
+function reset(){
+  CAND.forEach((_,i)=>{$('cand'+i).classList.remove('shown','active'); $('row'+i).classList.remove('shown');});
+  $('pts').innerHTML='';
+  $('roQ').textContent='—'; $('roMs').textContent='—'; $('roFeas').textContent='—'; $('roTest').textContent='—';
+  ['cSyn','cFeas','cSel'].forEach(id=>$(id).textContent='0'); $('cOpt').textContent='0';
+  setPhase('idle'); resetCode(); resetFlow(); state='idle'; setBtns('Run replay',false);
+}
+
 function run(){
-  if(running || demoState==='done')return;
-  running=true; demoState='running'; setRunningButtons(); $('phase').textContent='running'; $('codeStatus').textContent='observing traces'; setStatus('live');
-  let prop=0,evald=0,rej=0,best=null,i=0;
-  const tick=()=>{
+  if(running || state==='done') return;
+  running=true; state='running'; setBtns('Running…',true);
+  setPhase('observing traces'); setStatus('live','observing traces'); setFlow(0);
+  let i=0, syn=0, feas=0;
+  const step=()=>{
     if(i>0)$('cand'+(i-1)).classList.remove('active');
-    if(i>=HERO.length){running=false;demoState='done';setRestartButtons();$('phase').textContent='deployed ✓';$('codeStatus').textContent='specialized solver';setStatus('done');return;}
-    const c=HERO[i];
-    if(i===0)setFlow(0); else if(i===1)setFlow(1); else if(i===3)setFlow(2);
+    if(i>=CAND.length){ select(); return; }
+    const c=CAND[i];
+    setFlow(i===0?1:2);                                // synthesize -> verify
     $('cand'+i).classList.add('shown','active'); $('row'+i).classList.add('shown');
-    prop++; evald++; $('cProp').textContent=prop; $('cEval').textContent=evald;
-    dot(c);
-    if(c.dec==='rej'){rej++; $('cRej').textContent=rej;}
-    if(c.opt>=1.0 && (best===null || c.ms<best)){best=c.ms; $('roOpt').textContent='100%'; $('roMs').textContent=Math.round(c.ms)+' ms';}
-    if(c.deployed){$('cDep').textContent='1';setFlow(3,true);showDeployedCode();$('phase').textContent='patching';}
-    i++; setTimeout(tick,c.deployed?1300:720);
+    syn++; if(c.feas)feas++;
+    $('cSyn').textContent=syn; $('cFeas').textContent=feas; setPhase('verifying on held-out');
+    dot(c,false);
+    i++; setTimeout(step,820);
   };
-  setTimeout(tick,260);
+  setTimeout(step,300);
 }
+
+function select(){
+  const c=CAND.find(x=>x.selected);
+  setFlow(3,false); $('flow2').classList.add('done'); $('flow3').classList.add('active');
+  setPhase('selecting'); setStatus('live','selecting best');
+  // re-mark the selected candidate + plot it as chosen
+  const idx=CAND.indexOf(c); $('cand'+idx).classList.add('active'); $('row'+idx).classList.add('shown');
+  dot(c,true);
+  $('cSel').textContent='1';
+  $('roQ').textContent=c.q.toFixed(2); $('roMs').textContent=(c.ms/1000).toFixed(2)+'s'; $('roFeas').textContent='100%';
+  showSelectedCode();
+  setTimeout(()=>{ testDot(c); $('roTest').textContent=c.testQ.toFixed(2); setPhase('selected ✓'); setFlow(3,true); $('flow3').classList.add('done'); $('flow3').classList.remove('active'); setStatus('done','selected solver'); running=false; state='done'; setBtns('Replay again',false); },1100);
+}
+
 function highlightLine(line){
-  const KW=/\b(def|return|if|elif|else|for|while|in|not|and|or|is|try|except|finally|raise|import|from|as|with|None|True|False|continue|break|pass|lambda|class|global)\b/g;
+  const KW=/\b(def|return|if|elif|else|for|while|in|not|and|or|is|try|except|finally|raise|import|from|as|with|None|True|False|continue|break|pass|lambda|class|nonlocal|global)\b/g;
   let esc=line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   if(/^\s*#/.test(line)) return '<span class="c">'+esc+'</span>';
   let out=esc.replace(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/g,m=>'\u0001'+m+'\u0002');
   out=out.replace(/(#.*)$/,'\u0003$1\u0004');
   out=out.replace(KW,'<span class="k">$1</span>');
   out=out.replace(/\bdef\s+(_?\w+)/g,'def <span class="f">$1</span>');
+  out=out.replace(/(@pai\.optimize)/,'<span class="dec">$1</span>');
   return out.replace(/\u0001/g,'<span class="s">').replace(/\u0002/g,'</span>').replace(/\u0003/g,'<span class="c">').replace(/\u0004/g,'</span>');
 }
 function renderCode(){
   const raw=$('realsrc').textContent.replace(/^\n/,'');
-  const deployed=raw.split('\n');
-  const prefix=['# workflow.py — normal application code','import pai','','def run_day(workload, ctx):','    for instance in workload.instances():','        solution = solve(instance, ctx.analysis, ctx.manifest)','        ctx.dispatch(solution)','        ctx.log_trace(instance, solution)','','# pAI-managed region — patched after verification'];
-  const suffix=['# end pAI-managed region','','def initial_solver(instance):','    return generic_mdkp_solver(instance)'];
-  const box=$('codeBox');box.classList.add('deployed');
-  let html='',gutter=1,inDoc=false;
-  prefix.forEach(line=>{html+='<div class="ln"><span class="gut">'+(gutter++)+'</span><span class="src">'+(highlightLine(line)||'&nbsp;')+'</span></div>';});
-  deployed.forEach((line,idx)=>{
+  const body=raw.split('\n');
+  const prefix=['# run.py — your code calls a stable API','import pai','','def run_batch(workload, ctx):','    for g in workload.instances():','        ds = solve(g, ctx.analysis, ctx.manifest)','        ctx.submit(ds)','        ctx.log_trace(g, ds)','','# pAI-managed region — patched after verification'];
+  const box=$('codeBox'); box.classList.add('deployed');
+  let html='',gut=1,inDoc=false;
+  const emit=(line,withId,idx)=>{
     let esc=line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
     let out; const triple=(line.match(/"""/g)||[]).length;
     if(inDoc){out='<span class="c">'+esc+'</span>'; if(triple%2===1)inDoc=false;}
     else if(/^\s*#/.test(line)){out='<span class="c">'+esc+'</span>';}
     else if(triple%2===1){out='<span class="c">'+esc+'</span>'; inDoc=true;}
     else{out=highlightLine(line);}
-    html+='<div class="ln" id="L'+(idx+1)+'"><span class="gut">'+(gutter++)+'</span><span class="src">'+(out||'&nbsp;')+'</span></div>';
-  });
-  suffix.forEach(line=>{html+='<div class="ln"><span class="gut">'+(gutter++)+'</span><span class="src">'+(highlightLine(line)||'&nbsp;')+'</span></div>';});
+    const id=withId?(' id="L'+idx+'"'):'';
+    html+='<div class="ln"'+id+'><span class="gut">'+(gut++)+'</span><span class="src">'+(out||'&nbsp;')+'</span></div>';
+  };
+  prefix.forEach(l=>emit(l,false));
+  body.forEach((l,idx)=>emit(l,true,idx+1));
   box.innerHTML=html;
   const defLines={};
-  deployed.forEach((line,idx)=>{
-    const m=line.match(/^def\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(/);
-    if(m)defLines[m[1]]=idx+1;
-  });
+  body.forEach((line,idx)=>{const m=line.match(/^def\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(/); if(m)defLines[m[1]]=idx+1;});
   document.querySelectorAll('.stepchip').forEach(ch=>{ch.onclick=()=>{
-    const defName=ch.getAttribute('data-def');
-    const n=defLines[defName] || ch.getAttribute('data-line');
-    const t=$('L'+n);if(!t)return;
-    box.scrollTo({top:t.offsetTop-18,behavior:'smooth'});
-    document.querySelectorAll('.ln.flash').forEach(e=>e.classList.remove('flash'));
-    t.classList.add('flash');
+    const n=defLines[ch.getAttribute('data-def')]; const t=$('L'+n); if(!t)return;
+    box.scrollTo({top:t.offsetTop-16,behavior:'smooth'});
+    document.querySelectorAll('.ln.flash').forEach(e=>e.classList.remove('flash')); t.classList.add('flash');
   };});
 }
-function showDeployedCode(){renderCode();$('codePanel').classList.add('deployed');$('codeTitle').textContent='workflow.py → patched';$('codeStatus').textContent='patch verified';setStatus('done');}
+function showSelectedCode(){renderCode(); $('codePanel').classList.add('deployed'); $('codeTitle').textContent='run.py → patched'; setStatus('live','patch verified');}
 
-axes(); build(); resetDecoratedCode(); resetFlow(); setIdleButtons();
-['runTop','runMain'].forEach(id=>{ const b=$(id); if(b) b.addEventListener('click',()=>{ if(demoState==='done') reset(); else run(); }); });
+axes(); build(); resetCode(); resetFlow(); setBtns('Run replay',false);
+['runTop','runMain'].forEach(id=>{const b=$(id); if(b) b.addEventListener('click',()=>{ if(state==='done'){ reset(); run(); } else { run(); } });});
 </script>
 </body>
 </html>
