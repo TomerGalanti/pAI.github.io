@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>pAI — PACE 2025 Dominating Set, synthesized</title>
+<title>pAI — decorated code to verified solver</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -213,9 +213,9 @@ button{font-family:inherit}
 <header class="head"><div class="wrap">
   <div class="head-grid">
     <div>
-      <div class="eyebrow">PACE 2025 <span class="sep">/</span> Dominating Set <span class="sep">/</span> heuristic track</div>
-      <h1>One verified solver, reported by size and runtime.</h1>
-      <p class="lede">The benchmark instances are <b>huge, ultra-sparse graphs</b> — one giant component, average degree ≈ 3, heavy on leaves. pAI reads the run traces, forms a structural hypothesis about that graph distribution, synthesizes a specialized dominating-set heuristic for it, and verifies each candidate on held-out instances before selecting one. On the 100 private graphs, the selected solver returns an average dominating-set size of <b>231,595</b> in <b>2.89s</b>; released PACE solvers return slightly smaller sets, but take hundreds of seconds. Your code keeps calling <b>solve()</b>.</p>
+      <div class="eyebrow">pAI demo <span class="sep">/</span> decorated solver <span class="sep">/</span> PACE replay</div>
+      <h1>One decorated function. Faster verified code.</h1>
+      <p class="lede">pAI lets developers mark an expensive function with a decorator. From repeated runs, it learns the workload, synthesizes specialized replacements, verifies them, and patches only that function. This replay uses PACE 2025 Dominating Set: on 100 private graphs, the selected solver returns valid outputs with average size <b>231,595</b> in <b>2.89s</b>. Released PACE solvers return slightly smaller sets, but take hundreds of seconds. Your application still calls <b>solve()</b>.</p>
       <div class="head-actions">
         <button class="btn btn-primary" id="runMain">Run replay</button>
       </div>
@@ -252,14 +252,14 @@ button{font-family:inherit}
 
     <aside class="demo" aria-label="Synthesis pipeline">
       <div class="flow">
-        <div class="flowstep" id="flow0"><div class="n">step 1</div><strong>Observe</strong><span>Run traces from one workload.</span></div>
-        <div class="flowstep" id="flow1"><div class="n">step 2</div><strong>Hypothesize</strong><span>A structural claim about the graphs.</span></div>
-        <div class="flowstep" id="flow2"><div class="n">step 3</div><strong>Synthesize</strong><span>A solver tuned to that structure.</span></div>
-        <div class="flowstep" id="flow3"><div class="n">step 4</div><strong>Verify &amp; select</strong><span>Held-out checks, then pick one.</span></div>
+        <div class="flowstep" id="flow0"><div class="n">step 1</div><strong>Trace</strong><span>Collect repeated calls to the decorated function.</span></div>
+        <div class="flowstep" id="flow1"><div class="n">step 2</div><strong>Specialize</strong><span>Generate candidates for this workload.</span></div>
+        <div class="flowstep" id="flow2"><div class="n">step 3</div><strong>Verify</strong><span>Check validity, size, and runtime.</span></div>
+        <div class="flowstep" id="flow3"><div class="n">step 4</div><strong>Patch</strong><span>Replace only the marked function.</span></div>
       </div>
 
       <div class="card">
-        <div class="card-h"><h3>Private-test comparison</h3><span class="phase" id="phase">baselines</span></div>
+        <div class="card-h"><h3>Performance snapshot</h3><span class="phase" id="phase">baseline</span></div>
         <div class="chart-wrap"><svg class="plot" id="plot" viewBox="0 0 680 330" role="img" aria-label="PACE private-test average size versus runtime comparison"></svg></div>
         <div class="metrics-row">
           <div class="cw"><div class="l">pAI avg. size</div><div class="v" id="roQ">—</div></div>
@@ -268,22 +268,22 @@ button{font-family:inherit}
           <div class="cw"><div class="l">vs Codex</div><div class="v warn" id="roTest">—</div></div>
         </div>
         <div class="obs-block">
-          <h4>Observed workload</h4>
-          <div class="wl">Minimum dominating set</div>
-          <div class="wl-sub">PACE 2025 private test · average size versus runtime</div>
-          <div class="facts"><span>lower size is better</span><span>lower runtime is better</span><span>100 private graphs</span><span>validity checked</span></div>
+          <h4>Demo workload</h4>
+          <div class="wl">PACE Dominating Set replay</div>
+          <div class="wl-sub">100 private graphs · valid outputs · size and runtime</div>
+          <div class="facts"><span>decorated solve()</span><span>verified patch</span><span>100 private graphs</span><span>validity checked</span></div>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-h"><h3>Candidate queue</h3><span class="meta">replay</span></div>
+        <div class="card-h"><h3>Optimization run</h3><span class="meta">replay</span></div>
         <div class="qlist" id="stream"></div>
       </div>
 
       <div class="card ledger">
-        <div class="card-h"><h3>Synthesis ledger</h3><span class="meta">validation · feasibility checks</span></div>
+        <div class="card-h"><h3>Verified candidates</h3><span class="meta">validation · feasibility checks</span></div>
         <table>
-          <thead><tr><th>Candidate</th><th class="idea">Hypothesis</th><th>Check</th><th>Role</th><th>Feasible</th><th>Outcome</th></tr></thead>
+          <thead><tr><th>Candidate</th><th class="idea">Strategy</th><th>Check</th><th>Role</th><th>Feasible</th><th>Outcome</th></tr></thead>
           <tbody id="evalBody"></tbody>
         </table>
       </div>
@@ -1105,7 +1105,7 @@ const BAR_ROWS=[
  {name:'Exact-style timeout', ms:360100, size:'timeout', kind:'timeout'},
 ];
 const ratioDom=[1,150];
-const barX=v=>(PL.l+132)+(Math.log10(v)-Math.log10(ratioDom[0]))/(Math.log10(ratioDom[1])-Math.log10(ratioDom[0]))*(PL.W-PL.r-(PL.l+132));
+const barX=v=>PL.l+(Math.log10(v)-Math.log10(ratioDom[0]))/(Math.log10(ratioDom[1])-Math.log10(ratioDom[0]))*(PL.W-PL.l-PL.r);
 const ratioFmt=v=>v>=100?Math.round(v)+'×':v>=10?v.toFixed(0)+'×':v.toFixed(1)+'×';
 
 function axes(){ renderBenchmark(false); }
@@ -1206,13 +1206,13 @@ function reset(){
   CAND.forEach((_,i)=>{const c=$('cand'+i),r=$('row'+i); if(c)c.classList.remove('shown','active'); if(r)r.classList.remove('shown');});
   axes();
   ['roQ','roMs','roFeas','roTest'].forEach(id=>{ if($(id))$(id).textContent='—'; });
-  setPhase('baselines'); resetCode(); resetFlow(); state='idle'; setBtns('Run replay',false);
+  setPhase('baseline'); resetCode(); resetFlow(); state='idle'; setBtns('Run replay',false);
 }
 
 function run(){
   if(running || state==='done') return;
   running=true; state='running'; setBtns('Running…',true);
-  setPhase('observing traces'); setStatus('live','observing traces'); setFlow(0);
+  setPhase('tracing calls'); setStatus('live','tracing calls'); setFlow(0);
   let i=0;
   const step=()=>{
     if(i>0){const c=$('cand'+(i-1)); if(c)c.classList.remove('active');}
@@ -1221,7 +1221,7 @@ function run(){
     setFlow(i===0?1:2);
     const card=$('cand'+i), row=$('row'+i);
     if(card)card.classList.add('shown','active'); if(row)row.classList.add('shown');
-    setPhase('verifying on held-out');
+    setPhase('checking candidates');
     dot(c,false);
     i++; setTimeout(step,820);
   };
@@ -1231,7 +1231,7 @@ function run(){
 function select(){
   const c=CAND.find(x=>x.selected); const idx=CAND.indexOf(c);
   setFlow(3,false); const f2=$('flow2'),f3=$('flow3'); if(f2)f2.classList.add('done'); if(f3)f3.classList.add('active');
-  setPhase('selecting'); setStatus('live','selecting best');
+  setPhase('choosing patch'); setStatus('live','choosing patch');
   const card=$('cand'+idx); if(card)card.classList.add('active');
   dot(c,true);
   if($('roQ'))$('roQ').textContent=fmtSize(c.testSize);
@@ -1241,9 +1241,9 @@ function select(){
   setTimeout(()=>{
     testDot(c);
     if($('roTest'))$('roTest').textContent='2.2× faster';
-    setPhase('selected ✓'); setFlow(3,true);
+    setPhase('patched ✓'); setFlow(3,true);
     if(f3){f3.classList.add('done'); f3.classList.remove('active');}
-    setStatus('done','selected solver'); running=false; state='done'; setBtns('Replay again',false);
+    setStatus('done','patch applied'); running=false; state='done'; setBtns('Replay again',false);
   },1100);
 }
 
@@ -1299,7 +1299,7 @@ function renderCode(){
     document.querySelectorAll('.ln.flash').forEach(e=>e.classList.remove('flash')); t.classList.add('flash');
   };});
 }
-function showSelectedCode(){renderCode(); $('codePanel').classList.add('deployed'); $('codeTitle').textContent='run.py → patched'; setStatus('live','patch verified');}
+function showSelectedCode(){renderCode(); $('codePanel').classList.add('deployed'); $('codeTitle').textContent='solver.py → patched'; setStatus('live','patch verified');}
 
 /* ---------------- 3D dominating-set graph grid ---------------- */
 function initGraph3D(){
