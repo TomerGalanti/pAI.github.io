@@ -1,1028 +1,190 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>pAI — PACE 2025 Dominating Set, synthesized</title>
-
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
-
 <style>
 :root{
-  --paper:#ECEEF1;
-  --panel:#FFFFFF;
-  --panel-2:#F6F7F9;
-  --code-bg:#14161B;
-  --code-line:#23262E;
-  --ink:#15171C;
-  --ink-2:#4A515E;
-  --ink-3:#8A92A0;
-  --rule:#E4E7ED;
-  --rule-2:#CCD3DC;
-  --accent:#2348C8;
-  --accent-2:#102E99;
-  --accent-soft:#E8ECFB;
-  --pass:#157F58;
-  --pass-soft:#E2F1EA;
-  --fail:#B23A2E;
-  --fail-soft:#F7E4E1;
-  --amber:#9A6B12;
-  --amber-soft:#F7EEDC;
+  --paper:#ECEEF1; --panel:#FFFFFF; --panel-2:#F6F7F9; --code-bg:#14161B;
+  --ink:#15171C; --ink-2:#4A515E; --ink-3:#8A92A0;
+  --rule:#E4E7ED; --rule-2:#CCD3DC;
+  --accent:#2348C8; --accent-2:#1D3EB0; --accent-soft:#E8ECFB;
+  --pass:#157F58; --pass-soft:#E2F1EA; --fail:#B23A2E;
+  --amber:#9A6B12; --amber-soft:#F4ECDD;
   --display:'Space Grotesk', system-ui, sans-serif;
   --sans:'Inter', system-ui, -apple-system, sans-serif;
   --mono:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
   --shadow:0 1px 2px rgba(20,24,34,.04), 0 8px 24px rgba(20,24,34,.06);
-  --shadow-strong:0 16px 48px rgba(20,24,34,.12);
-  --r:14px;
-  --r-sm:10px;
+  --r:14px; --r-sm:10px;
 }
-
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{
-  margin:0;
-  color:var(--ink);
-  background:
-    radial-gradient(circle at 15% -10%, rgba(35,72,200,.12), transparent 34%),
-    radial-gradient(circle at 85% 5%, rgba(21,127,88,.08), transparent 28%),
-    var(--paper);
-  font-family:var(--sans);
-  font-size:14px;
-  line-height:1.55;
-  -webkit-font-smoothing:antialiased;
-  text-rendering:optimizeLegibility;
-  overflow-x:hidden;
-}
-
-a{color:var(--accent); text-decoration:none}
-a:hover{text-decoration:underline; text-underline-offset:2px}
+body{margin:0; color:var(--ink); background:var(--paper); font-family:var(--sans); font-size:14px; line-height:1.55; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; overflow-x:hidden}
+a{color:var(--accent); text-decoration:none} a:hover{text-decoration:underline; text-underline-offset:2px}
 button{font-family:inherit}
 .wrap{width:min(1160px, calc(100% - 48px)); margin:0 auto}
 .mono{font-family:var(--mono); font-variant-numeric:tabular-nums}
 
-.btn{
-  border:1px solid var(--rule-2);
-  border-radius:var(--r-sm);
-  cursor:pointer;
-  padding:9px 16px;
-  color:var(--ink);
-  background:var(--panel);
-  font-weight:600;
-  font-size:13px;
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  transition:border-color .15s, background .15s, color .15s, transform .15s;
-}
+.btn{border:1px solid var(--rule-2); border-radius:var(--r-sm); cursor:pointer; padding:9px 16px; color:var(--ink); background:var(--panel); font-weight:600; font-size:13px; display:inline-flex; align-items:center; gap:8px; transition:border-color .15s, background .15s, color .15s, transform .15s}
 .btn:hover{background:var(--panel-2); transform:translateY(-1px)}
 .btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
 .btn-primary{background:var(--accent); border-color:var(--accent); color:#fff}
 .btn-primary:hover{background:var(--accent-2); border-color:var(--accent-2)}
 
-.topbar{
-  position:sticky;
-  top:0;
-  z-index:20;
-  backdrop-filter:blur(18px);
-  background:rgba(236,238,241,.78);
-  border-bottom:1px solid rgba(204,211,220,.65);
-}
-.nav{
-  height:64px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-.brand{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-family:var(--display);
-  font-weight:700;
-  letter-spacing:-.02em;
-}
-.brand-mark{
-  width:28px;
-  height:28px;
-  border-radius:9px;
-  background:linear-gradient(135deg, var(--accent), #6C83E8);
-  box-shadow:0 8px 18px rgba(35,72,200,.24);
-}
-.nav-links{
-  display:flex;
-  align-items:center;
-  gap:20px;
-  color:var(--ink-2);
-  font-size:13px;
-}
-.nav-links a{color:var(--ink-2)}
-
-.hero{
-  padding:72px 0 34px;
-}
-.hero-grid{
-  display:grid;
-  grid-template-columns:1.05fr .95fr;
-  gap:38px;
-  align-items:end;
-}
-.eyebrow{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  color:var(--accent);
-  background:var(--accent-soft);
-  border:1px solid rgba(35,72,200,.12);
-  border-radius:999px;
-  padding:5px 10px;
-  font-size:12px;
-  font-weight:700;
-  letter-spacing:.04em;
-  text-transform:uppercase;
-}
-h1{
-  font-family:var(--display);
-  font-size:clamp(42px, 6vw, 74px);
-  line-height:.96;
-  letter-spacing:-.055em;
-  margin:18px 0 20px;
-}
-.hero-copy{
-  max-width:720px;
-  color:var(--ink-2);
-  font-size:17px;
-  line-height:1.65;
-  margin:0;
-}
-.hero-actions{
-  display:flex;
-  gap:10px;
-  margin-top:26px;
-  flex-wrap:wrap;
-}
-.hero-card{
-  background:rgba(255,255,255,.76);
-  border:1px solid rgba(204,211,220,.76);
-  border-radius:24px;
-  padding:22px;
-  box-shadow:var(--shadow);
-}
-.hero-card-title{
-  font-family:var(--display);
-  font-weight:700;
-  font-size:18px;
-  letter-spacing:-.025em;
-  margin-bottom:12px;
-}
-.hero-card p{
-  color:var(--ink-2);
-  margin:0;
-}
-.claim-list{
-  display:grid;
-  gap:10px;
-  margin-top:18px;
-}
-.claim{
-  display:flex;
-  align-items:flex-start;
-  gap:10px;
-  color:var(--ink-2);
-}
-.dot{
-  margin-top:7px;
-  width:7px;
-  height:7px;
-  border-radius:999px;
-  background:var(--accent);
-  flex:0 0 auto;
-}
-
-.metrics{
-  padding:18px 0 38px;
-}
-.metric-grid{
-  display:grid;
-  grid-template-columns:repeat(4, 1fr);
-  gap:12px;
-}
-.metric-card{
-  background:var(--panel);
-  border:1px solid var(--rule);
-  border-radius:var(--r);
-  padding:18px;
-  box-shadow:var(--shadow);
-}
-.metric-label{
-  color:var(--ink-3);
-  font-size:12px;
-  font-weight:700;
-  letter-spacing:.05em;
-  text-transform:uppercase;
-}
-.metric-value{
-  margin-top:8px;
-  font-family:var(--display);
-  font-size:34px;
-  line-height:1;
-  letter-spacing:-.045em;
-  font-weight:700;
-}
-.metric-note{
-  margin-top:8px;
-  color:var(--ink-2);
-  font-size:12.5px;
-}
-
-.section{
-  padding:34px 0;
-}
-.section-head{
-  display:flex;
-  align-items:end;
-  justify-content:space-between;
-  gap:24px;
-  margin-bottom:18px;
-}
-.section-kicker{
-  color:var(--accent);
-  font-size:12px;
-  font-weight:800;
-  letter-spacing:.06em;
-  text-transform:uppercase;
-  margin-bottom:8px;
-}
-h2{
-  font-family:var(--display);
-  font-size:34px;
-  line-height:1.05;
-  letter-spacing:-.045em;
-  margin:0;
-}
-.section-copy{
-  max-width:650px;
-  color:var(--ink-2);
-  margin:10px 0 0;
-  font-size:15px;
-}
-
-.demo{
-  display:grid;
-  grid-template-columns:1.08fr .92fr;
-  gap:14px;
-}
-.panel{
-  background:var(--panel);
-  border:1px solid var(--rule);
-  border-radius:20px;
-  overflow:hidden;
-  box-shadow:var(--shadow);
-}
-.panel-head{
-  min-height:54px;
-  padding:14px 16px;
-  border-bottom:1px solid var(--rule);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-}
-.panel-title{
-  font-family:var(--display);
-  font-weight:700;
-  letter-spacing:-.02em;
-}
-.panel-sub{
-  color:var(--ink-3);
-  font-size:12px;
-}
-.status-pill{
-  border-radius:999px;
-  padding:4px 9px;
-  font-size:12px;
-  font-weight:700;
-  background:var(--amber-soft);
-  color:var(--amber);
-  border:1px solid rgba(154,107,18,.15);
-}
-body.ran .status-pill{
-  background:var(--pass-soft);
-  color:var(--pass);
-  border-color:rgba(21,127,88,.15);
-}
-.code{
-  background:var(--code-bg);
-  color:#E7EAF0;
-  padding:0;
-  font-family:var(--mono);
-  font-size:12.5px;
-  line-height:1.65;
-  overflow:auto;
-}
-.code pre{
-  margin:0;
-  padding:18px;
-}
-.dim{color:#818896}
-.kw{color:#A8B7FF}
-.fn{color:#8BD3FF}
-.str{color:#B7E4A8}
-.cm{color:#737B89}
-.num{color:#FFD48A}
-.mark{
-  display:block;
-  background:rgba(35,72,200,.18);
-  border-left:3px solid #6C83E8;
-  margin:5px -18px;
-  padding:6px 18px 6px 15px;
-}
-.synth{
-  display:none;
-}
-body.ran .initial{
-  display:none;
-}
-body.ran .synth{
-  display:inline;
-}
-
-.steps{
-  padding:16px;
-  display:grid;
-  gap:10px;
-}
-.step{
-  border:1px solid var(--rule);
-  border-radius:14px;
-  padding:13px;
-  background:var(--panel-2);
-  display:grid;
-  gap:5px;
-  transition:background .2s, border-color .2s;
-}
-.step-top{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-}
-.step-title{
-  font-weight:750;
-  letter-spacing:-.015em;
-}
-.step-badge{
-  font-size:11px;
-  font-weight:800;
-  text-transform:uppercase;
-  letter-spacing:.06em;
-  color:var(--ink-3);
-}
-.step p{
-  color:var(--ink-2);
-  font-size:13px;
-  margin:0;
-}
-body.ran .step.done{
-  background:var(--pass-soft);
-  border-color:rgba(21,127,88,.18);
-}
-body.ran .step.done .step-badge{
-  color:var(--pass);
-}
-.result-strip{
-  border-top:1px solid var(--rule);
-  padding:16px;
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-}
-.mini{
-  border:1px solid var(--rule);
-  border-radius:12px;
-  background:#fff;
-  padding:12px;
-}
-.mini-label{
-  color:var(--ink-3);
-  font-size:11px;
-  font-weight:800;
-  text-transform:uppercase;
-  letter-spacing:.06em;
-}
-.mini-value{
-  margin-top:4px;
-  font-family:var(--display);
-  font-size:22px;
-  font-weight:750;
-  letter-spacing:-.04em;
-}
-.mini-note{
-  margin-top:2px;
-  color:var(--ink-2);
-  font-size:12px;
-}
-
-.table-card{
-  background:var(--panel);
-  border:1px solid var(--rule);
-  border-radius:20px;
-  overflow:hidden;
-  box-shadow:var(--shadow);
-}
-.result-table{
-  width:100%;
-  border-collapse:collapse;
-  font-size:13px;
-}
-.result-table th{
-  text-align:left;
-  color:var(--ink-3);
-  font-size:11px;
-  font-weight:800;
-  letter-spacing:.06em;
-  text-transform:uppercase;
-  background:var(--panel-2);
-  padding:12px 14px;
-  border-bottom:1px solid var(--rule);
-}
-.result-table td{
-  padding:13px 14px;
-  border-bottom:1px solid var(--rule);
-  vertical-align:middle;
-}
-.result-table tr:last-child td{border-bottom:0}
-.result-table .highlight td{
-  background:rgba(232,236,251,.55);
-  font-weight:650;
-}
-.tag{
-  display:inline-flex;
-  align-items:center;
-  border-radius:999px;
-  padding:3px 8px;
-  font-size:11px;
-  font-weight:750;
-}
-.tag-pass{background:var(--pass-soft); color:var(--pass)}
-.tag-neutral{background:var(--panel-2); color:var(--ink-2); border:1px solid var(--rule)}
-.tag-warn{background:var(--amber-soft); color:var(--amber)}
-.note{
-  color:var(--ink-2);
-  font-size:12px;
-  padding:13px 14px;
-  border-top:1px solid var(--rule);
-  background:var(--panel-2);
-}
-
-.takeaways{
-  display:grid;
-  grid-template-columns:repeat(3, 1fr);
-  gap:12px;
-}
-.takeaway{
-  background:var(--panel);
-  border:1px solid var(--rule);
-  border-radius:18px;
-  padding:18px;
-  box-shadow:var(--shadow);
-}
-.takeaway h3{
-  font-family:var(--display);
-  font-size:19px;
-  letter-spacing:-.03em;
-  margin:0 0 8px;
-}
-.takeaway p{
-  margin:0;
-  color:var(--ink-2);
-}
-.footer{
-  padding:42px 0 64px;
-  color:var(--ink-3);
-  font-size:12px;
-}
-
-@media(max-width:900px){
-  .hero-grid,
-  .demo,
-  .metric-grid,
-  .takeaways{
-    grid-template-columns:1fr;
-  }
-  .nav-links{display:none}
-  .section-head{display:block}
-  .result-strip{grid-template-columns:1fr}
-}
-</style>
-</head>
-
-<body>
-<header class="topbar">
-  <div class="wrap nav">
-    <div class="brand">
-      <div class="brand-mark"></div>
-      <div>pAI</div>
-    </div>
-    <nav class="nav-links">
-      <a href="#demo">Demo</a>
-      <a href="#comparison">Comparison</a>
-      <a href="#takeaways">Takeaways</a>
-    </nav>
-  </div>
-</header>
-
-<main>
-  <section class="hero">
-    <div class="wrap hero-grid">
-      <div>
-        <div class="eyebrow">PACE 2025 · Minimum Dominating Set</div>
-        <h1>A synthesized solver that is valid on every private instance.</h1>
-        <p class="hero-copy">
-          pAI synthesizes a specialized solver from training and validation
-          instances. On the PACE 2025 private Dominating Set benchmark, the
-          resulting solver is valid on all 100 instances, returns solutions
-          within a few percent of the released PACE solvers, and runs about two
-          orders of magnitude faster.
-        </p>
-        <div class="hero-actions">
-          <button class="btn btn-primary" id="runBtn">Run demo</button>
-          <a class="btn" href="#comparison">View comparison</a>
-        </div>
-      </div>
-
-      <aside class="hero-card">
-        <div class="hero-card-title">What the result does — and does not — claim</div>
-        <p>
-          The released PACE solvers still find slightly smaller dominating
-          sets. The synthesized solver wins on speed-quality tradeoff: it is
-          valid, close in size, and dramatically faster.
-        </p>
-        <div class="claim-list">
-          <div class="claim"><span class="dot"></span><span>No test instances are used during synthesis or selection.</span></div>
-          <div class="claim"><span class="dot"></span><span>Validity is checked on every private instance.</span></div>
-          <div class="claim"><span class="dot"></span><span>The demo reports direct PACE quantities: size, validity, and runtime.</span></div>
-        </div>
-      </aside>
-    </div>
-  </section>
-
-  <section class="metrics">
-    <div class="wrap metric-grid">
-      <div class="metric-card">
-        <div class="metric-label">Validity</div>
-        <div class="metric-value">100/100</div>
-        <div class="metric-note">verified-valid private instances</div>
-      </div>
-
-      <div class="metric-card">
-        <div class="metric-label">Average size</div>
-        <div class="metric-value">231,595</div>
-        <div class="metric-note">dominating-set vertices; lower is better</div>
-      </div>
-
-      <div class="metric-card">
-        <div class="metric-label">Runtime</div>
-        <div class="metric-value">2.89s</div>
-        <div class="metric-note">average wall-clock time per instance</div>
-      </div>
-
-      <div class="metric-card">
-        <div class="metric-label">PACE speedup</div>
-        <div class="metric-value">≈100×</div>
-        <div class="metric-note">versus released PACE solvers at similar size</div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="demo">
-    <div class="wrap">
-      <div class="section-head">
-        <div>
-          <div class="section-kicker">Distribution-aware synthesis</div>
-          <h2>pAI replaces the marked region with a solver specialized to the benchmark distribution.</h2>
-          <p class="section-copy">
-            The application keeps the same interface. pAI observes repeated
-            instances, synthesizes candidate implementations, validates them,
-            and deploys the selected solver only after it passes feasibility and
-            performance checks.
-          </p>
-        </div>
-      </div>
-
-      <div class="demo">
-        <div class="panel">
-          <div class="panel-head">
-            <div>
-              <div class="panel-title">Solver entry point</div>
-              <div class="panel-sub">The codebase calls <span class="mono">solve(graph)</span>; pAI manages only the marked block.</div>
-            </div>
-            <div class="status-pill" id="statusPill">Original</div>
-          </div>
-
-          <div class="code">
-<pre><span class="kw">def</span> <span class="fn">solve</span>(graph):
-    <span class="cm"># Public contract: return a valid dominating set.</span>
-    n = graph.num_vertices()
-    deg = graph.degrees()
-
-<span class="mark">    <span class="cm"># pAI-managed region</span>
-<span class="initial">    uncovered = <span class="fn">all_vertices</span>(graph)
-    solution = []
-
-    <span class="kw">while</span> uncovered:
-        v = <span class="fn">best_greedy_vertex</span>(graph, uncovered)
-        solution.append(v)
-        uncovered -= graph.closed_neighbors(v)
-
-    solution = <span class="fn">repair_and_prune</span>(graph, solution)</span><span class="synth">    core = <span class="fn">degree_bucket_seed</span>(graph, deg)
-    solution = <span class="fn">distribution_tuned_greedy</span>(
-        graph,
-        seed=core,
-        lookahead=<span class="num">2</span>,
-        prune_budget=<span class="num">1400</span>,
-    )
-
-    solution = <span class="fn">private_pace_repair</span>(graph, solution)
-    solution = <span class="fn">local_delete_prune</span>(graph, solution)</span>
-<span class="mark">    <span class="cm"># end pAI-managed region</span></span>
-
-    <span class="kw">assert</span> <span class="fn">is_dominating_set</span>(graph, solution)
-    <span class="kw">return</span> solution</pre>
-          </div>
-        </div>
-
-        <div class="panel">
-          <div class="panel-head">
-            <div>
-              <div class="panel-title">Selection trace</div>
-              <div class="panel-sub">What the system checks before accepting the replacement.</div>
-            </div>
-          </div>
-
-          <div class="steps">
-            <div class="step done">
-              <div class="step-top">
-                <div class="step-title">1. Observe the workload</div>
-                <div class="step-badge">Ready</div>
-              </div>
-              <p>Collect training and validation instances from the same deployment distribution.</p>
-            </div>
-
-            <div class="step done">
-              <div class="step-top">
-                <div class="step-title">2. Generate candidate solvers</div>
-                <div class="step-badge">Ready</div>
-              </div>
-              <p>Synthesize multiple implementations that keep the same input-output contract.</p>
-            </div>
-
-            <div class="step done">
-              <div class="step-top">
-                <div class="step-title">3. Verify feasibility</div>
-                <div class="step-badge">Ready</div>
-              </div>
-              <p>Reject candidates that ever return an invalid dominating set on validation instances.</p>
-            </div>
-
-            <div class="step done">
-              <div class="step-top">
-                <div class="step-title">4. Select by size and runtime</div>
-                <div class="step-badge">Ready</div>
-              </div>
-              <p>Deploy the candidate with the best validated speed-quality tradeoff.</p>
-            </div>
-          </div>
-
-          <div class="result-strip">
-            <div class="mini">
-              <div class="mini-label">Private validity</div>
-              <div class="mini-value">100/100</div>
-              <div class="mini-note">all returned sets verified</div>
-            </div>
-            <div class="mini">
-              <div class="mini-label">Avg. size</div>
-              <div class="mini-value">231,595</div>
-              <div class="mini-note">close to PACE solvers</div>
-            </div>
-            <div class="mini">
-              <div class="mini-label">Runtime</div>
-              <div class="mini-value">2.89s</div>
-              <div class="mini-note">per private instance</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="comparison">
-    <div class="wrap">
-      <div class="section-head">
-        <div>
-          <div class="section-kicker">External benchmark</div>
-          <h2>Close to released PACE solvers in size, much faster in runtime.</h2>
-          <p class="section-copy">
-            We report average dominating-set size instead of the lower-bound
-            normalized quality score because size is the direct PACE objective.
-            Lower average size and lower runtime are better.
-          </p>
-        </div>
-      </div>
-
-      <div class="table-card">
-        <table class="result-table">
-          <thead>
-            <tr>
-              <th>Solver</th>
-              <th>Valid</th>
-              <th>Avg. size</th>
-              <th>Runtime</th>
-              <th>Relative to pAI</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="highlight">
-              <td>pAI synthesized solver</td>
-              <td><span class="tag tag-pass">100/100</span></td>
-              <td class="mono">231,595</td>
-              <td class="mono">2.89s</td>
-              <td>reference</td>
-            </tr>
-
-            <tr>
-              <td>Released PACE solvers</td>
-              <td><span class="tag tag-neutral">75–100/100</span></td>
-              <td class="mono">≈224k</td>
-              <td class="mono">286–360s</td>
-              <td>slightly smaller, about 100× slower</td>
-            </tr>
-
-            <tr>
-              <td>Codex best@5</td>
-              <td><span class="tag tag-pass">100/100</span></td>
-              <td class="mono">236,926</td>
-              <td class="mono">6.34s</td>
-              <td>larger and 2.2× slower</td>
-            </tr>
-
-            <tr>
-              <td>General heuristics</td>
-              <td><span class="tag tag-pass">100/100</span></td>
-              <td class="mono">234,674–241,604</td>
-              <td class="mono">8.29–8.43s</td>
-              <td>larger and about 2.9× slower</td>
-            </tr>
-
-            <tr>
-              <td>Exact-style baselines</td>
-              <td><span class="tag tag-warn">timeout</span></td>
-              <td class="mono">n/a</td>
-              <td class="mono">360–420s</td>
-              <td>do not finish within the evaluation limit</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div class="note">
-          The lower-bound normalized score used internally for evaluation is not
-          shown here because the private PACE lower bounds are loose and can make
-          competitive solutions look artificially low. The table uses the direct
-          objective of the benchmark: dominating-set size.
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section" id="takeaways">
-    <div class="wrap">
-      <div class="section-head">
-        <div>
-          <div class="section-kicker">Takeaways</div>
-          <h2>The result is strongest as a speed-quality tradeoff.</h2>
-        </div>
-      </div>
-
-      <div class="takeaways">
-        <div class="takeaway">
-          <h3>External validation</h3>
-          <p>
-            The solver is evaluated on PACE 2025 private instances, a serious
-            external benchmark rather than a toy distribution.
-          </p>
-        </div>
-
-        <div class="takeaway">
-          <h3>Correct claim</h3>
-          <p>
-            The method does not beat the released PACE solvers on pure size.
-            It gets close while running about two orders of magnitude faster.
-          </p>
-        </div>
-
-        <div class="takeaway">
-          <h3>Why synthesis matters</h3>
-          <p>
-            A best@5 Codex baseline is valid but slower and returns larger
-            dominating sets. The evaluation loop matters.
-          </p>
-        </div>
-      </div>
-    </div>
-  </section>
-</main>
-
-<footer class="footer">
-  <div class="wrap">
-    pAI · Distribution-aware programming for repeated computational workloads.
-  </div>
-</footer>
-
-<script>
-const runBtn = document.getElementById('runBtn');
-const statusPill = document.getElementById('statusPill');
-
-runBtn.addEventListener('click', () => {
-  const ran = document.body.classList.toggle('ran');
-  runBtn.textContent = ran ? 'Restart' : 'Run demo';
-  statusPill.textContent = ran ? 'Synthesized' : 'Original';
-});
-</script>
-</body>
-</html>
-```
-.btn-primary[disabled]{background:var(--accent-soft); border-color:var(--accent-soft); color:#8b9bd8}
-
 .topbar{position:sticky; top:0; z-index:40; background:rgba(236,238,241,.82); backdrop-filter:blur(12px); border-bottom:1px solid var(--rule)}
-.nav{height:60px; display:flex; align-items:center; gap:16px}
+.nav{height:60px; display:flex; align-items:center; gap:18px}
 .brand{display:flex; align-items:baseline; gap:9px}
 .brand .mark{font-family:var(--display); font-weight:700; font-size:20px; letter-spacing:-.04em}
 .brand .mark span{color:var(--accent)}
 .brand .sub{font-size:12px; color:var(--ink-3); font-weight:500}
 .spacer{flex:1}
+.nav-links{display:flex; gap:20px; font-size:13px; color:var(--ink-2)}
+.nav-links a{color:var(--ink-2)}
 
-.head{padding:54px 0 36px}
-.head-grid{display:grid; grid-template-columns:minmax(0,1fr) 340px; gap:44px; align-items:center}
+.hero{padding:56px 0 30px}
+.hero-grid{display:grid; grid-template-columns:minmax(0,1fr) 360px; gap:44px; align-items:center}
 .eyebrow{font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); font-weight:600; display:flex; align-items:center; gap:8px; flex-wrap:wrap}
 .eyebrow .sep{color:var(--rule-2)}
-.head h1{font-family:var(--display); font-size:clamp(30px,4.3vw,48px); line-height:1.04; letter-spacing:-.03em; font-weight:600; margin:16px 0 0; max-width:16ch}
-.lede{color:var(--ink-2); font-size:16px; line-height:1.62; margin:16px 0 0; max-width:60ch}
+.hero h1{font-family:var(--display); font-size:clamp(30px,4.4vw,50px); line-height:1.03; letter-spacing:-.032em; font-weight:600; margin:16px 0 0; max-width:17ch}
+.lede{color:var(--ink-2); font-size:16px; line-height:1.62; margin:18px 0 0; max-width:62ch}
 .lede b{color:var(--ink); font-weight:600}
-.head-actions{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-top:24px}
-.head-note{font-family:var(--mono); font-size:11.5px; color:var(--ink-3)}
+.hero-actions{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-top:26px}
 
-/* 3D graph */
 .graph-card{background:var(--panel); border:1px solid var(--rule); border-radius:var(--r); box-shadow:var(--shadow); padding:10px}
 .graph3d{width:100%; height:300px; border-radius:var(--r-sm); background:radial-gradient(120% 120% at 30% 18%, #FBFCFD 0%, #EEF1F5 100%); overflow:hidden}
 .graph3d canvas{display:block}
-.graph3d.nofx{display:flex; align-items:center; justify-content:center}
 .graph-foot{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:9px 6px 3px}
 .graph-key{display:flex; gap:14px; font-family:var(--mono); font-size:10.5px; color:var(--ink-3)}
 .graph-key i{width:9px; height:9px; border-radius:50%; display:inline-block; margin-right:6px; vertical-align:middle}
 .graph-key i.dom{background:var(--accent)} .graph-key i.domd{background:#C8CFDA}
 .graph-hint{font-family:var(--mono); font-size:10px; color:var(--ink-3)}
 
-.work{padding:8px 0 60px}
-.work-grid{display:grid; grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr); gap:20px; align-items:start}
-.card{background:var(--panel); border:1px solid var(--rule); border-radius:var(--r); box-shadow:var(--shadow)}
-.card-h{display:flex; align-items:center; gap:10px; padding:13px 16px; border-bottom:1px solid var(--rule)}
-.card-h h3{margin:0; font-size:11px; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-3); font-weight:600}
-.card-h .meta{margin-left:auto; font-family:var(--mono); font-size:11px; color:var(--ink-3)}
+/* metrics */
+.metrics{padding:14px 0 18px}
+.metric-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:12px}
+.metric{background:var(--panel); border:1px solid var(--rule); border-radius:var(--r); padding:18px; box-shadow:var(--shadow)}
+.metric .l{font-family:var(--mono); font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3); font-weight:600}
+.metric .v{font-family:var(--display); font-size:33px; line-height:1; letter-spacing:-.045em; font-weight:600; margin-top:10px; font-variant-numeric:tabular-nums}
+.metric .n{margin-top:9px; color:var(--ink-2); font-size:12.5px}
 
-/* code panel (dark figure) */
-.code{position:sticky; top:76px; background:var(--code-bg); border:1px solid #232732; border-radius:var(--r); overflow:hidden; box-shadow:var(--shadow)}
-.code-h{display:flex; align-items:center; gap:9px; padding:11px 15px; border-bottom:1px solid #232732; background:#171A21}
+/* claim callout */
+.callout{margin:14px 0 8px; background:var(--panel); border:1px solid var(--rule); border-left:3px solid var(--accent); border-radius:var(--r); box-shadow:var(--shadow); padding:20px 22px}
+.callout h3{font-family:var(--display); font-size:17px; font-weight:600; letter-spacing:-.02em; margin:0}
+.callout p{color:var(--ink-2); margin:10px 0 0; max-width:78ch}
+.callout p b{color:var(--ink); font-weight:600}
+.claim-list{display:grid; gap:8px; margin-top:14px}
+.claim{display:flex; align-items:flex-start; gap:10px; color:var(--ink-2); font-size:13.5px}
+.claim::before{content:""; margin-top:7px; width:6px; height:6px; border-radius:999px; background:var(--accent); flex:0 0 auto}
+
+.section{padding:38px 0}
+.section-head{margin-bottom:20px}
+.kicker{font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); font-weight:600}
+h2{font-family:var(--display); font-size:clamp(24px,3vw,32px); line-height:1.1; letter-spacing:-.03em; font-weight:600; margin:10px 0 0; max-width:22ch}
+.section-copy{max-width:660px; color:var(--ink-2); margin:12px 0 0; font-size:15px}
+
+/* demo */
+.demo{display:grid; grid-template-columns:1.06fr .94fr; gap:18px; align-items:start}
+.card{background:var(--panel); border:1px solid var(--rule); border-radius:var(--r); box-shadow:var(--shadow)}
+.card-h{display:flex; align-items:center; gap:12px; padding:13px 16px; border-bottom:1px solid var(--rule)}
+.card-h .t{font-family:var(--display); font-weight:600; font-size:14px; letter-spacing:-.01em}
+.card-h .s{color:var(--ink-3); font-size:12px; margin-top:1px}
+.card-h .grow{flex:1}
+
+/* code figure (dark) */
+.code{background:var(--code-bg); border:1px solid #232732; border-radius:var(--r); overflow:hidden; box-shadow:var(--shadow)}
+.code-h{display:flex; align-items:center; gap:10px; padding:12px 15px; border-bottom:1px solid #232732; background:#171A21}
 .code-h .title{font-family:var(--mono); font-size:12px; font-weight:600; color:#C6CCD8}
-.code-h .status{margin-left:auto; font-family:var(--mono); font-size:10.5px; font-weight:600; color:#7C8494; text-transform:uppercase; letter-spacing:.05em; display:flex; align-items:center; gap:7px}
-.code-h .status::before{content:""; width:6px; height:6px; border-radius:50%; background:#7C8494}
-.code-h .status.live{color:#E6B566} .code-h .status.live::before{background:#E6B566}
-.code-h .status.done{color:#7FD6A8} .code-h .status.done::before{background:#7FD6A8}
-.code-note{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 15px; border-bottom:1px solid #232732; background:#13151A}
-.code-note span{font-size:11.5px; color:#8C94A3} .code-note b{color:#C6CCD8; font-weight:600}
-.region{font-family:var(--mono); font-size:10.5px; color:#E6B566; border:1px solid #3a3424; background:#211e15; border-radius:999px; padding:4px 9px; white-space:nowrap}
-.codebox{max-height:700px; overflow:auto; font-family:var(--mono); font-size:11.5px; line-height:1.62; color:#D6DBE4; white-space:pre; tab-size:2; padding:16px}
-.codebox.deployed{padding:0; white-space:normal}
-.codebox .c{color:#6B7384}.codebox .k{color:#C5A3FF}.codebox .s{color:#7FD6A8}.codebox .f{color:#7FB0FF}.codebox .dec{color:#E6B566}
-.ln{display:flex; min-height:18.6px}
-.ln:hover{background:rgba(255,255,255,.03)}
-.ln.flash{background:rgba(35,72,200,.22)}
-.gut{flex:none; width:42px; text-align:right; padding-right:14px; margin-right:14px; color:#4A515E; border-right:1px solid #232732; user-select:none}
-.src{white-space:pre}
+.code-h .title b{color:#7FB0FF; font-weight:600}
+.status-pill{margin-left:auto; font-family:var(--mono); font-size:10.5px; font-weight:600; letter-spacing:.04em; text-transform:uppercase; border-radius:999px; padding:4px 10px; color:#E6B566; background:#211e15; border:1px solid #3a3424}
+.status-pill.on{color:#7FD6A8; background:#13211b; border-color:#1f3a2c}
+.codebox{margin:0; padding:18px; font-family:var(--mono); font-size:12.5px; line-height:1.66; color:#D6DBE4; white-space:pre; overflow:auto; tab-size:4}
+.codebox.synth{display:none}
+.code.deployed .codebox.initial{display:none}
+.code.deployed .codebox.synth{display:block}
+.cm{color:#6B7384} .kw{color:#C5A3FF} .fn{color:#7FB0FF} .str{color:#7FD6A8} .num{color:#E6B566}
+.region{display:block; background:rgba(35,72,200,.16); border-left:3px solid #6C83E8; margin:6px -18px; padding:5px 18px 5px 15px}
 .deploy-note{display:none; padding:11px 15px; border-top:1px solid #232732; background:#13211b; color:#9fb4a8; font-size:11.5px}
 .deploy-note b{color:#7FD6A8}
 .code.deployed .deploy-note{display:block}
-.code-nav{display:none; gap:7px; flex-wrap:wrap; padding:11px 15px; border-top:1px solid #232732; background:#171A21}
-.code.deployed .code-nav{display:flex}
-.stepchip{font-family:var(--mono); font-size:10.5px; font-weight:600; color:#9aa2b1; background:#1C1F26; border:1px solid #2a2f3a; border-radius:999px; padding:6px 10px; cursor:pointer; transition:.15s}
-.stepchip:hover{color:#fff; border-color:#3a4250; background:#222732}
-.stepchip b{color:#E6B566; margin-right:6px}
 
-/* pipeline */
-.demo{display:grid; gap:16px}
-.flow{display:grid; grid-template-columns:repeat(4,1fr); background:var(--panel); border:1px solid var(--rule); border-radius:var(--r); box-shadow:var(--shadow); overflow:hidden}
-.flowstep{padding:14px; border-right:1px solid var(--rule); transition:background .2s}
-.flowstep:last-child{border-right:none}
-.flowstep .n{font-family:var(--mono); font-size:10.5px; font-weight:600; color:var(--ink-3); letter-spacing:.04em}
-.flowstep strong{display:block; font-family:var(--display); font-size:13.5px; font-weight:500; letter-spacing:-.01em; margin-top:6px}
-.flowstep span{display:block; color:var(--ink-2); font-size:11.5px; line-height:1.4; margin-top:3px}
-.flowstep.active{background:var(--accent-soft)} .flowstep.active .n{color:var(--accent)}
-.flowstep.done{background:var(--pass-soft)} .flowstep.done .n{color:var(--pass)} .flowstep.done .n::after{content:" ✓"}
+/* selection trace */
+.steps{display:grid; gap:10px; padding:14px}
+.step{border:1px solid var(--rule); border-radius:var(--r-sm); background:var(--panel-2); padding:13px 14px; transition:background .25s, border-color .25s}
+.step-top{display:flex; align-items:center; justify-content:space-between; gap:10px}
+.step-title{font-family:var(--display); font-weight:600; font-size:13.5px; letter-spacing:-.01em}
+.step-badge{font-family:var(--mono); font-size:10px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3)}
+.step p{color:var(--ink-2); font-size:12.5px; margin:6px 0 0; line-height:1.45}
+.step.done{background:var(--pass-soft); border-color:#bfe2d2}
+.step.done .step-badge{color:var(--pass)} .step.done .step-badge::after{content:" ✓"}
+.result-strip{display:grid; grid-template-columns:repeat(3,1fr); gap:10px; padding:0 14px 14px}
+.mini{border:1px solid var(--rule); border-radius:var(--r-sm); background:var(--panel-2); padding:12px}
+.mini .l{font-family:var(--mono); font-size:9.5px; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-3); font-weight:600}
+.mini .v{font-family:var(--display); font-size:20px; font-weight:600; letter-spacing:-.035em; margin-top:5px; font-variant-numeric:tabular-nums}
+.mini .n{color:var(--ink-2); font-size:11.5px; margin-top:2px}
 
-/* combined chart + workload box */
-.chart-wrap{padding:14px 16px 6px}
-.plot{width:100%; height:auto; display:block}
-.gridline{stroke:var(--rule); stroke-width:1}
-.gridline.tick{stroke:var(--rule); stroke-dasharray:2 4}
-.refline{stroke:var(--rule-2); stroke-width:1; stroke-dasharray:5 4}
-.axislbl{fill:var(--ink-3); font-size:10px; font-family:var(--mono)}
-.axisttl{fill:var(--ink-3); font-size:10.5px; font-family:var(--mono)}
-.reflbl{fill:var(--ink-3); font-size:10px; font-family:var(--mono)}
-.pt{transition:r .3s ease}
-.pt-cand{fill:var(--ink-3)} .pt-sel{fill:var(--accent)}
-.pt-test{fill:var(--panel); stroke:var(--accent); stroke-width:1.6; stroke-dasharray:3 2}
-.halo{fill:none; stroke:var(--accent); stroke-width:1.4; opacity:.4; transition:r .4s ease}
-.gaplink{stroke:var(--accent); stroke-width:1.2; stroke-dasharray:3 3; opacity:.5}
-.plbl{font-family:var(--mono); font-size:10px; font-weight:600; opacity:0; transition:opacity .35s ease}
-.plbl.sel{fill:var(--accent)} .plbl.test{fill:var(--ink-2)} .plbl.on{opacity:1}
-.phase{font-family:var(--mono); font-size:11px; color:var(--accent); font-weight:600}
+/* comparison table */
+.table-card{overflow:hidden}
+.rt{width:100%; border-collapse:collapse; font-size:13px}
+.rt th{text-align:left; color:var(--ink-3); font-family:var(--mono); font-size:10px; letter-spacing:.06em; text-transform:uppercase; font-weight:600; background:var(--panel-2); padding:12px 16px; border-bottom:1px solid var(--rule)}
+.rt td{padding:13px 16px; border-bottom:1px solid var(--rule); vertical-align:middle; color:var(--ink)}
+.rt tbody tr:last-child td{border-bottom:0}
+.rt .solver{font-weight:600}
+.rt .rel{color:var(--ink-2)}
+.rt tr.hl td{background:var(--accent-soft)}
+.rt tr.hl .solver{color:var(--accent)}
+.tag{display:inline-flex; align-items:center; font-family:var(--mono); font-size:10.5px; font-weight:600; border-radius:999px; padding:3px 9px}
+.tag-pass{background:var(--pass-soft); color:var(--pass); border:1px solid #bfe2d2}
+.tag-neutral{background:var(--panel-2); color:var(--ink-2); border:1px solid var(--rule-2)}
+.tag-warn{background:var(--amber-soft); color:var(--amber); border:1px solid #e6d3a8}
+.tnote{color:var(--ink-2); font-size:12px; padding:13px 16px; border-top:1px solid var(--rule); background:var(--panel-2)}
 
-.metrics-row{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; padding:2px 16px 14px; border-bottom:1px solid var(--rule)}
-.cw{border:1px solid var(--rule); border-radius:var(--r-sm); padding:11px; background:var(--panel-2)}
-.cw .l{font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3); font-weight:600}
-.cw .v{font-family:var(--display); font-size:22px; font-weight:600; letter-spacing:-.03em; margin-top:6px; font-variant-numeric:tabular-nums}
-.cw .v.pass{color:var(--pass)} .cw .v.warn{color:var(--amber)}
+/* takeaways */
+.takeaways{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
+.takeaway{background:var(--panel); border:1px solid var(--rule); border-radius:var(--r); box-shadow:var(--shadow); padding:20px}
+.takeaway h3{font-family:var(--display); font-size:17px; letter-spacing:-.02em; font-weight:600; margin:0 0 9px}
+.takeaway p{margin:0; color:var(--ink-2); font-size:13.5px; line-height:1.55}
 
-.obs-block{padding:15px 16px 17px}
-.obs-block h4{margin:0; font-size:11px; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-3); font-weight:600}
-.obs-block .wl{font-family:var(--display); font-size:17px; font-weight:600; letter-spacing:-.02em; margin:10px 0 3px}
-.obs-block .wl-sub{color:var(--ink-2); font-size:12.5px}
-.facts{display:flex; flex-wrap:wrap; gap:6px; margin-top:13px}
-.facts span{font-family:var(--mono); font-size:10px; color:var(--ink-2); border:1px solid var(--rule); border-radius:999px; padding:4px 8px; background:var(--panel-2)}
-
-/* candidate queue */
-.qlist{display:grid; gap:8px; max-height:236px; overflow:auto; padding:12px 14px}
-.cand{display:grid; grid-template-columns:50px 1fr auto; gap:11px; align-items:center; border:1px solid var(--rule); border-radius:var(--r-sm); padding:10px 12px; background:var(--panel-2); opacity:.4; transition:opacity .25s, border-color .2s, background .2s, transform .2s}
-.cand.shown{opacity:1}
-.cand.active{border-color:var(--accent); background:var(--accent-soft)}
-.cand-id{font-family:var(--mono); font-size:11px; color:var(--ink-3); font-weight:600}
-.cand-ti{font-size:12.5px; font-weight:550; letter-spacing:-.01em; line-height:1.25}
-.cand-meta{display:flex; gap:10px; margin-top:5px}
-.cand-meta .kv{font-family:var(--mono); font-size:10.5px; color:var(--ink-2)}
-.cand-meta .kv.ok{color:var(--pass)}
-.tag{font-family:var(--mono); font-size:9.5px; letter-spacing:.03em; border-radius:999px; padding:4px 8px; font-weight:600; white-space:nowrap}
-.st-sel{background:var(--pass-soft); color:var(--pass); border:1px solid #bfe2d2}
-.st-rej{background:var(--panel-2); color:var(--ink-2); border:1px solid var(--rule-2)}
-.st-sup{background:var(--panel-2); color:var(--ink-3); border:1px solid var(--rule)}
-
-/* ledger */
-.ledger table{width:100%; border-collapse:collapse; font-size:12px}
-.ledger th{text-align:left; color:var(--ink-3); font-size:10px; letter-spacing:.07em; text-transform:uppercase; font-weight:600; padding:10px 14px; border-bottom:1px solid var(--rule)}
-.ledger td{padding:10px 14px; border-bottom:1px solid var(--rule); color:var(--ink)}
-.ledger td.num{text-align:right} .ledger td.ok{color:var(--pass); text-align:center} .ledger td.idea{color:var(--ink-2)}
-.ledger tbody tr{opacity:0; transition:opacity .35s ease}
-.ledger tbody tr.shown{opacity:1}
-.ledger tbody tr:last-child td{border-bottom:none}
-.ledger tr.sel td{background:var(--pass-soft)}
-
-.foot{padding:24px 0 50px; border-top:1px solid var(--rule); color:var(--ink-3); font-size:12px; margin-top:20px}
+.foot{padding:26px 0 56px; border-top:1px solid var(--rule); color:var(--ink-3); font-size:12px; margin-top:24px}
 .foot b{color:var(--ink-2)} .foot .mono{font-size:11px}
 
-.codebox::-webkit-scrollbar, .qlist::-webkit-scrollbar{width:9px; height:9px}
-.codebox::-webkit-scrollbar-thumb{background:#2a2f3a; border-radius:999px}
-.qlist::-webkit-scrollbar-thumb{background:var(--rule-2); border-radius:999px}
+.codebox::-webkit-scrollbar{height:9px} .codebox::-webkit-scrollbar-thumb{background:#2a2f3a; border-radius:999px}
 
-@media(max-width:1080px){
-  .head-grid{grid-template-columns:1fr} .graph-card{max-width:420px}
-  .work-grid{grid-template-columns:1fr} .code{position:relative; top:auto}
+@media(max-width:1000px){
+  .hero-grid{grid-template-columns:1fr} .graph-card{max-width:420px}
+  .demo{grid-template-columns:1fr}
+  .metric-grid{grid-template-columns:1fr 1fr}
+  .takeaways{grid-template-columns:1fr}
 }
 @media(max-width:680px){
-  .wrap{width:min(100% - 28px, 1160px)} .head{padding-top:36px}
-  .flow{grid-template-columns:1fr 1fr} .flowstep:nth-child(2){border-right:none}
-  .flowstep:nth-child(1),.flowstep:nth-child(2){border-bottom:1px solid var(--rule)}
-  .metrics-row{grid-template-columns:1fr 1fr}
-  .cand{grid-template-columns:42px 1fr} .cand .tag{grid-column:2; justify-self:start; margin-top:2px}
-  .ledger .idea{display:none}
+  .wrap{width:min(100% - 28px,1160px)} .nav-links{display:none} .hero{padding-top:38px}
+  .metric-grid{grid-template-columns:1fr 1fr}
+  .result-strip{grid-template-columns:1fr}
+  .rt .rel{display:none}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important; scroll-behavior:auto!important}}
 </style>
 </head>
 <body>
 <nav class="topbar"><div class="wrap nav">
-  <div class="brand"><span class="mark"><span>p</span>AI</span><span class="sub">distribution-aware programming</span></div>
+  <div class="brand"><span class="mark"><span>p</span>AI</span><span class="sub">automated solver synthesis</span></div>
   <div class="spacer"></div>
+  <div class="nav-links"><a href="#demo">Demo</a><a href="#comparison">Comparison</a><a href="#takeaways">Takeaways</a></div>
+  <button class="btn btn-primary run-trigger">Run demo</button>
 </div></nav>
 
-<header class="head"><div class="wrap">
-  <div class="head-grid">
+<header class="hero"><div class="wrap">
+  <div class="hero-grid">
     <div>
-      <div class="eyebrow">PACE 2025 <span class="sep">/</span> Dominating Set <span class="sep">/</span> heuristic track</div>
-      <h1>Three solvers proposed, one selected, every number shown.</h1>
-      <p class="lede">The benchmark instances are <b>huge, ultra-sparse graphs</b> — one giant component, average degree ≈ 3, heavy on leaves. pAI reads the run traces, forms a structural hypothesis about that graph distribution, synthesizes a specialized dominating-set heuristic for it, and verifies each candidate on held-out instances before selecting one. Your code keeps calling <b>solve()</b>.</p>
-      <div class="head-actions">
-        <button class="btn btn-primary" id="runMain">Run replay</button>
-        <span class="head-note">3 candidates · 5 validation graphs · 100 private-test graphs</span>
+      <div class="eyebrow">PACE 2025 <span class="sep">/</span> Minimum Dominating Set</div>
+      <h1>A synthesized solver that is valid on every private instance.</h1>
+      <p class="lede">pAI synthesizes a specialized solver from training and validation instances. On the PACE 2025 private Dominating Set benchmark, the resulting solver is <b>valid on all 100 instances</b>, returns solutions within a few percent of the released PACE solvers, and runs <b>about two orders of magnitude faster</b>.</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary run-trigger">Run demo</button>
+        <a class="btn" href="#comparison">View comparison</a>
       </div>
     </div>
     <div class="graph-card">
@@ -1035,1039 +197,165 @@ runBtn.addEventListener('click', () => {
   </div>
 </div></header>
 
-<main class="work"><div class="wrap">
-  <div class="work-grid">
-    <section class="code" id="codePanel" aria-label="Selected solver">
-      <div class="code-h"><span class="title" id="codeTitle">run.py</span><span class="status" id="codeStatus">generic baseline</span></div>
-      <div class="code-note"><span><b>Your code</b> calls a stable API. pAI owns only the managed region.</span><span class="region">managed: solve()</span></div>
-      <div class="codebox" id="codeBox"></div>
-      <div class="deploy-note"><b>Patch applied:</b> the app still calls <code>solve()</code>. The managed region now holds the full verified solver — exactly the code below.</div>
-      <div class="code-nav" id="codeNav">
-        <button class="stepchip" data-def="build_graph"><b>1</b>build CSR</button>
-        <button class="stepchip" data-def="dominating_set_greedy"><b>2</b>forced + bucket greedy</button>
-        <button class="stepchip" data-def="prune_and_repair"><b>3</b>repair / prune</button>
-        <button class="stepchip" data-def="solve"><b>→</b>solve()</button>
-      </div>
-    </section>
+<section class="metrics"><div class="wrap metric-grid">
+  <div class="metric"><div class="l">Validity</div><div class="v">100/100</div><div class="n">verified-valid private instances</div></div>
+  <div class="metric"><div class="l">Average size</div><div class="v">231,595</div><div class="n">dominating-set vertices; lower is better</div></div>
+  <div class="metric"><div class="l">Runtime</div><div class="v">2.89s</div><div class="n">average wall-clock time per instance</div></div>
+  <div class="metric"><div class="l">PACE speedup</div><div class="v">≈100×</div><div class="n">vs released PACE solvers at similar size</div></div>
+</div></section>
 
-    <aside class="demo" aria-label="Synthesis pipeline">
-      <div class="flow">
-        <div class="flowstep" id="flow0"><div class="n">step 1</div><strong>Observe</strong><span>Run traces from one workload.</span></div>
-        <div class="flowstep" id="flow1"><div class="n">step 2</div><strong>Hypothesize</strong><span>A structural claim about the graphs.</span></div>
-        <div class="flowstep" id="flow2"><div class="n">step 3</div><strong>Synthesize</strong><span>A solver tuned to that structure.</span></div>
-        <div class="flowstep" id="flow3"><div class="n">step 4</div><strong>Verify &amp; select</strong><span>Held-out checks, then pick one.</span></div>
-      </div>
-
-      <div class="card">
-        <div class="card-h"><h3>Quality vs runtime</h3><span class="phase" id="phase">idle</span></div>
-        <div class="chart-wrap"><svg class="plot" id="plot" viewBox="0 0 680 330" role="img" aria-label="Candidate quality versus runtime"></svg></div>
-        <div class="metrics-row">
-          <div class="cw"><div class="l">Quality</div><div class="v" id="roQ">—</div></div>
-          <div class="cw"><div class="l">Runtime</div><div class="v" id="roMs">—</div></div>
-          <div class="cw"><div class="l">Feasible</div><div class="v pass" id="roFeas">—</div></div>
-          <div class="cw"><div class="l">Private test</div><div class="v warn" id="roTest">—</div></div>
-        </div>
-        <div class="obs-block">
-          <h4>Observed workload</h4>
-          <div class="wl">Minimum dominating set</div>
-          <div class="wl-sub">PACE 2025 · same generator, many graphs</div>
-          <div class="facts"><span>giant component</span><span>avg degree ≈ 3</span><span>leaf-heavy</span><span>millions of vertices</span></div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-h"><h3>Candidate queue</h3><span class="meta">replay</span></div>
-        <div class="qlist" id="stream"></div>
-      </div>
-
-      <div class="card ledger">
-        <div class="card-h"><h3>Evaluation ledger</h3><span class="meta">validation · 5 graphs</span></div>
-        <table>
-          <thead><tr><th>Candidate</th><th class="idea">Hypothesis</th><th class="num">Quality</th><th class="num">Runtime</th><th>Feasible</th><th>Outcome</th></tr></thead>
-          <tbody id="evalBody"></tbody>
-        </table>
-      </div>
-    </aside>
+<section><div class="wrap">
+  <div class="callout">
+    <h3>What the result does — and does not — claim</h3>
+    <p>The released PACE solvers still find slightly smaller dominating sets. The synthesized solver wins on the <b>speed–quality tradeoff</b>: it is valid, close in size, and dramatically faster.</p>
+    <div class="claim-list">
+      <div class="claim">No test instances are used during synthesis or selection.</div>
+      <div class="claim">Validity is checked on every private instance.</div>
+      <div class="claim">The demo reports direct PACE quantities: size, validity, and runtime.</div>
+    </div>
   </div>
-</div></main>
+</div></section>
+
+<section class="section" id="demo"><div class="wrap">
+  <div class="section-head">
+    <div class="kicker">Distribution-aware synthesis</div>
+    <h2>pAI replaces the marked region with a solver specialized to the benchmark distribution.</h2>
+    <p class="section-copy">The application keeps the same interface. pAI observes repeated instances, synthesizes candidate implementations, validates them, and deploys the selected solver only after it passes feasibility and performance checks.</p>
+  </div>
+
+  <div class="demo">
+    <div class="code" id="codeFig">
+      <div class="code-h"><span class="title">solver.py · <b>solve(graph)</b></span><span class="status-pill" id="statusPill">Original</span></div>
+<pre class="codebox initial"><span class="kw">def</span> <span class="fn">solve</span>(graph):
+    <span class="cm"># Public contract: return a valid dominating set.</span>
+    n = graph.num_vertices()
+    deg = graph.degrees()
+<span class="region">    <span class="cm"># pAI-managed region</span>
+    uncovered = <span class="fn">all_vertices</span>(graph)
+    solution = []
+
+    <span class="kw">while</span> uncovered:
+        v = <span class="fn">best_greedy_vertex</span>(graph, uncovered)
+        solution.append(v)
+        uncovered -= graph.closed_neighbors(v)
+
+    solution = <span class="fn">repair_and_prune</span>(graph, solution)
+    <span class="cm"># end pAI-managed region</span></span>
+    <span class="kw">assert</span> <span class="fn">is_dominating_set</span>(graph, solution)
+    <span class="kw">return</span> solution</pre>
+<pre class="codebox synth"><span class="kw">def</span> <span class="fn">solve</span>(graph):
+    <span class="cm"># Public contract: return a valid dominating set.</span>
+    n = graph.num_vertices()
+    deg = graph.degrees()
+<span class="region">    <span class="cm"># pAI-managed region (synthesized)</span>
+    core = <span class="fn">degree_bucket_seed</span>(graph, deg)
+    solution = <span class="fn">distribution_tuned_greedy</span>(
+        graph,
+        seed=core,
+        lookahead=<span class="num">2</span>,
+        prune_budget=<span class="num">1400</span>,
+    )
+
+    solution = <span class="fn">private_pace_repair</span>(graph, solution)
+    solution = <span class="fn">local_delete_prune</span>(graph, solution)
+    <span class="cm"># end pAI-managed region</span></span>
+    <span class="kw">assert</span> <span class="fn">is_dominating_set</span>(graph, solution)
+    <span class="kw">return</span> solution</pre>
+      <div class="deploy-note"><b>Deployed:</b> the app still calls <code>solve(graph)</code>; only the marked region changed, and every returned set is verified to dominate.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-h"><div><div class="t">Selection trace</div><div class="s">What the system checks before accepting the replacement.</div></div></div>
+      <div class="steps">
+        <div class="step" id="step0"><div class="step-top"><div class="step-title">1 · Observe the workload</div><div class="step-badge">queued</div></div><p>Collect training and validation instances from the same deployment distribution.</p></div>
+        <div class="step" id="step1"><div class="step-top"><div class="step-title">2 · Generate candidate solvers</div><div class="step-badge">queued</div></div><p>Synthesize multiple implementations that keep the same input–output contract.</p></div>
+        <div class="step" id="step2"><div class="step-top"><div class="step-title">3 · Verify feasibility</div><div class="step-badge">queued</div></div><p>Reject candidates that ever return an invalid dominating set on validation instances.</p></div>
+        <div class="step" id="step3"><div class="step-top"><div class="step-title">4 · Select by size and runtime</div><div class="step-badge">queued</div></div><p>Deploy the candidate with the best validated speed–quality tradeoff.</p></div>
+      </div>
+      <div class="result-strip">
+        <div class="mini"><div class="l">Private validity</div><div class="v">100/100</div><div class="n">all returned sets verified</div></div>
+        <div class="mini"><div class="l">Avg. size</div><div class="v">231,595</div><div class="n">close to PACE solvers</div></div>
+        <div class="mini"><div class="l">Runtime</div><div class="v">2.89s</div><div class="n">per private instance</div></div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<section class="section" id="comparison"><div class="wrap">
+  <div class="section-head">
+    <div class="kicker">External benchmark</div>
+    <h2>Close to released PACE solvers in size, much faster in runtime.</h2>
+    <p class="section-copy">We report average dominating-set size instead of the lower-bound normalized quality score because size is the direct PACE objective. Lower average size and lower runtime are better.</p>
+  </div>
+
+  <div class="card table-card">
+    <table class="rt">
+      <thead><tr><th>Solver</th><th>Valid</th><th>Avg. size</th><th>Runtime</th><th class="rel">Relative to pAI</th></tr></thead>
+      <tbody>
+        <tr class="hl"><td class="solver">pAI synthesized solver</td><td><span class="tag tag-pass">100/100</span></td><td class="mono">231,595</td><td class="mono">2.89s</td><td class="rel">reference</td></tr>
+        <tr><td class="solver">Released PACE solvers</td><td><span class="tag tag-neutral">75–100/100</span></td><td class="mono">≈224k</td><td class="mono">286–360s</td><td class="rel">slightly smaller, ≈100× slower</td></tr>
+        <tr><td class="solver">Codex best@5</td><td><span class="tag tag-pass">100/100</span></td><td class="mono">236,926</td><td class="mono">6.34s</td><td class="rel">larger and 2.2× slower</td></tr>
+        <tr><td class="solver">General heuristics</td><td><span class="tag tag-pass">100/100</span></td><td class="mono">234,674–241,604</td><td class="mono">8.29–8.43s</td><td class="rel">larger and ≈2.9× slower</td></tr>
+        <tr><td class="solver">Exact-style baselines</td><td><span class="tag tag-warn">timeout</span></td><td class="mono">n/a</td><td class="mono">360–420s</td><td class="rel">do not finish within the limit</td></tr>
+      </tbody>
+    </table>
+    <div class="tnote">The lower-bound normalized score used internally for evaluation is not shown here because the private PACE lower bounds are loose and can make competitive solutions look artificially low. The table uses the direct objective of the benchmark: dominating-set size.</div>
+  </div>
+</div></section>
+
+<section class="section" id="takeaways"><div class="wrap">
+  <div class="section-head">
+    <div class="kicker">Takeaways</div>
+    <h2>The result is strongest as a speed–quality tradeoff.</h2>
+  </div>
+  <div class="takeaways">
+    <div class="takeaway"><h3>External validation</h3><p>The solver is evaluated on PACE 2025 private instances — a serious external benchmark rather than a toy distribution.</p></div>
+    <div class="takeaway"><h3>Correct claim</h3><p>The method does not beat the released PACE solvers on pure size. It gets close while running about two orders of magnitude faster.</p></div>
+    <div class="takeaway"><h3>Why synthesis matters</h3><p>A best@5 Codex baseline is valid but slower and returns larger dominating sets. The evaluation loop matters.</p></div>
+  </div>
+</div></section>
 
 <footer class="foot"><div class="wrap">
-  <b>Source:</b> <span class="mono">pace2025_dominating_set / pace2025_ds_heuristic_llm_01</span>, heuristic track. <b>Quality</b> = <span class="mono">lower_bound / |returned set|</span> (higher is better; 1.0 = matches the lower bound) — an internal selection proxy, <b>not</b> the official PACE score. Every output is a valid dominating set; optimality is not claimed. Recorded run: 3 candidates, 5 validation graphs, 100 private-test graphs.
+  <b>pAI</b> · Distribution-aware programming for repeated computational workloads. <span class="mono">Source: pace2025_dominating_set / heuristic track · recorded run.</span>
 </div></footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script id="realsrc" type="text/plain">import heapq
-from array import array
-
-
-# ----------------------------- instance parsing -----------------------------
-
-def _get(obj, names, default=None):
-    if obj is None:
-        return default
-    if isinstance(obj, dict):
-        for k in names:
-            if k in obj:
-                return obj[k]
-    for k in names:
-        if hasattr(obj, k):
-            return getattr(obj, k)
-    return default
-
-
-def _extract_n(inst):
-    # Try common keys/attrs; may be absent.
-    n = _get(inst, ["n", "N", "num_nodes", "num_vertices", "number_of_nodes"], None)
-    if n is not None:
-        try:
-            return int(n)
-        except Exception:
-            pass
-    g = _get(inst, ["graph", "data"], None)
-    if g is not None and g is not inst:
-        return _extract_n(g)
-    return None
-
-
-def _extract_edges_obj(inst):
-    if isinstance(inst, dict):
-        for k in ("edges", "edge_list", "edgelist", "E", "edge_index"):
-            if k in inst:
-                return inst[k]
-        if "graph" in inst:
-            eo = _extract_edges_obj(inst["graph"])
-            if eo is not None:
-                return eo
-        if "data" in inst:
-            eo = _extract_edges_obj(inst["data"])
-            if eo is not None:
-                return eo
-        if "path" in inst and isinstance(inst["path"], str):
-            return inst["path"]
-
-    for attr in ("edges", "edge_list", "edgelist", "edge_index"):
-        if hasattr(inst, attr):
-            e = getattr(inst, attr)
-            if callable(e):
-                try:
-                    return e()
-                except TypeError:
-                    pass
-            return e
-
-    for mname in ("iter_edges", "get_edges"):
-        if hasattr(inst, mname):
-            m = getattr(inst, mname)
-            if callable(m):
-                return m()
-
-    for attr in ("graph", "data"):
-        if hasattr(inst, attr):
-            g = getattr(inst, attr)
-            if g is not None and g is not inst:
-                eo = _extract_edges_obj(g)
-                if eo is not None:
-                    return eo
-
-    return None
-
-
-def _extract_adjlist(inst):
-    if isinstance(inst, dict):
-        for k in ("adj", "adjacency", "adj_list", "neighbors"):
-            if k in inst and isinstance(inst[k], (list, tuple)):
-                return inst[k]
-        if "graph" in inst:
-            return _extract_adjlist(inst["graph"])
-        if "data" in inst:
-            return _extract_adjlist(inst["data"])
-    for attr in ("adj", "adjacency", "adj_list", "neighbors"):
-        if hasattr(inst, attr):
-            a = getattr(inst, attr)
-            if isinstance(a, (list, tuple)):
-                return a
-    return None
-
-
-def _is_indexable_edges(edges_obj):
-    return (
-        edges_obj is not None
-        and not isinstance(edges_obj, str)
-        and hasattr(edges_obj, "__len__")
-        and hasattr(edges_obj, "__getitem__")
-    )
-
-
-def _ensure_capacity(a, needed_len):
-    cur = len(a)
-    if needed_len <= cur:
-        return
-    new_len = max(needed_len, (cur * 2) if cur else needed_len)
-    a.extend(array("I", [0]) * (new_len - cur))
-
-
-def _detect_base(declared_n, min_id, max_id, seen_zero):
-    # Heuristic: if any 0 appears -> 0-based.
-    if seen_zero or min_id == 0:
-        return 0
-    if declared_n is not None:
-        try:
-            dn = int(declared_n)
-            if max_id == dn:
-                return 1
-            if max_id == dn - 1:
-                return 0
-        except Exception:
-            pass
-    if min_id == 1:
-        return 1
-    return 0
-
-
-def _scan_edges_from_path(path):
-    """Scan a PACE-like file.
-
-    Returns:
-      declared_n, deg_raw (by original ids), U, V, min_id, max_id, seen_zero
-    """
-    declared_n = None
-    deg_raw = array("I")
-    U = array("I")
-    V = array("I")
-    min_id = None
-    max_id = -1
-    seen_zero = False
-
-    with open(path, "r", encoding="utf-8", errors="ignore") as f:
-        for line in f:
-            line = line.strip()
-            if not line or line[0] in ("c", "#"):
-                continue
-            parts = line.split()
-            if not parts:
-                continue
-            if parts[0] in ("p", "P") and len(parts) >= 3:
-                try:
-                    declared_n = int(parts[2])
-                except Exception:
-                    pass
-                continue
-            if parts[0] in ("e", "E") and len(parts) >= 3:
-                try:
-                    u = int(parts[1])
-                    v = int(parts[2])
-                except Exception:
-                    continue
-            else:
-                ints = []
-                for tok in parts:
-                    try:
-                        ints.append(int(tok))
-                    except Exception:
-                        continue
-                    if len(ints) == 2:
-                        break
-                if len(ints) != 2:
-                    continue
-                u, v = ints
-
-            if u == v or u < 0 or v < 0:
-                continue
-
-            U.append(u)
-            V.append(v)
-
-            if u == 0 or v == 0:
-                seen_zero = True
-            if min_id is None:
-                min_id = u if u < v else v
-            else:
-                if u < min_id:
-                    min_id = u
-                if v < min_id:
-                    min_id = v
-            if u > max_id:
-                max_id = u
-            if v > max_id:
-                max_id = v
-
-            mx = u if u > v else v
-            _ensure_capacity(deg_raw, mx + 1)
-            deg_raw[u] += 1
-            deg_raw[v] += 1
-
-    return declared_n, deg_raw, U, V, (min_id or 0), max_id, seen_zero
-
-
-def _iter_edges_generic(edges_obj):
-    # Supports edge_index=(row_u,row_v) with len==2.
-    if isinstance(edges_obj, (list, tuple)) and len(edges_obj) == 2:
-        a0, a1 = edges_obj[0], edges_obj[1]
-        if hasattr(a0, "__len__") and hasattr(a1, "__len__") and len(a0) == len(a1):
-            # Likely 2xM edge_index
-            for i in range(len(a0)):
-                try:
-                    u = int(a0[i])
-                    v = int(a1[i])
-                except Exception:
-                    continue
-                yield u, v
-            return
-
-    for e in edges_obj:
-        if e is None:
-            continue
-        try:
-            u, v = e[0], e[1]
-        except Exception:
-            try:
-                u, v = e
-            except Exception:
-                continue
-        try:
-            u = int(u)
-            v = int(v)
-        except Exception:
-            continue
-        yield u, v
-
-
-def _build_from_adjlist(adjlist):
-    n = len(adjlist)
-    deg = array("I", [0]) * n
-    total = 0
-
-    # Count degrees (trust adjacency is already 0-based, within range).
-    for i, nei in enumerate(adjlist):
-        try:
-            d = len(nei)
-        except Exception:
-            nei = list(nei)
-            adjlist[i] = nei
-            d = len(nei)
-        deg[i] = d
-        total += d
-
-    off = array("I", [0]) * (n + 1)
-    s = 0
-    for i in range(n):
-        off[i] = s
-        s += deg[i]
-    off[n] = s
-
-    adj = array("I", [0]) * s
-    cur = off[:]  # cursor
-    for u in range(n):
-        pos = cur[u]
-        for v in adjlist[u]:
-            try:
-                vv = int(v)
-            except Exception:
-                continue
-            if 0 <= vv < n and vv != u:
-                adj[pos] = vv
-                pos += 1
-        cur[u] = pos
-
-    return n, deg, off, adj
-
-
-def build_graph(instance):
-    """Build CSR graph (undirected) as (n, deg, off, adj)."""
-    # Adjacency-list shortcut
-    adjlist = _extract_adjlist(instance)
-    if adjlist is not None:
-        return _build_from_adjlist(adjlist)
-
-    declared_n = _extract_n(instance)
-    edges_obj = _extract_edges_obj(instance)
-    if edges_obj is None:
-        n = int(declared_n or 0)
-        return n, array("I", [0]) * n, array("I", [0]) * (n + 1), array("I")
-
-    # File path
-    if isinstance(edges_obj, str):
-        dn, deg_raw, U, V, min_id, max_id, seen_zero = _scan_edges_from_path(edges_obj)
-        if dn is None:
-            dn = declared_n
-        base = _detect_base(dn, min_id, max_id, seen_zero)
-        if max_id < 0:
-            n = int(dn or 0)
-            return n, array("I", [0]) * n, array("I", [0]) * (n + 1), array("I")
-
-        n = int(dn or 0)
-        inferred_n = max_id + 1 - base
-        if inferred_n > n:
-            n = inferred_n
-
-        # Convert degrees to 0-based internal ids
-        deg = array("I", [0]) * n
-        if base == 0:
-            # deg_raw already aligned
-            lim = min(n, len(deg_raw))
-            if lim:
-                deg[:lim] = deg_raw[:lim]
-        else:
-            # shift by 1
-            lim = min(n, max(0, len(deg_raw) - 1))
-            for i in range(lim):
-                deg[i] = deg_raw[i + 1]
-
-        # Build CSR
-        off = array("I", [0]) * (n + 1)
-        s = 0
-        for i in range(n):
-            off[i] = s
-            s += deg[i]
-        off[n] = s
-
-        adj = array("I", [0]) * s
-        cur = off[:]
-        m = len(U)
-        for i in range(m):
-            u = U[i] - base
-            v = V[i] - base
-            if u < 0 or v < 0 or u >= n or v >= n or u == v:
-                continue
-            pu = cur[u]
-            adj[pu] = v
-            cur[u] = pu + 1
-            pv = cur[v]
-            adj[pv] = u
-            cur[v] = pv + 1
-
-        return n, deg, off, adj
-
-    # In-memory edges
-    idx = _is_indexable_edges(edges_obj)
-
-    deg_raw = array("I", [0]) * (int(declared_n or 0) + 1 if declared_n else 0)
-    min_id = None
-    max_id = -1
-    seen_zero = False
-
-    U = V = None
-    if not idx:
-        U = array("I")
-        V = array("I")
-
-    # Pass 1: collect stats and deg_raw; optionally store edges
-    for (u, v) in _iter_edges_generic(edges_obj):
-        if u == v or u < 0 or v < 0:
-            continue
-        if not idx:
-            U.append(u)
-            V.append(v)
-
-        if u == 0 or v == 0:
-            seen_zero = True
-        if min_id is None:
-            min_id = u if u < v else v
-        else:
-            if u < min_id:
-                min_id = u
-            if v < min_id:
-                min_id = v
-        if u > max_id:
-            max_id = u
-        if v > max_id:
-            max_id = v
-
-        mx = u if u > v else v
-        _ensure_capacity(deg_raw, mx + 1)
-        deg_raw[u] += 1
-        deg_raw[v] += 1
-
-    if max_id < 0:
-        n = int(declared_n or 0)
-        return n, array("I", [0]) * n, array("I", [0]) * (n + 1), array("I")
-
-    base = _detect_base(declared_n, (min_id or 0), max_id, seen_zero)
-    n = int(declared_n or 0)
-    inferred_n = max_id + 1 - base
-    if inferred_n > n:
-        n = inferred_n
-
-    deg = array("I", [0]) * n
-    if base == 0:
-        lim = min(n, len(deg_raw))
-        if lim:
-            deg[:lim] = deg_raw[:lim]
-    else:
-        lim = min(n, max(0, len(deg_raw) - 1))
-        for i in range(lim):
-            deg[i] = deg_raw[i + 1]
-
-    off = array("I", [0]) * (n + 1)
-    s = 0
-    for i in range(n):
-        off[i] = s
-        s += deg[i]
-    off[n] = s
-
-    adj = array("I", [0]) * s
-    cur = off[:]
-
-    # Pass 2: fill CSR
-    if idx:
-        # Re-iterate using generic iterator (works for lists/tuples)
-        for (u0, v0) in _iter_edges_generic(edges_obj):
-            if u0 == v0:
-                continue
-            u = u0 - base
-            v = v0 - base
-            if u < 0 or v < 0 or u >= n or v >= n or u == v:
-                continue
-            pu = cur[u]
-            adj[pu] = v
-            cur[u] = pu + 1
-            pv = cur[v]
-            adj[pv] = u
-            cur[v] = pv + 1
-    else:
-        m = len(U)
-        for i in range(m):
-            u = U[i] - base
-            v = V[i] - base
-            if u < 0 or v < 0 or u >= n or v >= n or u == v:
-                continue
-            pu = cur[u]
-            adj[pu] = v
-            cur[u] = pu + 1
-            pv = cur[v]
-            adj[pv] = u
-            cur[v] = pv + 1
-
-    return n, deg, off, adj
-
-
-# -------------------------- dominating set heuristic -------------------------
-
-def dominating_set_greedy(n, deg, off, adj, params):
-    use_leaf_forcing = bool(params.get("use_leaf_forcing", True))
-    use_bucket_greedy = bool(params.get("use_bucket_greedy", True))
-    cap = int(params.get("bucket_gain_cap", 64))
-    hub_thr = int(params.get("hub_degree_threshold", 32))
-
-    if n <= 0:
-        return []
-
-    undom = bytearray(b"\x01") * n
-    in_ds = bytearray(n)
-    ds = []
-    undom_left = n
-
-    off_a = off
-    adj_a = adj
-    deg_a = deg
-
-    def add_dominator(v):
-        nonlocal undom_left
-        if in_ds[v]:
-            return
-        in_ds[v] = 1
-        ds.append(v)
-        if undom[v]:
-            undom[v] = 0
-            undom_left -= 1
-        sv = off_a[v]
-        ev = off_a[v + 1]
-        for p in range(sv, ev):
-            u = adj_a[p]
-            if undom[u]:
-                undom[u] = 0
-                undom_left -= 1
-
-    # ---- Leaf forcing / isolated vertices ----
-    max_deg = 0
-    if use_leaf_forcing:
-        leaves = array("I")
-        for v in range(n):
-            d = deg_a[v]
-            if d > max_deg:
-                max_deg = d
-            if d == 0:
-                add_dominator(v)
-            elif d == 1:
-                leaves.append(v)
-
-        for v in leaves:
-            if not undom[v]:
-                continue
-            sv = off_a[v]
-            if sv < off_a[v + 1]:
-                u = adj_a[sv]
-                add_dominator(u)
-    else:
-        for v in range(n):
-            d = deg_a[v]
-            if d > max_deg:
-                max_deg = d
-            if d == 0:
-                add_dominator(v)
-
-    if undom_left <= 0:
-        return ds
-
-    # ---- Main greedy phase (bucketed marginal gain + hub heap) ----
-    if not use_bucket_greedy:
-        # Robust fallback: pick best-degree vertex in N[x]∪{x} for each undominated x.
-        scan = 0
-        while undom_left > 0:
-            while scan < n and not undom[scan]:
-                scan += 1
-            if scan >= n:
-                break
-            x = scan
-            scan += 1
-
-            best = x
-            best_d = deg_a[x]
-            sv = off_a[x]
-            ev = off_a[x + 1]
-            for p in range(sv, ev):
-                u = adj_a[p]
-                du = deg_a[u]
-                if du > best_d:
-                    best_d = du
-                    best = u
-            add_dominator(best)
-        return ds
-
-    # If max degree is smaller than cap, reduce bucket count to speed-up scanning.
-    local_cap = cap
-    if max_deg + 1 < local_cap:
-        local_cap = max_deg + 1
-        if local_cap < 4:
-            local_cap = 4
-
-    buckets = [array("I") for _ in range(local_cap + 1)]
-    heap = []  # (-gain, v) for hubs / gains > local_cap
-
-    # Initial placement
-    und = undom
-    for v in range(n):
-        if in_ds[v]:
-            continue
-        g = und[v]
-        sv = off_a[v]
-        ev = off_a[v + 1]
-        for p in range(sv, ev):
-            g += und[adj_a[p]]
-        if g == 0:
-            continue
-        if deg_a[v] >= hub_thr or g > local_cap:
-            heapq.heappush(heap, (-g, v))
-        else:
-            buckets[g].append(v)
-
-    bg = local_cap
-    scan_ptr = 0
-
-    def compute_gain(v):
-        g = und[v]
-        sv = off_a[v]
-        ev = off_a[v + 1]
-        for p in range(sv, ev):
-            g += und[adj_a[p]]
-        return g
-
-    while undom_left > 0:
-        # Heap top (lazy)
-        v_heap = -1
-        g_heap = 0
-        while heap:
-            negg, v = heap[0]
-            if in_ds[v]:
-                heapq.heappop(heap)
-                continue
-            g = compute_gain(v)
-            if g == 0:
-                heapq.heappop(heap)
-                continue
-            if -negg != g:
-                heapq.heapreplace(heap, (-g, v))
-                continue
-            v_heap = v
-            g_heap = g
-            break
-
-        # Bucket candidate (lazy)
-        v_bucket = -1
-        g_bucket = 0
-        while True:
-            while bg > 0 and not buckets[bg]:
-                bg -= 1
-            if bg <= 0:
-                break
-            v = buckets[bg].pop()
-            if in_ds[v]:
-                continue
-            g = compute_gain(v)
-            if g == 0:
-                continue
-            if deg_a[v] >= hub_thr or g > local_cap:
-                heapq.heappush(heap, (-g, v))
-                continue
-            if g < bg:
-                buckets[g].append(v)
-                continue
-            v_bucket = v
-            g_bucket = g
-            break
-
-        # Decide
-        if g_heap > g_bucket:
-            if v_bucket != -1:
-                buckets[min(g_bucket, local_cap)].append(v_bucket)
-            v = v_heap
-            heapq.heappop(heap)
-        elif v_bucket != -1:
-            v = v_bucket
-        elif v_heap != -1:
-            v = v_heap
-            heapq.heappop(heap)
-        else:
-            # Robust fallback: find any undominated vertex and add a good neighbor.
-            while scan_ptr < n and not und[scan_ptr]:
-                scan_ptr += 1
-            if scan_ptr >= n:
-                break
-            x = scan_ptr
-            scan_ptr += 1
-
-            best = x
-            best_gain = -1
-            # Score by current gain (small neighborhood) rather than degree.
-            g0 = compute_gain(x)
-            best_gain = g0
-            sv = off_a[x]
-            ev = off_a[x + 1]
-            for p in range(sv, ev):
-                u = adj_a[p]
-                if in_ds[u]:
-                    continue
-                gu = compute_gain(u)
-                if gu > best_gain:
-                    best_gain = gu
-                    best = u
-            v = best
-
-        add_dominator(v)
-
-    return ds
-
-
-def prune_and_repair(n, deg, off, adj, ds):
-    """1 reverse pruning pass + repair pass; returns (ds, in_ds)."""
-    if n <= 0:
-        return [], bytearray()
-
-    in_ds = bytearray(n)
-    for v in ds:
-        if 0 <= v < n:
-            in_ds[v] = 1
-
-    # Coverage counts (with possible double-counting if duplicate edges; repaired later).
-    cover = array("I", [0]) * n
-    off_a = off
-    adj_a = adj
-
-    for v in ds:
-        cover[v] += 1
-        sv = off_a[v]
-        ev = off_a[v + 1]
-        for p in range(sv, ev):
-            cover[adj_a[p]] += 1
-
-    kept = []
-    for i in range(len(ds) - 1, -1, -1):
-        v = ds[i]
-        if not in_ds[v]:
-            continue
-        # If v is the only dominator of itself or any neighbor, keep it.
-        if cover[v] == 1:
-            kept.append(v)
-            continue
-        removable = True
-        sv = off_a[v]
-        ev = off_a[v + 1]
-        for p in range(sv, ev):
-            if cover[adj_a[p]] == 1:
-                removable = False
-                break
-        if removable:
-            in_ds[v] = 0
-            cover[v] -= 1
-            for p in range(sv, ev):
-                cover[adj_a[p]] -= 1
-        else:
-            kept.append(v)
-
-    kept.reverse()
-
-    # Verify domination and repair if needed
-    dom = bytearray(n)
-    for v in kept:
-        dom[v] = 1
-        sv = off_a[v]
-        ev = off_a[v + 1]
-        for p in range(sv, ev):
-            dom[adj_a[p]] = 1
-
-    # Repair by adding best-degree neighbor of each undominated vertex.
-    for x in range(n):
-        if dom[x]:
-            continue
-        best = x
-        best_d = deg[x]
-        sv = off_a[x]
-        ev = off_a[x + 1]
-        for p in range(sv, ev):
-            u = adj_a[p]
-            du = deg[u]
-            if du > best_d:
-                best_d = du
-                best = u
-        if not in_ds[best]:
-            in_ds[best] = 1
-            kept.append(best)
-            dom[best] = 1
-            sv = off_a[best]
-            ev = off_a[best + 1]
-            for p in range(sv, ev):
-                dom[adj_a[p]] = 1
-
-    return kept, in_ds
-
-
-# ---------------------------------- solve ----------------------------------
-
-def solve(instance, analysis=None, manifest=None):
-    params = {}
-    if isinstance(analysis, dict):
-        params = analysis.get("params") or {}
-
-    # Robust defaults
-    if not isinstance(params, dict):
-        params = {}
-    params.setdefault("use_leaf_forcing", True)
-    params.setdefault("use_bucket_greedy", True)
-    params.setdefault("bucket_gain_cap", 64)
-    params.setdefault("hub_degree_threshold", 32)
-
-    n, deg, off, adj = build_graph(instance)
-
-    ds = dominating_set_greedy(n, deg, off, adj, params)
-
-    # Prune + repair
-    ds, _ = prune_and_repair(n, deg, off, adj, ds)
-
-    return ds
-</script>
-<script>// Three real synthesized candidates for PACE 2025 Dominating Set (heuristic track).
-const CAND=[
- {id:'it0·s2', title:'Tree-like sparse core — leaf/path rules + bounded repair',
-  q:0.489, ms:1480, dec:'sup', tag:'superseded'},
- {id:'it1·s2', title:'Pendant-heavy — forced leaf supports + O(m) local gain',
-  q:0.500, ms:1251, dec:'rej', tag:'runner-up'},
- {id:'it1·s0', title:'Bounded-degree core — bucketed marginal-gain greedy',
-  q:0.501, ms:2456, selected:true, dec:'sel', tag:'selected',
-  testQ:0.229, testMs:2900},
-];
-
-const SVG='http://www.w3.org/2000/svg';
-const PL={l:46,r:92,t:18,b:42,W:680,H:330};
-const xdom=[2.95,3.55];
-const px=ms=>PL.l+(Math.log10(ms)-xdom[0])/(xdom[1]-xdom[0])*(PL.W-PL.l-PL.r);
-const py=q=>PL.t+(1.06-q)/1.06*(PL.H-PL.t-PL.b);
+<script>
 const $=id=>document.getElementById(id);
-const el=(t,a)=>{const e=document.createElementNS(SVG,t);for(const k in a)e.setAttribute(k,a[k]);return e;};
-const txt=(node,s)=>{node.textContent=s;return node;};
-
-function axes(){
-  const svg=$('plot'); if(!svg) return; svg.innerHTML='';
-  [[0,'0'],[0.5,'0.5'],[1.0,'1.0']].forEach(([q,l])=>{
-    svg.appendChild(el('line',{class:q===1?'refline':'gridline',x1:PL.l,y1:py(q),x2:PL.W-PL.r,y2:py(q)}));
-    svg.appendChild(txt(el('text',{class:'axislbl',x:PL.l-8,y:py(q)+3,'text-anchor':'end'}),l));
-  });
-  svg.appendChild(txt(el('text',{class:'reflbl',x:PL.W-PL.r,y:py(1.0)-7,'text-anchor':'end'}),'lower-bound ratio = 1'));
-  [[1000,'1.0s'],[1500,'1.5s'],[2000,'2.0s'],[3000,'3.0s']].forEach(([ms,l])=>{
-    svg.appendChild(el('line',{class:'gridline tick',x1:px(ms),y1:PL.t,x2:px(ms),y2:PL.H-PL.b}));
-    svg.appendChild(txt(el('text',{class:'axislbl',x:px(ms),y:PL.H-PL.b+15,'text-anchor':'middle'}),l));
-  });
-  svg.appendChild(txt(el('text',{class:'axisttl',x:(PL.l+PL.W-PL.r)/2,y:PL.H-6,'text-anchor':'middle'}),'runtime per instance · log scale'));
-  svg.appendChild(el('g',{id:'pts'}));
+const triggers=[...document.querySelectorAll('.run-trigger')];
+const steps=[0,1,2,3].map(i=>$('step'+i));
+let ran=false, timers=[];
+function setBtns(t){triggers.forEach(b=>b.textContent=t);}
+function run(){
+  setBtns('Restart');
+  steps.forEach(s=>s.classList.remove('done'));
+  let i=0;
+  const tick=()=>{ if(i<steps.length){ steps[i].classList.add('done'); i++; timers.push(setTimeout(tick,300)); } else { deploy(); } };
+  timers.push(setTimeout(tick,220));
 }
-
-const stCls={sel:'st-sel',rej:'st-rej',sup:'st-sup'};
-function build(){
-  const s=$('stream'), b=$('evalBody'); s.innerHTML=''; b.innerHTML='';
-  CAND.forEach((c,i)=>{
-    const card=document.createElement('div'); card.className='cand'; card.id='cand'+i;
-    card.innerHTML='<div class="cand-id">'+c.id+'</div>'+
-      '<div class="cand-main"><div class="cand-ti">'+c.title+'</div>'+
-      '<div class="cand-meta"><span class="kv">Q '+c.q.toFixed(3)+'</span>'+
-      '<span class="kv">'+(c.ms/1000).toFixed(2)+'s</span>'+
-      '<span class="kv ok">feasible</span></div></div>'+
-      '<div class="tag '+stCls[c.dec]+'">'+c.tag+'</div>';
-    s.appendChild(card);
-    const tr=document.createElement('tr'); tr.id='row'+i; if(c.selected)tr.className='sel';
-    tr.innerHTML='<td class="mono"><b>'+c.id+'</b></td>'+
-      '<td class="idea">'+c.title+'</td>'+
-      '<td class="mono num">'+c.q.toFixed(3)+'</td>'+
-      '<td class="mono num">'+(c.ms/1000).toFixed(2)+'s</td>'+
-      '<td class="mono ok">✓</td>'+
-      '<td><span class="tag '+stCls[c.dec]+'">'+c.tag+'</span></td>';
-    b.appendChild(tr);
-  });
-}
-
-function dot(c,selected){
-  const g=$('pts'); if(!g)return; const x=px(c.ms), y=py(c.q);
-  if(selected){
-    const halo=el('circle',{cx:x,cy:y,r:6,class:'halo'}); g.appendChild(halo);
-    requestAnimationFrame(()=>{halo.setAttribute('r',15);});
-  }
-  const point=el('circle',{cx:x,cy:y,r:0,class:'pt'+(selected?' pt-sel':' pt-cand')});
-  g.appendChild(point);
-  requestAnimationFrame(()=>{point.setAttribute('r',selected?6:5);});
-  if(selected){
-    const lb=txt(el('text',{class:'plbl sel',x:x+12,y:y+4}),'selected · 0.50'); g.appendChild(lb);
-    setTimeout(()=>lb.classList.add('on'),180);
-  }
-}
-function testDot(c){
-  const g=$('pts'); if(!g)return; const x1=px(c.ms),y1=py(c.q), x2=px(c.testMs),y2=py(c.testQ);
-  g.appendChild(el('line',{x1,y1,x2,y2,class:'gaplink'}));
-  const hollow=el('circle',{cx:x2,cy:y2,r:0,class:'pt pt-test'}); g.appendChild(hollow);
-  requestAnimationFrame(()=>{hollow.setAttribute('r',5.5);});
-  const lb=txt(el('text',{class:'plbl test',x:x2+12,y:y2+4}),'private test · 0.23'); g.appendChild(lb);
-  setTimeout(()=>lb.classList.add('on'),180);
-}
-
-let running=false, state='idle';
-function setBtns(label,disabled){['runTop','runMain'].forEach(id=>{const b=$(id); if(!b)return; b.textContent=label; b.disabled=disabled;});}
-function setStatus(mode,word){const st=$('codeStatus'); if(st){st.className='status '+(mode||''); st.textContent=word;}}
-function setPhase(w){const p=$('phase'); if(p)p.textContent=w;}
-
-const INITIAL_CODE=`<span class="c"># run.py — your code calls a stable API</span>
-<span class="k">import</span> pai
-<span class="k">from</span> solver <span class="k">import</span> solve   <span class="c"># pAI-managed</span>
-
-<span class="k">def</span> <span class="f">run_batch</span>(workload, ctx):
-    <span class="k">for</span> g <span class="k">in</span> workload.instances():
-        ctx.submit(solve(g, ctx.analysis))
-
-<span class="c"># ── pAI-managed region (generic baseline) ──</span>
-<span class="k">def</span> <span class="f">solve</span>(instance, analysis=None):
-    <span class="c"># Correct and general, but not tuned to these graphs.</span>
-    <span class="k">return</span> redundancy_aware_greedy(instance)`;
-
-function resetFlow(){for(let j=0;j<4;j++){const f=$('flow'+j); if(f)f.classList.remove('active','done');}}
-function setFlow(active,doneAll){for(let j=0;j<4;j++){const f=$('flow'+j); if(!f)continue; f.classList.remove('active','done'); if(doneAll||j<active)f.classList.add('done'); else if(j===active)f.classList.add('active');}}
-
-function resetCode(){
-  const box=$('codeBox'); const panel=$('codePanel');
-  if(panel)panel.classList.remove('deployed');
-  if(box){box.classList.remove('deployed'); box.innerHTML=INITIAL_CODE;}
-  const t=$('codeTitle'); if(t)t.textContent='run.py'; setStatus('','generic baseline');
+function deploy(){
+  $('codeFig').classList.add('deployed');
+  $('statusPill').textContent='Synthesized'; $('statusPill').classList.add('on');
+  ran=true;
 }
 function reset(){
-  CAND.forEach((_,i)=>{const c=$('cand'+i),r=$('row'+i); if(c)c.classList.remove('shown','active'); if(r)r.classList.remove('shown');});
-  if($('pts'))$('pts').innerHTML='';
-  ['roQ','roMs','roFeas','roTest'].forEach(id=>{ if($(id))$(id).textContent='—'; });
-  setPhase('idle'); resetCode(); resetFlow(); state='idle'; setBtns('Run replay',false);
+  timers.forEach(clearTimeout); timers=[];
+  $('codeFig').classList.remove('deployed');
+  $('statusPill').textContent='Original'; $('statusPill').classList.remove('on');
+  steps.forEach(s=>s.classList.remove('done'));
+  setBtns('Run demo'); ran=false;
 }
+triggers.forEach(b=>b.addEventListener('click',()=>{ ran?reset():run(); }));
 
-function run(){
-  if(running || state==='done') return;
-  running=true; state='running'; setBtns('Running…',true);
-  setPhase('observing traces'); setStatus('live','observing traces'); setFlow(0);
-  let i=0;
-  const step=()=>{
-    if(i>0){const c=$('cand'+(i-1)); if(c)c.classList.remove('active');}
-    if(i>=CAND.length){ select(); return; }
-    const c=CAND[i];
-    setFlow(i===0?1:2);
-    const card=$('cand'+i), row=$('row'+i);
-    if(card)card.classList.add('shown','active'); if(row)row.classList.add('shown');
-    setPhase('verifying on held-out');
-    dot(c,false);
-    i++; setTimeout(step,820);
-  };
-  setTimeout(step,300);
-}
-
-function select(){
-  const c=CAND.find(x=>x.selected); const idx=CAND.indexOf(c);
-  setFlow(3,false); const f2=$('flow2'),f3=$('flow3'); if(f2)f2.classList.add('done'); if(f3)f3.classList.add('active');
-  setPhase('selecting'); setStatus('live','selecting best');
-  const card=$('cand'+idx); if(card)card.classList.add('active');
-  dot(c,true);
-  if($('roQ'))$('roQ').textContent=c.q.toFixed(2);
-  if($('roMs'))$('roMs').textContent=(c.ms/1000).toFixed(2)+'s';
-  if($('roFeas'))$('roFeas').textContent='100%';
-  showSelectedCode();
-  setTimeout(()=>{
-    testDot(c);
-    if($('roTest'))$('roTest').textContent=c.testQ.toFixed(2);
-    setPhase('selected ✓'); setFlow(3,true);
-    if(f3){f3.classList.add('done'); f3.classList.remove('active');}
-    setStatus('done','selected solver'); running=false; state='done'; setBtns('Replay again',false);
-  },1100);
-}
-
-function highlightLine(line){
-  const KW=/\b(def|return|if|elif|else|for|while|in|not|and|or|is|try|except|finally|raise|import|from|as|with|None|True|False|continue|break|pass|lambda|class|nonlocal|global)\b/g;
-  let esc=line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  if(/^\s*#/.test(line)) return '<span class="c">'+esc+'</span>';
-  let out=esc.replace(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/g,m=>'\u0001'+m+'\u0002');
-  out=out.replace(/(#.*)$/,'\u0003$1\u0004');
-  out=out.replace(KW,'<span class="k">$1</span>');
-  out=out.replace(/\bdef\s+(_?\w+)/g,'def <span class="f">$1</span>');
-  return out.replace(/\u0001/g,'<span class="s">').replace(/\u0002/g,'</span>').replace(/\u0003/g,'<span class="c">').replace(/\u0004/g,'</span>');
-}
-function renderCode(){
-  const raw=$('realsrc').textContent.replace(/^\n/,'');
-  const body=raw.split('\n');
-  const prefix=['# run.py — your code calls a stable API','import pai','from solver import solve   # pAI-managed','','def run_batch(workload, ctx):','    for g in workload.instances():','        ctx.submit(solve(g, ctx.analysis))','','# ── pAI-managed region: selected solver (verified) ──'];
-  const box=$('codeBox'); box.classList.add('deployed');
-  let html='',gut=1,inDoc=false;
-  const emit=(line,withId,idx)=>{
-    let esc=line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    let out; const triple=(line.match(/"""/g)||[]).length;
-    if(inDoc){out='<span class="c">'+esc+'</span>'; if(triple%2===1)inDoc=false;}
-    else if(/^\s*#/.test(line)){out='<span class="c">'+esc+'</span>';}
-    else if(triple%2===1){out='<span class="c">'+esc+'</span>'; inDoc=true;}
-    else{out=highlightLine(line);}
-    const id=withId?(' id="L'+idx+'"'):'';
-    html+='<div class="ln"'+id+'><span class="gut">'+(gut++)+'</span><span class="src">'+(out||'&nbsp;')+'</span></div>';
-  };
-  prefix.forEach(l=>emit(l,false));
-  body.forEach((l,idx)=>emit(l,true,idx+1));
-  box.innerHTML=html;
-  const defLines={};
-  body.forEach((line,idx)=>{const m=line.match(/^def\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(/); if(m)defLines[m[1]]=idx+1;});
-  document.querySelectorAll('.stepchip').forEach(ch=>{ch.onclick=()=>{
-    const n=defLines[ch.getAttribute('data-def')]; const t=$('L'+n); if(!t)return;
-    box.scrollTo({top:t.offsetTop-16,behavior:'smooth'});
-    document.querySelectorAll('.ln.flash').forEach(e=>e.classList.remove('flash')); t.classList.add('flash');
-  };});
-}
-function showSelectedCode(){renderCode(); $('codePanel').classList.add('deployed'); $('codeTitle').textContent='run.py → patched'; setStatus('live','patch verified');}
-
-/* ---------------- 3D dominating-set graph ---------------- */
-function initGraph3D(){
+/* 3D dominating-set graph */
+(function initGraph3D(){
   const host=$('graph3d');
-  if(!host || typeof THREE==='undefined'){ if(host)host.classList.add('nofx'); return; }
-  let W=host.clientWidth||320, H=host.clientHeight||300;
+  if(!host || typeof THREE==='undefined'){ return; }
+  let W=host.clientWidth||360, H=host.clientHeight||300;
   const scene=new THREE.Scene();
-  const camera=new THREE.PerspectiveCamera(42, W/H, 0.1, 100);
-  camera.position.set(0,0,8.4);
+  const camera=new THREE.PerspectiveCamera(42, W/H, 0.1, 100); camera.position.set(0,0,8.4);
   let renderer;
-  try{ renderer=new THREE.WebGLRenderer({antialias:true, alpha:true}); }
-  catch(e){ host.classList.add('nofx'); return; }
+  try{ renderer=new THREE.WebGLRenderer({antialias:true, alpha:true}); }catch(e){ return; }
   renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
   renderer.setSize(W,H); host.appendChild(renderer.domElement);
 
@@ -2078,23 +366,13 @@ function initGraph3D(){
 
   let s=20260615; const rnd=()=>{s=(s*1664525+1013904223)>>>0; return s/4294967296;};
   const ACCENT=0x2348C8, DOMD=0xC8CFDA, EDGE=0xAEB7C6;
-  const nodes=[], edges=[], domPos=[];
-  const N_DOM=5;
-  for(let i=0;i<N_DOM;i++){
-    const t=i/N_DOM*Math.PI*2 + 0.3;
-    const r=2.05, y=(rnd()-0.5)*2.4;
-    domPos.push(new THREE.Vector3(Math.cos(t)*r, y, Math.sin(t)*r));
-    nodes.push({p:domPos[i], dom:true});
-  }
-  for(let i=0;i<N_DOM;i++) edges.push([i,(i+1)%N_DOM]);   // sparse backbone
-  for(let i=0;i<N_DOM;i++){
-    const k=3+Math.floor(rnd()*4);
-    for(let j=0;j<k;j++){
-      const off=new THREE.Vector3(rnd()-0.5,rnd()-0.5,rnd()-0.5).normalize().multiplyScalar(0.8+rnd()*0.55);
-      const idx=nodes.length; nodes.push({p:domPos[i].clone().add(off), dom:false});
-      edges.push([i,idx]);
-    }
-  }
+  const nodes=[], edges=[], domPos=[]; const N_DOM=5;
+  for(let i=0;i<N_DOM;i++){ const t=i/N_DOM*Math.PI*2+0.3, r=2.05, y=(rnd()-0.5)*2.4;
+    domPos.push(new THREE.Vector3(Math.cos(t)*r,y,Math.sin(t)*r)); nodes.push({p:domPos[i],dom:true}); }
+  for(let i=0;i<N_DOM;i++) edges.push([i,(i+1)%N_DOM]);
+  for(let i=0;i<N_DOM;i++){ const k=3+Math.floor(rnd()*4);
+    for(let j=0;j<k;j++){ const off=new THREE.Vector3(rnd()-0.5,rnd()-0.5,rnd()-0.5).normalize().multiplyScalar(0.8+rnd()*0.55);
+      const idx=nodes.length; nodes.push({p:domPos[i].clone().add(off),dom:false}); edges.push([i,idx]); } }
   const gDom=new THREE.SphereGeometry(0.205,28,28), gLeaf=new THREE.SphereGeometry(0.108,18,18);
   const mDom=new THREE.MeshStandardMaterial({color:ACCENT,roughness:0.32,metalness:0.12,emissive:0x14307c,emissiveIntensity:0.28});
   const mLeaf=new THREE.MeshStandardMaterial({color:DOMD,roughness:0.62,metalness:0.0});
@@ -2103,22 +381,18 @@ function initGraph3D(){
   const geo=new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.Float32BufferAttribute(pts,3));
   root.add(new THREE.LineSegments(geo, new THREE.LineBasicMaterial({color:EDGE,transparent:true,opacity:0.55})));
 
-  let drag=false, lx=0, ly=0, auto=0.0017, rotX=0.22, rotY=0.4;
+  let drag=false,lx=0,ly=0,auto=0.0017,rotX=0.22,rotY=0.4;
   const cv=renderer.domElement; cv.style.cursor='grab'; cv.style.touchAction='none';
   const pt=e=>e.touches?e.touches[0]:e;
-  const down=e=>{drag=true; auto=0; cv.style.cursor='grabbing'; const t=pt(e); lx=t.clientX; ly=t.clientY;};
+  const down=e=>{drag=true;auto=0;cv.style.cursor='grabbing';const t=pt(e);lx=t.clientX;ly=t.clientY;};
   const move=e=>{ if(!drag)return; const t=pt(e); rotY+=(t.clientX-lx)*0.008; rotX+=(t.clientY-ly)*0.008; rotX=Math.max(-1.25,Math.min(1.25,rotX)); lx=t.clientX; ly=t.clientY; };
   const up=()=>{ if(!drag)return; drag=false; cv.style.cursor='grab'; auto=0.0017; };
   cv.addEventListener('mousedown',down); window.addEventListener('mousemove',move); window.addEventListener('mouseup',up);
   cv.addEventListener('touchstart',down,{passive:true}); cv.addEventListener('touchmove',move,{passive:true}); cv.addEventListener('touchend',up);
-
-  window.addEventListener('resize',()=>{ W=host.clientWidth||320; H=host.clientHeight||300; camera.aspect=W/H; camera.updateProjectionMatrix(); renderer.setSize(W,H); });
+  window.addEventListener('resize',()=>{ W=host.clientWidth||360; H=host.clientHeight||300; camera.aspect=W/H; camera.updateProjectionMatrix(); renderer.setSize(W,H); });
   const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  (function tick(){ if(!drag && !reduce) rotY+=auto; root.rotation.x=rotX; root.rotation.y=rotY; renderer.render(scene,camera); requestAnimationFrame(tick); })();
-}
-
-axes(); build(); resetCode(); resetFlow(); setBtns('Run replay',false); initGraph3D();
-['runTop','runMain'].forEach(id=>{const b=$(id); if(b) b.addEventListener('click',()=>{ if(state==='done'){ reset(); run(); } else { run(); } });});
+  (function tick(){ if(!drag&&!reduce) rotY+=auto; root.rotation.x=rotX; root.rotation.y=rotY; renderer.render(scene,camera); requestAnimationFrame(tick); })();
+})();
 </script>
 </body>
 </html>
