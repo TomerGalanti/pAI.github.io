@@ -204,7 +204,6 @@ button{font-family:inherit}
       <p class="lede">The benchmark instances are <b>huge, ultra-sparse graphs</b> — one giant component, average degree ≈ 3, heavy on leaves. pAI reads the run traces, forms a structural hypothesis about that graph distribution, synthesizes a specialized dominating-set heuristic for it, and verifies each candidate on held-out instances before selecting one. On the 100 private graphs, the selected solver returns an average dominating-set size of <b>231,595</b> in <b>2.89s</b>; released PACE solvers return slightly smaller sets, but take hundreds of seconds. Your code keeps calling <b>solve()</b>.</p>
       <div class="head-actions">
         <button class="btn btn-primary" id="runMain">Run replay</button>
-        <span class="head-note">3 candidates · 5 validation graphs · 100 private-test graphs</span>
       </div>
     </div>
     <div class="graph-card">
