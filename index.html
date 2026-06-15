@@ -1182,7 +1182,7 @@ const INITIAL_CODE=`<span class="c"># solver.py — mark the code pAI is allowed
 <span class="k">import</span> pai
 
 <span class="dec">@pai.optimize(</span>
-    workload=<span class="s">"pace2025/dominating-set"</span>,
+    learn_from=<span class="s">"calls"</span>,
     objective=<span class="s">"valid && minimize(size, runtime)"</span>,
 <span class="dec">)</span>
 <span class="k">def</span> <span class="f">solve</span>(instance, analysis=None):
