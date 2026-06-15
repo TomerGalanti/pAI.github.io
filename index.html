@@ -200,8 +200,8 @@ button{font-family:inherit}
   <div class="head-grid">
     <div>
       <div class="eyebrow">PACE 2025 <span class="sep">/</span> Dominating Set <span class="sep">/</span> heuristic track</div>
-      <h1>Three solvers proposed, one selected, every number shown.</h1>
-      <p class="lede">The benchmark instances are <b>huge, ultra-sparse graphs</b> — one giant component, average degree ≈ 3, heavy on leaves. pAI reads the run traces, forms a structural hypothesis about that graph distribution, synthesizes a specialized dominating-set heuristic for it, and verifies each candidate on held-out instances before selecting one. Your code keeps calling <b>solve()</b>.</p>
+      <h1>One verified solver, reported by size and runtime.</h1>
+      <p class="lede">The benchmark instances are <b>huge, ultra-sparse graphs</b> — one giant component, average degree ≈ 3, heavy on leaves. pAI reads the run traces, forms a structural hypothesis about that graph distribution, synthesizes a specialized dominating-set heuristic for it, and verifies each candidate on held-out instances before selecting one. On the 100 private graphs, the selected solver returns an average dominating-set size of <b>231,595</b> in <b>2.89s</b>; released PACE solvers return slightly smaller sets, but take hundreds of seconds. Your code keeps calling <b>solve()</b>.</p>
       <div class="head-actions">
         <button class="btn btn-primary" id="runMain">Run replay</button>
         <span class="head-note">3 candidates · 5 validation graphs · 100 private-test graphs</span>
@@ -241,18 +241,18 @@ button{font-family:inherit}
       </div>
 
       <div class="card">
-        <div class="card-h"><h3>Quality vs runtime</h3><span class="phase" id="phase">idle</span></div>
-        <div class="chart-wrap"><svg class="plot" id="plot" viewBox="0 0 680 330" role="img" aria-label="Candidate quality versus runtime"></svg></div>
+        <div class="card-h"><h3>Size vs runtime</h3><span class="phase" id="phase">idle</span></div>
+        <div class="chart-wrap"><svg class="plot" id="plot" viewBox="0 0 680 330" role="img" aria-label="Candidate dominating-set size versus runtime"></svg></div>
         <div class="metrics-row">
-          <div class="cw"><div class="l">Quality</div><div class="v" id="roQ">—</div></div>
+          <div class="cw"><div class="l">Val. size</div><div class="v" id="roQ">—</div></div>
           <div class="cw"><div class="l">Runtime</div><div class="v" id="roMs">—</div></div>
           <div class="cw"><div class="l">Feasible</div><div class="v pass" id="roFeas">—</div></div>
-          <div class="cw"><div class="l">Private test</div><div class="v warn" id="roTest">—</div></div>
+          <div class="cw"><div class="l">Private size</div><div class="v warn" id="roTest">—</div></div>
         </div>
         <div class="obs-block">
           <h4>Observed workload</h4>
           <div class="wl">Minimum dominating set</div>
-          <div class="wl-sub">PACE 2025 · same generator, many graphs</div>
+          <div class="wl-sub">PACE 2025 · direct objective is dominating-set size</div>
           <div class="facts"><span>giant component</span><span>avg degree ≈ 3</span><span>leaf-heavy</span><span>millions of vertices</span></div>
         </div>
       </div>
@@ -265,7 +265,7 @@ button{font-family:inherit}
       <div class="card ledger">
         <div class="card-h"><h3>Evaluation ledger</h3><span class="meta">validation · 5 graphs</span></div>
         <table>
-          <thead><tr><th>Candidate</th><th class="idea">Hypothesis</th><th class="num">Quality</th><th class="num">Runtime</th><th>Feasible</th><th>Outcome</th></tr></thead>
+          <thead><tr><th>Candidate</th><th class="idea">Hypothesis</th><th class="num">Avg. size</th><th class="num">Runtime</th><th>Feasible</th><th>Outcome</th></tr></thead>
           <tbody id="evalBody"></tbody>
         </table>
       </div>
@@ -274,7 +274,7 @@ button{font-family:inherit}
 </div></main>
 
 <footer class="foot"><div class="wrap">
-  <b>Source:</b> <span class="mono">pace2025_dominating_set / pace2025_ds_heuristic_llm_01</span>, heuristic track. <b>Quality</b> = <span class="mono">lower_bound / |returned set|</span> (higher is better; 1.0 = matches the lower bound) — an internal selection proxy, <b>not</b> the official PACE score. Every output is a valid dominating set; optimality is not claimed. Recorded run: 3 candidates, 5 validation graphs, 100 private-test graphs.
+  <b>Source:</b> <span class="mono">pace2025_dominating_set / pace2025_ds_heuristic_llm_01</span>, heuristic track. We report the direct PACE quantities: validity, average dominating-set size, and runtime. Lower size and lower runtime are better. The lower-bound-normalized score is used internally for selection, but is not displayed here because the private lower bounds are loose. Every output is a valid dominating set; optimality is not claimed. Recorded run: 3 candidates, 5 validation graphs, 100 private-test graphs.
 </div></footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -1048,32 +1048,35 @@ def solve(instance, analysis=None, manifest=None):
     return ds
 </script>
 <script>// Three real synthesized candidates for PACE 2025 Dominating Set (heuristic track).
+// Sizes are average dominating-set sizes; lower is better.
 const CAND=[
  {id:'it0·s2', title:'Tree-like sparse core — leaf/path rules + bounded repair',
-  q:0.489, ms:1480, dec:'sup', tag:'superseded'},
+  size:77918, ms:1480, dec:'sup', tag:'superseded'},
  {id:'it1·s2', title:'Pendant-heavy — forced leaf supports + O(m) local gain',
-  q:0.500, ms:1251, dec:'rej', tag:'runner-up'},
+  size:74758, ms:1251, dec:'rej', tag:'runner-up'},
  {id:'it1·s0', title:'Bounded-degree core — bucketed marginal-gain greedy',
-  q:0.501, ms:2456, selected:true, dec:'sel', tag:'selected',
-  testQ:0.229, testMs:2900},
+  size:74826, ms:2456, selected:true, dec:'sel', tag:'selected',
+  testSize:231595, testMs:2900},
 ];
 
 const SVG='http://www.w3.org/2000/svg';
 const PL={l:46,r:92,t:18,b:42,W:680,H:330};
 const xdom=[2.95,3.55];
 const px=ms=>PL.l+(Math.log10(ms)-xdom[0])/(xdom[1]-xdom[0])*(PL.W-PL.l-PL.r);
-const py=q=>PL.t+(1.06-q)/1.06*(PL.H-PL.t-PL.b);
+const ydom=[70000,240000];
+const py=size=>PL.t+(size-ydom[0])/(ydom[1]-ydom[0])*(PL.H-PL.t-PL.b);
+const fmtSize=v=>v>=100000?(v/1000).toFixed(v>=200000?0:1)+'k':Math.round(v).toLocaleString();
 const $=id=>document.getElementById(id);
 const el=(t,a)=>{const e=document.createElementNS(SVG,t);for(const k in a)e.setAttribute(k,a[k]);return e;};
 const txt=(node,s)=>{node.textContent=s;return node;};
 
 function axes(){
   const svg=$('plot'); if(!svg) return; svg.innerHTML='';
-  [[0,'0'],[0.5,'0.5'],[1.0,'1.0']].forEach(([q,l])=>{
-    svg.appendChild(el('line',{class:q===1?'refline':'gridline',x1:PL.l,y1:py(q),x2:PL.W-PL.r,y2:py(q)}));
-    svg.appendChild(txt(el('text',{class:'axislbl',x:PL.l-8,y:py(q)+3,'text-anchor':'end'}),l));
+  [[75000,'75k'],[150000,'150k'],[225000,'225k']].forEach(([size,l])=>{
+    svg.appendChild(el('line',{class:size===75000?'refline':'gridline',x1:PL.l,y1:py(size),x2:PL.W-PL.r,y2:py(size)}));
+    svg.appendChild(txt(el('text',{class:'axislbl',x:PL.l-8,y:py(size)+3,'text-anchor':'end'}),l));
   });
-  svg.appendChild(txt(el('text',{class:'reflbl',x:PL.W-PL.r,y:py(1.0)-7,'text-anchor':'end'}),'lower-bound ratio = 1'));
+  svg.appendChild(txt(el('text',{class:'reflbl',x:PL.W-PL.r,y:py(75000)-7,'text-anchor':'end'}),'average size · lower is better'));
   [[1000,'1.0s'],[1500,'1.5s'],[2000,'2.0s'],[3000,'3.0s']].forEach(([ms,l])=>{
     svg.appendChild(el('line',{class:'gridline tick',x1:px(ms),y1:PL.t,x2:px(ms),y2:PL.H-PL.b}));
     svg.appendChild(txt(el('text',{class:'axislbl',x:px(ms),y:PL.H-PL.b+15,'text-anchor':'middle'}),l));
@@ -1089,7 +1092,7 @@ function build(){
     const card=document.createElement('div'); card.className='cand'; card.id='cand'+i;
     card.innerHTML='<div class="cand-id">'+c.id+'</div>'+
       '<div class="cand-main"><div class="cand-ti">'+c.title+'</div>'+
-      '<div class="cand-meta"><span class="kv">Q '+c.q.toFixed(3)+'</span>'+
+      '<div class="cand-meta"><span class="kv">size '+fmtSize(c.size)+'</span>'+
       '<span class="kv">'+(c.ms/1000).toFixed(2)+'s</span>'+
       '<span class="kv ok">feasible</span></div></div>'+
       '<div class="tag '+stCls[c.dec]+'">'+c.tag+'</div>';
@@ -1097,7 +1100,7 @@ function build(){
     const tr=document.createElement('tr'); tr.id='row'+i; if(c.selected)tr.className='sel';
     tr.innerHTML='<td class="mono"><b>'+c.id+'</b></td>'+
       '<td class="idea">'+c.title+'</td>'+
-      '<td class="mono num">'+c.q.toFixed(3)+'</td>'+
+      '<td class="mono num">'+fmtSize(c.size)+'</td>'+
       '<td class="mono num">'+(c.ms/1000).toFixed(2)+'s</td>'+
       '<td class="mono ok">✓</td>'+
       '<td><span class="tag '+stCls[c.dec]+'">'+c.tag+'</span></td>';
@@ -1106,7 +1109,7 @@ function build(){
 }
 
 function dot(c,selected){
-  const g=$('pts'); if(!g)return; const x=px(c.ms), y=py(c.q);
+  const g=$('pts'); if(!g)return; const x=px(c.ms), y=py(c.size);
   if(selected){
     const halo=el('circle',{cx:x,cy:y,r:6,class:'halo'}); g.appendChild(halo);
     requestAnimationFrame(()=>{halo.setAttribute('r',15);});
@@ -1115,16 +1118,16 @@ function dot(c,selected){
   g.appendChild(point);
   requestAnimationFrame(()=>{point.setAttribute('r',selected?6:5);});
   if(selected){
-    const lb=txt(el('text',{class:'plbl sel',x:x+12,y:y+4}),'selected · 0.50'); g.appendChild(lb);
+    const lb=txt(el('text',{class:'plbl sel',x:x+12,y:y+4}),'selected · '+fmtSize(c.size)); g.appendChild(lb);
     setTimeout(()=>lb.classList.add('on'),180);
   }
 }
 function testDot(c){
-  const g=$('pts'); if(!g)return; const x1=px(c.ms),y1=py(c.q), x2=px(c.testMs),y2=py(c.testQ);
+  const g=$('pts'); if(!g)return; const x1=px(c.ms),y1=py(c.size), x2=px(c.testMs),y2=py(c.testSize);
   g.appendChild(el('line',{x1,y1,x2,y2,class:'gaplink'}));
   const hollow=el('circle',{cx:x2,cy:y2,r:0,class:'pt pt-test'}); g.appendChild(hollow);
   requestAnimationFrame(()=>{hollow.setAttribute('r',5.5);});
-  const lb=txt(el('text',{class:'plbl test',x:x2+12,y:y2+4}),'private test · 0.23'); g.appendChild(lb);
+  const lb=txt(el('text',{class:'plbl test',x:x2+12,y:y2+4}),'private test · '+fmtSize(c.testSize)); g.appendChild(lb);
   setTimeout(()=>lb.classList.add('on'),180);
 }
 
@@ -1187,13 +1190,13 @@ function select(){
   setPhase('selecting'); setStatus('live','selecting best');
   const card=$('cand'+idx); if(card)card.classList.add('active');
   dot(c,true);
-  if($('roQ'))$('roQ').textContent=c.q.toFixed(2);
+  if($('roQ'))$('roQ').textContent=fmtSize(c.size);
   if($('roMs'))$('roMs').textContent=(c.ms/1000).toFixed(2)+'s';
   if($('roFeas'))$('roFeas').textContent='100%';
   showSelectedCode();
   setTimeout(()=>{
     testDot(c);
-    if($('roTest'))$('roTest').textContent=c.testQ.toFixed(2);
+    if($('roTest'))$('roTest').textContent=fmtSize(c.testSize);
     setPhase('selected ✓'); setFlow(3,true);
     if(f3){f3.classList.add('done'); f3.classList.remove('active');}
     setStatus('done','selected solver'); running=false; state='done'; setBtns('Replay again',false);
