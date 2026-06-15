@@ -263,9 +263,9 @@ button{font-family:inherit}
       </div>
 
       <div class="card ledger">
-        <div class="card-h"><h3>Evaluation ledger</h3><span class="meta">validation · 5 graphs</span></div>
+        <div class="card-h"><h3>Evaluation ledger</h3><span class="meta">validation · 5 graphs · selected by score</span></div>
         <table>
-          <thead><tr><th>Candidate</th><th class="idea">Hypothesis</th><th class="num">Avg. size</th><th class="num">Runtime</th><th>Feasible</th><th>Outcome</th></tr></thead>
+          <thead><tr><th>Candidate</th><th class="idea">Hypothesis</th><th class="num">Val. avg. size</th><th class="num">Runtime</th><th>Feasible</th><th>Outcome</th></tr></thead>
           <tbody id="evalBody"></tbody>
         </table>
       </div>
@@ -274,7 +274,7 @@ button{font-family:inherit}
 </div></main>
 
 <footer class="foot"><div class="wrap">
-  <b>Source:</b> <span class="mono">pace2025_dominating_set / pace2025_ds_heuristic_llm_01</span>, heuristic track. We report the direct PACE quantities: validity, average dominating-set size, and runtime. Lower size and lower runtime are better. The lower-bound-normalized score is used internally for selection, but is not displayed here because the private lower bounds are loose. Every output is a valid dominating set; optimality is not claimed. Recorded run: 3 candidates, 5 validation graphs, 100 private-test graphs.
+  <b>Source:</b> <span class="mono">pace2025_dominating_set / pace2025_ds_heuristic_llm_01</span>, heuristic track. We report the direct PACE quantities: validity, average dominating-set size, and runtime. Lower size and lower runtime are better. Candidate selection used the held-out lower-bound-normalized score; the main private-test result is reported by average size because the private lower bounds are loose. Every output is a valid dominating set; optimality is not claimed. Recorded run: 3 candidates, 5 validation graphs, 100 private-test graphs.
 </div></footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -1051,11 +1051,11 @@ def solve(instance, analysis=None, manifest=None):
 // Sizes are average dominating-set sizes; lower is better.
 const CAND=[
  {id:'it0·s2', title:'Tree-like sparse core — leaf/path rules + bounded repair',
-  size:77918, ms:1480, dec:'sup', tag:'superseded'},
+  size:77918, ms:1480, score:0.489246, dec:'sup', tag:'superseded'},
  {id:'it1·s2', title:'Pendant-heavy — forced leaf supports + O(m) local gain',
-  size:74758, ms:1251, dec:'rej', tag:'runner-up'},
+  size:74758, ms:1251, score:0.500419, dec:'rej', tag:'smaller/faster runner-up'},
  {id:'it1·s0', title:'Bounded-degree core — bucketed marginal-gain greedy',
-  size:74826, ms:2456, selected:true, dec:'sel', tag:'selected',
+  size:74826, ms:2456, score:0.500665, selected:true, dec:'sel', tag:'selected by score',
   testSize:231595, testMs:2900},
 ];
 
@@ -1092,7 +1092,7 @@ function build(){
     const card=document.createElement('div'); card.className='cand'; card.id='cand'+i;
     card.innerHTML='<div class="cand-id">'+c.id+'</div>'+
       '<div class="cand-main"><div class="cand-ti">'+c.title+'</div>'+
-      '<div class="cand-meta"><span class="kv">size '+fmtSize(c.size)+'</span>'+
+      '<div class="cand-meta"><span class="kv">val size '+fmtSize(c.size)+'</span>'+
       '<span class="kv">'+(c.ms/1000).toFixed(2)+'s</span>'+
       '<span class="kv ok">feasible</span></div></div>'+
       '<div class="tag '+stCls[c.dec]+'">'+c.tag+'</div>';
@@ -1118,7 +1118,7 @@ function dot(c,selected){
   g.appendChild(point);
   requestAnimationFrame(()=>{point.setAttribute('r',selected?6:5);});
   if(selected){
-    const lb=txt(el('text',{class:'plbl sel',x:x+12,y:y+4}),'selected · '+fmtSize(c.size)); g.appendChild(lb);
+    const lb=txt(el('text',{class:'plbl sel',x:x+12,y:y+4}),'selected by score · '+fmtSize(c.size)); g.appendChild(lb);
     setTimeout(()=>lb.classList.add('on'),180);
   }
 }
