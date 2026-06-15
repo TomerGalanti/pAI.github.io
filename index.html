@@ -56,6 +56,10 @@ button{font-family:inherit}
 
 /* 3D graph */
 .graph-card{background:var(--panel); border:1px solid var(--rule); border-radius:var(--r); box-shadow:var(--shadow); padding:10px}
+.graph-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:8px}
+.graph-cell{position:relative; border-radius:var(--r-sm); background:radial-gradient(120% 120% at 30% 18%, #FBFCFD 0%, #EEF1F5 100%); overflow:hidden; border:1px solid var(--rule)}
+.graph-cell .graph3d{height:132px; border-radius:0; background:transparent}
+.graph-cell-label{position:absolute; left:9px; bottom:7px; font-family:var(--mono); font-size:9.5px; color:var(--ink-3); background:rgba(255,255,255,.72); border:1px solid rgba(204,211,220,.72); border-radius:999px; padding:2px 7px; pointer-events:none}
 .graph3d{width:100%; height:300px; border-radius:var(--r-sm); background:radial-gradient(120% 120% at 30% 18%, #FBFCFD 0%, #EEF1F5 100%); overflow:hidden}
 .graph3d canvas{display:block}
 .graph3d.nofx{display:flex; align-items:center; justify-content:center}
@@ -127,6 +131,16 @@ button{font-family:inherit}
 .gaplink{stroke:var(--accent); stroke-width:1.2; stroke-dasharray:3 3; opacity:.5}
 .plbl{font-family:var(--mono); font-size:10px; font-weight:600; opacity:0; transition:opacity .35s ease}
 .plbl.sel{fill:var(--accent)} .plbl.test{fill:var(--ink-2)} .plbl.on{opacity:1}
+.bar-bg{fill:var(--panel-2); stroke:var(--rule); stroke-width:1}
+.bar-fill{fill:var(--rule-2); transition:width .45s ease, opacity .25s ease}
+.bar-fill.sel{fill:var(--accent)}
+.bar-fill.warn{fill:#DDBA6E}
+.bar-lbl{fill:var(--ink); font-size:11px; font-weight:600; font-family:var(--sans)}
+.bar-sub{fill:var(--ink-3); font-size:10px; font-family:var(--mono)}
+.bar-val{fill:var(--ink); font-size:10.5px; font-weight:700; font-family:var(--mono)}
+.bar-size{fill:var(--ink-2); font-size:10px; font-family:var(--mono)}
+.bar-note{fill:var(--ink-3); font-size:10px; font-family:var(--mono)}
+.bar-head{fill:var(--ink-3); font-size:10px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; font-family:var(--mono)}
 .phase{font-family:var(--mono); font-size:11px; color:var(--accent); font-weight:600}
 
 .metrics-row{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; padding:2px 16px 14px; border-bottom:1px solid var(--rule)}
@@ -207,10 +221,15 @@ button{font-family:inherit}
       </div>
     </div>
     <div class="graph-card">
-      <div class="graph3d" id="graph3d"></div>
+      <div class="graph-grid">
+        <div class="graph-cell"><div class="graph3d" id="graph3d0"></div><span class="graph-cell-label">private #01</span></div>
+        <div class="graph-cell"><div class="graph3d" id="graph3d1"></div><span class="graph-cell-label">private #18</span></div>
+        <div class="graph-cell"><div class="graph3d" id="graph3d2"></div><span class="graph-cell-label">private #47</span></div>
+        <div class="graph-cell"><div class="graph3d" id="graph3d3"></div><span class="graph-cell-label">private #83</span></div>
+      </div>
       <div class="graph-foot">
         <div class="graph-key"><span><i class="dom"></i>dominator</span><span><i class="domd"></i>dominated</span></div>
-        <span class="graph-hint">drag to rotate</span>
+        <span class="graph-hint">drag any graph</span>
       </div>
     </div>
   </div>
@@ -220,9 +239,9 @@ button{font-family:inherit}
   <div class="work-grid">
     <section class="code" id="codePanel" aria-label="Selected solver">
       <div class="code-h"><span class="title" id="codeTitle">run.py</span><span class="status" id="codeStatus">generic baseline</span></div>
-      <div class="code-note"><span><b>Your code</b> calls a stable API. pAI owns only the managed region.</span><span class="region">managed: solve()</span></div>
+      <div class="code-note"><span><b>Your code</b> marks the optimization target with a pAI decorator.</span><span class="region">@pai.optimize · solve()</span></div>
       <div class="codebox" id="codeBox"></div>
-      <div class="deploy-note"><b>Patch applied:</b> the app still calls <code>solve()</code>. The managed region now holds the full verified solver — exactly the code below.</div>
+      <div class="deploy-note"><b>Patch applied:</b> the app still calls <code>solve()</code>. The decorated function now holds the full verified solver — exactly the code below.</div>
       <div class="code-nav" id="codeNav">
         <button class="stepchip" data-def="build_graph"><b>1</b>build CSR</button>
         <button class="stepchip" data-def="dominating_set_greedy"><b>2</b>forced + bucket greedy</button>
@@ -1071,75 +1090,60 @@ const HEUR_RANGE={x1:8290,x2:8430,y1:234674,y2:241604,label:'general heuristics'
 const TIMEOUT_RANGE={x1:360100,x2:420100,label:'exact-style timeout'};
 
 const SVG='http://www.w3.org/2000/svg';
-const PL={l:54,r:118,t:18,b:42,W:680,H:330};
-const xdom=[Math.log10(2000),Math.log10(450000)];
-const px=ms=>PL.l+(Math.log10(ms)-xdom[0])/(xdom[1]-xdom[0])*(PL.W-PL.l-PL.r);
-const ydom=[222000,242500];
-const py=size=>PL.t+(size-ydom[0])/(ydom[1]-ydom[0])*(PL.H-PL.t-PL.b);
-const fmtSize=v=>v>=100000?(v/1000).toFixed(0)+'k':Math.round(v).toLocaleString();
+const PL={l:54,r:126,t:28,b:34,W:680,H:330};
 const $=id=>document.getElementById(id);
 const el=(t,a)=>{const e=document.createElementNS(SVG,t);for(const k in a)e.setAttribute(k,a[k]);return e;};
 const txt=(node,s)=>{node.textContent=s;return node;};
+const fmtSize=v=>v>=100000?(v/1000).toFixed(1)+'k':Math.round(v).toLocaleString();
+const fmtRuntime=ms=>ms>=1000?(ms/1000).toFixed(ms<10000?2:0)+'s':Math.round(ms)+'ms';
+const PAI_MS=BASELINES.find(b=>b.kind==='pai').ms;
+const BAR_ROWS=[
+ {name:'pAI selected', ms:2890, size:'231.6k', kind:'pai'},
+ {name:'Codex best@5', ms:6340, size:'236.9k', kind:'codex'},
+ {name:'General heuristics', ms:8360, size:'234.7–241.6k', kind:'heur'},
+ {name:'Released PACE solvers', ms:316070, size:'224.1–224.7k', kind:'pace'},
+ {name:'Exact-style timeout', ms:360100, size:'timeout', kind:'timeout'},
+];
+const ratioDom=[1,150];
+const barX=v=>(PL.l+132)+(Math.log10(v)-Math.log10(ratioDom[0]))/(Math.log10(ratioDom[1])-Math.log10(ratioDom[0]))*(PL.W-PL.r-(PL.l+132));
+const ratioFmt=v=>v>=100?Math.round(v)+'×':v>=10?v.toFixed(0)+'×':v.toFixed(1)+'×';
 
-function axes(){
+function axes(){ renderBenchmark(false); }
+
+function renderBenchmark(emphasize){
   const svg=$('plot'); if(!svg) return; svg.innerHTML='';
-  [[224000,'224k'],[232000,'232k'],[240000,'240k']].forEach(([size,l])=>{
-    svg.appendChild(el('line',{class:'gridline',x1:PL.l,y1:py(size),x2:PL.W-PL.r,y2:py(size)}));
-    svg.appendChild(txt(el('text',{class:'axislbl',x:PL.l-8,y:py(size)+3,'text-anchor':'end'}),l));
+  const barL=PL.l+132, barR=PL.W-PL.r, rowH=48, barH=12, top=62;
+  svg.appendChild(txt(el('text',{class:'bar-head',x:PL.l,y:24}),'solver / baseline'));
+  svg.appendChild(txt(el('text',{class:'bar-head',x:barL,y:24}),'runtime vs pAI'));
+  svg.appendChild(txt(el('text',{class:'bar-head',x:PL.W-PL.r+16,y:24}),'avg. size'));
+  [1,3,10,30,100].forEach(v=>{
+    const x=barX(v);
+    svg.appendChild(el('line',{class:'gridline tick',x1:x,y1:44,x2:x,y2:top+rowH*(BAR_ROWS.length-1)+28}));
+    svg.appendChild(txt(el('text',{class:'axislbl',x:x,y:PL.H-12,'text-anchor':'middle'}),v+'×'));
   });
-  svg.appendChild(txt(el('text',{class:'reflbl',x:PL.W-PL.r,y:PL.t+10,'text-anchor':'end'}),'lower size is better'));
-  [[3000,'3s'],[10000,'10s'],[100000,'100s'],[400000,'400s']].forEach(([ms,l])=>{
-    svg.appendChild(el('line',{class:'gridline tick',x1:px(ms),y1:PL.t,x2:px(ms),y2:PL.H-PL.b}));
-    svg.appendChild(txt(el('text',{class:'axislbl',x:px(ms),y:PL.H-PL.b+15,'text-anchor':'middle'}),l));
+  svg.appendChild(txt(el('text',{class:'bar-note',x:barL,y:44}),'lower is faster · bar length is log-scaled'));
+
+  BAR_ROWS.forEach((b,i)=>{
+    const y=top+i*rowH;
+    const ratio=b.ms/PAI_MS;
+    const x0=barX(1), x1=barX(Math.max(1,ratio));
+    svg.appendChild(txt(el('text',{class:'bar-lbl',x:PL.l,y:y+4}),b.name));
+    svg.appendChild(txt(el('text',{class:'bar-sub',x:PL.l,y:y+20}),fmtRuntime(b.ms)));
+    svg.appendChild(el('rect',{class:'bar-bg',x:x0,y:y-9,width:barR-x0,height:barH,rx:6}));
+    const cls='bar-fill '+(b.kind==='pai'?'sel':(b.kind==='timeout'?'warn':''));
+    const fill=el('rect',{class:cls,x:x0,y:y-9,width:emphasize&&b.kind==='pai'?Math.max(x1-x0,10):0,height:barH,rx:6});
+    svg.appendChild(fill);
+    requestAnimationFrame(()=>fill.setAttribute('width',Math.max(x1-x0,10)));
+    svg.appendChild(txt(el('text',{class:'bar-val',x:Math.min(x1+8,barR+4),y:y+2}),b.kind==='timeout'?'≥'+ratioFmt(ratio):ratioFmt(ratio)));
+    svg.appendChild(txt(el('text',{class:'bar-size',x:PL.W-PL.r+16,y:y+2}),b.size));
   });
-  svg.appendChild(txt(el('text',{class:'axisttl',x:(PL.l+PL.W-PL.r)/2,y:PL.H-6,'text-anchor':'middle'}),'runtime per instance · log scale'));
-  svg.appendChild(el('g',{id:'pts'}));
-  renderBenchmark(false);
+  svg.appendChild(txt(el('text',{class:'bar-note',x:PL.l,y:PL.H-12}),'Size is still reported directly; the bar focuses the visual comparison on runtime.'));
 }
 
 function plotLabel(g,x,y,text,cls,dx=10,dy=4){
   const lb=txt(el('text',{class:'plbl '+(cls||''),x:x+dx,y:y+dy}),text);
   g.appendChild(lb); setTimeout(()=>lb.classList.add('on'),100);
 }
-function renderBenchmark(emphasize){
-  const g=$('pts'); if(!g)return; g.innerHTML='';
-
-  // General heuristic range: small box because they occupy a tight runtime band.
-  const hx=Math.min(px(HEUR_RANGE.x1),px(HEUR_RANGE.x2));
-  const hw=Math.abs(px(HEUR_RANGE.x2)-px(HEUR_RANGE.x1));
-  const hy=Math.min(py(HEUR_RANGE.y1),py(HEUR_RANGE.y2));
-  const hh=Math.abs(py(HEUR_RANGE.y2)-py(HEUR_RANGE.y1));
-  g.appendChild(el('rect',{x:hx,y:hy,width:Math.max(hw,8),height:Math.max(hh,8),rx:5,fill:'#F7EEDC',stroke:'#9A6B12','stroke-width':1,opacity:.85}));
-  plotLabel(g,hx+8,hy+hh+12,HEUR_RANGE.label,'test',6,4);
-
-  // Exact-style baselines time out, so show the timeout band rather than a fake quality point.
-  const tx=Math.min(px(TIMEOUT_RANGE.x1),px(TIMEOUT_RANGE.x2));
-  const tw=Math.abs(px(TIMEOUT_RANGE.x2)-px(TIMEOUT_RANGE.x1));
-  g.appendChild(el('rect',{x:tx,y:PL.t,width:Math.max(tw,8),height:PL.H-PL.t-PL.b,fill:'#F6F7F9',stroke:'#CCD3DC','stroke-width':1,'stroke-dasharray':'4 4',opacity:.7}));
-  plotLabel(g,tx,PL.t+16,'exact timeout','test',8,4);
-
-  // Released PACE solvers.
-  BASELINES.filter(b=>b.kind==='pace').forEach(b=>{
-    g.appendChild(el('circle',{cx:px(b.ms),cy:py(b.size),r:4.5,class:'pt pt-cand'}));
-  });
-  plotLabel(g,px(300000),py(224500),'released PACE solvers','test',10,-10);
-
-  // Codex.
-  const codex=BASELINES.find(b=>b.kind==='codex');
-  g.appendChild(el('circle',{cx:px(codex.ms),cy:py(codex.size),r:5.5,class:'pt pt-test'}));
-  plotLabel(g,px(codex.ms),py(codex.size),codex.label,'test',12,4);
-
-  // pAI selected solver.
-  const pai=BASELINES.find(b=>b.kind==='pai');
-  const x=px(pai.ms), y=py(pai.size);
-  if(emphasize){
-    const halo=el('circle',{cx:x,cy:y,r:6,class:'halo'}); g.appendChild(halo);
-    requestAnimationFrame(()=>{halo.setAttribute('r',16);});
-  }
-  g.appendChild(el('circle',{cx:x,cy:y,r:emphasize?7:6,class:'pt pt-sel'}));
-  plotLabel(g,x,y,pai.label,'sel',12,4);
-}
-
 const stCls={sel:'st-sel',rej:'st-rej',sup:'st-sup'};
 function build(){
   const s=$('stream'), b=$('evalBody'); s.innerHTML=''; b.innerHTML='';
@@ -1174,18 +1178,20 @@ function setBtns(label,disabled){['runTop','runMain'].forEach(id=>{const b=$(id)
 function setStatus(mode,word){const st=$('codeStatus'); if(st){st.className='status '+(mode||''); st.textContent=word;}}
 function setPhase(w){const p=$('phase'); if(p)p.textContent=w;}
 
-const INITIAL_CODE=`<span class="c"># run.py — your code calls a stable API</span>
+const INITIAL_CODE=`<span class="c"># solver.py — mark the code pAI is allowed to improve</span>
 <span class="k">import</span> pai
-<span class="k">from</span> solver <span class="k">import</span> solve   <span class="c"># pAI-managed</span>
+
+<span class="dec">@pai.optimize(</span>
+    workload=<span class="s">"pace2025/dominating-set"</span>,
+    objective=<span class="s">"valid && minimize(size, runtime)"</span>,
+<span class="dec">)</span>
+<span class="k">def</span> <span class="f">solve</span>(instance, analysis=None):
+    <span class="c"># Correct and general, but not tuned to these graphs yet.</span>
+    <span class="k">return</span> redundancy_aware_greedy(instance)
 
 <span class="k">def</span> <span class="f">run_batch</span>(workload, ctx):
     <span class="k">for</span> g <span class="k">in</span> workload.instances():
-        ctx.submit(solve(g, ctx.analysis))
-
-<span class="c"># ── pAI-managed region (generic baseline) ──</span>
-<span class="k">def</span> <span class="f">solve</span>(instance, analysis=None):
-    <span class="c"># Correct and general, but not tuned to these graphs.</span>
-    <span class="k">return</span> redundancy_aware_greedy(instance)`;
+        ctx.submit(solve(g, ctx.analysis))`;
 
 function resetFlow(){for(let j=0;j<4;j++){const f=$('flow'+j); if(f)f.classList.remove('active','done');}}
 function setFlow(active,doneAll){for(let j=0;j<4;j++){const f=$('flow'+j); if(!f)continue; f.classList.remove('active','done'); if(doneAll||j<active)f.classList.add('done'); else if(j===active)f.classList.add('active');}}
@@ -1245,6 +1251,7 @@ function highlightLine(line){
   const KW=/\b(def|return|if|elif|else|for|while|in|not|and|or|is|try|except|finally|raise|import|from|as|with|None|True|False|continue|break|pass|lambda|class|nonlocal|global)\b/g;
   let esc=line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   if(/^\s*#/.test(line)) return '<span class="c">'+esc+'</span>';
+  if(/^\s*@/.test(line)) return '<span class="dec">'+esc+'</span>';
   let out=esc.replace(/("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')/g,m=>'\u0001'+m+'\u0002');
   out=out.replace(/(#.*)$/,'\u0003$1\u0004');
   out=out.replace(KW,'<span class="k">$1</span>');
@@ -1254,7 +1261,7 @@ function highlightLine(line){
 function renderCode(){
   const raw=$('realsrc').textContent.replace(/^\n/,'');
   const body=raw.split('\n');
-  const prefix=['# run.py — your code calls a stable API','import pai','from solver import solve   # pAI-managed','','def run_batch(workload, ctx):','    for g in workload.instances():','        ctx.submit(solve(g, ctx.analysis))','','# ── pAI-managed region: selected solver (verified) ──'];
+  const prefix=['# solver.py — mark the code pAI is allowed to improve','import pai','','# ── helper code synthesized inside the decorated solver module ──'];
   const box=$('codeBox'); box.classList.add('deployed');
   let html='',gut=1,inDoc=false;
   const emit=(line,withId,idx)=>{
@@ -1268,7 +1275,21 @@ function renderCode(){
     html+='<div class="ln"'+id+'><span class="gut">'+(gut++)+'</span><span class="src">'+(out||'&nbsp;')+'</span></div>';
   };
   prefix.forEach(l=>emit(l,false));
-  body.forEach((l,idx)=>emit(l,true,idx+1));
+  body.forEach((l,idx)=>{
+    if(/^def\s+solve\s*\(/.test(l)){
+      emit('',false);
+      emit('# ── pAI-managed function: selected solver (verified) ──',false);
+      emit('@pai.optimize(',false);
+      emit('    workload="pace2025/dominating-set",',false);
+      emit('    objective="valid && minimize(size, runtime)",',false);
+      emit(')',false);
+    }
+    emit(l,true,idx+1);
+  });
+  emit('',false);
+  emit('def run_batch(workload, ctx):',false);
+  emit('    for g in workload.instances():',false);
+  emit('        ctx.submit(solve(g, ctx.analysis))',false);
   box.innerHTML=html;
   const defLines={};
   body.forEach((line,idx)=>{const m=line.match(/^def\s+([A-Za-z_][A-Za-z0-9_]*)\s*\(/); if(m)defLines[m[1]]=idx+1;});
@@ -1280,14 +1301,19 @@ function renderCode(){
 }
 function showSelectedCode(){renderCode(); $('codePanel').classList.add('deployed'); $('codeTitle').textContent='run.py → patched'; setStatus('live','patch verified');}
 
-/* ---------------- 3D dominating-set graph ---------------- */
+/* ---------------- 3D dominating-set graph grid ---------------- */
 function initGraph3D(){
-  const host=$('graph3d');
-  if(!host || typeof THREE==='undefined'){ if(host)host.classList.add('nofx'); return; }
-  let W=host.clientWidth||320, H=host.clientHeight||300;
+  const hosts=[...document.querySelectorAll('.graph3d')];
+  if(!hosts.length) return;
+  if(typeof THREE==='undefined'){ hosts.forEach(h=>h.classList.add('nofx')); return; }
+  hosts.forEach((host,i)=>initGraphCell(host,i));
+}
+
+function initGraphCell(host,variant){
+  let W=host.clientWidth||160, H=host.clientHeight||132;
   const scene=new THREE.Scene();
   const camera=new THREE.PerspectiveCamera(42, W/H, 0.1, 100);
-  camera.position.set(0,0,8.4);
+  camera.position.set(0,0,8.2);
   let renderer;
   try{ renderer=new THREE.WebGLRenderer({antialias:true, alpha:true}); }
   catch(e){ host.classList.add('nofx'); return; }
@@ -1295,47 +1321,54 @@ function initGraph3D(){
   renderer.setSize(W,H); host.appendChild(renderer.domElement);
 
   const root=new THREE.Group(); scene.add(root);
-  scene.add(new THREE.AmbientLight(0xffffff,0.8));
+  scene.add(new THREE.AmbientLight(0xffffff,0.82));
   const d1=new THREE.DirectionalLight(0xffffff,0.7); d1.position.set(3,4,5); scene.add(d1);
-  const d2=new THREE.DirectionalLight(0x9db4ff,0.3); d2.position.set(-4,-2,-4); scene.add(d2);
+  const d2=new THREE.DirectionalLight(0x9db4ff,0.26); d2.position.set(-4,-2,-4); scene.add(d2);
 
-  let s=20260615; const rnd=()=>{s=(s*1664525+1013904223)>>>0; return s/4294967296;};
+  let s=20260615+variant*117; const rnd=()=>{s=(s*1664525+1013904223)>>>0; return s/4294967296;};
   const ACCENT=0x2348C8, DOMD=0xC8CFDA, EDGE=0xAEB7C6;
   const nodes=[], edges=[], domPos=[];
-  const N_DOM=5;
+  const N_DOM=[4,5,6,5][variant%4];
+  const radius=[1.9,2.05,1.82,2.1][variant%4];
   for(let i=0;i<N_DOM;i++){
-    const t=i/N_DOM*Math.PI*2 + 0.3;
-    const r=2.05, y=(rnd()-0.5)*2.4;
-    domPos.push(new THREE.Vector3(Math.cos(t)*r, y, Math.sin(t)*r));
+    const t=i/N_DOM*Math.PI*2 + 0.28 + variant*.16;
+    const y=(rnd()-0.5)*(variant===2?2.8:2.1);
+    domPos.push(new THREE.Vector3(Math.cos(t)*radius, y, Math.sin(t)*radius));
     nodes.push({p:domPos[i], dom:true});
   }
-  for(let i=0;i<N_DOM;i++) edges.push([i,(i+1)%N_DOM]);   // sparse backbone
+  for(let i=0;i<N_DOM;i++) edges.push([i,(i+1)%N_DOM]);
+  if(variant===1 || variant===3) edges.push([0,Math.floor(N_DOM/2)]);
   for(let i=0;i<N_DOM;i++){
-    const k=3+Math.floor(rnd()*4);
+    const k=(variant===0?4:variant===1?3:variant===2?5:2)+Math.floor(rnd()*3);
     for(let j=0;j<k;j++){
-      const off=new THREE.Vector3(rnd()-0.5,rnd()-0.5,rnd()-0.5).normalize().multiplyScalar(0.8+rnd()*0.55);
+      const off=new THREE.Vector3(rnd()-0.5,rnd()-0.5,rnd()-0.5).normalize().multiplyScalar(0.62+rnd()*0.62);
       const idx=nodes.length; nodes.push({p:domPos[i].clone().add(off), dom:false});
       edges.push([i,idx]);
+      if(variant===2 && rnd()>.72){
+        const idx2=nodes.length; nodes.push({p:nodes[idx].p.clone().add(off.clone().normalize().multiplyScalar(.48+rnd()*.32)), dom:false});
+        edges.push([idx,idx2]);
+      }
     }
   }
-  const gDom=new THREE.SphereGeometry(0.205,28,28), gLeaf=new THREE.SphereGeometry(0.108,18,18);
-  const mDom=new THREE.MeshStandardMaterial({color:ACCENT,roughness:0.32,metalness:0.12,emissive:0x14307c,emissiveIntensity:0.28});
+
+  const gDom=new THREE.SphereGeometry(0.17,24,24), gLeaf=new THREE.SphereGeometry(0.09,16,16);
+  const mDom=new THREE.MeshStandardMaterial({color:ACCENT,roughness:0.32,metalness:0.12,emissive:0x14307c,emissiveIntensity:0.24});
   const mLeaf=new THREE.MeshStandardMaterial({color:DOMD,roughness:0.62,metalness:0.0});
   nodes.forEach(n=>{const m=new THREE.Mesh(n.dom?gDom:gLeaf, n.dom?mDom:mLeaf); m.position.copy(n.p); root.add(m);});
   const pts=[]; edges.forEach(([a,b])=>{const A=nodes[a].p,B=nodes[b].p; pts.push(A.x,A.y,A.z,B.x,B.y,B.z);});
   const geo=new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.Float32BufferAttribute(pts,3));
-  root.add(new THREE.LineSegments(geo, new THREE.LineBasicMaterial({color:EDGE,transparent:true,opacity:0.55})));
+  root.add(new THREE.LineSegments(geo, new THREE.LineBasicMaterial({color:EDGE,transparent:true,opacity:0.52})));
 
-  let drag=false, lx=0, ly=0, auto=0.0017, rotX=0.22, rotY=0.4;
+  let drag=false, lx=0, ly=0, auto=0.0014+variant*.00018, rotX=0.18+variant*.06, rotY=0.34+variant*.25;
   const cv=renderer.domElement; cv.style.cursor='grab'; cv.style.touchAction='none';
   const pt=e=>e.touches?e.touches[0]:e;
   const down=e=>{drag=true; auto=0; cv.style.cursor='grabbing'; const t=pt(e); lx=t.clientX; ly=t.clientY;};
   const move=e=>{ if(!drag)return; const t=pt(e); rotY+=(t.clientX-lx)*0.008; rotX+=(t.clientY-ly)*0.008; rotX=Math.max(-1.25,Math.min(1.25,rotX)); lx=t.clientX; ly=t.clientY; };
-  const up=()=>{ if(!drag)return; drag=false; cv.style.cursor='grab'; auto=0.0017; };
+  const up=()=>{ if(!drag)return; drag=false; cv.style.cursor='grab'; auto=0.0014+variant*.00018; };
   cv.addEventListener('mousedown',down); window.addEventListener('mousemove',move); window.addEventListener('mouseup',up);
   cv.addEventListener('touchstart',down,{passive:true}); cv.addEventListener('touchmove',move,{passive:true}); cv.addEventListener('touchend',up);
 
-  window.addEventListener('resize',()=>{ W=host.clientWidth||320; H=host.clientHeight||300; camera.aspect=W/H; camera.updateProjectionMatrix(); renderer.setSize(W,H); });
+  window.addEventListener('resize',()=>{ W=host.clientWidth||160; H=host.clientHeight||132; camera.aspect=W/H; camera.updateProjectionMatrix(); renderer.setSize(W,H); });
   const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   (function tick(){ if(!drag && !reduce) rotY+=auto; root.rotation.x=rotX; root.rotation.y=rotY; renderer.render(scene,camera); requestAnimationFrame(tick); })();
 }
