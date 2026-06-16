@@ -12,12 +12,13 @@
   --paper:#ECEEF1; --panel:#FFFFFF; --panel-2:#F6F7F9; --code-bg:#14161B;
   --ink:#15171C; --ink-2:#4A515E; --ink-3:#8A92A0;
   --rule:#E4E7ED; --rule-2:#CCD3DC;
-  --accent:#2348C8; --accent-soft:#E8ECFB;
+  --accent:#2348C8; --accent-2:#1D3EB0; --accent-soft:#E8ECFB;
   --pass:#157F58; --pass-soft:#E2F1EA; --fail:#B23A2E; --amber:#9A6B12;
   --display:'Space Grotesk', system-ui, sans-serif;
   --sans:'Inter', system-ui, -apple-system, sans-serif;
   --mono:'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
   --shadow:0 1px 2px rgba(20,24,34,.04), 0 8px 24px rgba(20,24,34,.06);
+  --shadow-lg:0 2px 4px rgba(20,24,34,.04), 0 18px 50px rgba(20,24,34,.10);
   --r:14px; --r-sm:10px;
 }
 *{box-sizing:border-box}
@@ -25,16 +26,16 @@ html{scroll-behavior:smooth}
 body{margin:0; color:var(--ink); background:var(--paper); font-family:var(--sans); font-size:14px; line-height:1.55; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; overflow-x:hidden}
 a{color:var(--accent); text-decoration:none} a:hover{text-decoration:underline; text-underline-offset:2px}
 button{font-family:inherit}
-.wrap{width:min(1160px, calc(100% - 48px)); margin:0 auto}
+.wrap{width:min(1180px, calc(100% - 48px)); margin:0 auto}
 .mono{font-family:var(--mono); font-variant-numeric:tabular-nums}
 
-.btn{border:1px solid var(--rule-2); border-radius:var(--r-sm); cursor:pointer; padding:9px 16px; color:var(--ink); background:var(--panel); font-weight:600; font-size:13px; display:inline-flex; align-items:center; gap:8px; transition:border-color .15s, background .15s, color .15s, transform .15s}
+.btn{border:1px solid var(--rule-2); border-radius:var(--r-sm); cursor:pointer; padding:9px 17px; color:var(--ink); background:var(--panel); font-weight:600; font-size:13px; display:inline-flex; align-items:center; gap:8px; transition:border-color .15s, background .15s, color .15s, transform .15s, box-shadow .15s}
 .btn:hover{background:var(--panel-2); transform:translateY(-1px)}
 .btn:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
 .btn[disabled]{cursor:default; transform:none; color:var(--ink-3)}
-.btn-primary{background:var(--accent); border-color:var(--accent); color:#fff}
-.btn-primary:hover{background:#1d3eb0; border-color:#1d3eb0}
-.btn-primary[disabled]{background:var(--accent-soft); border-color:var(--accent-soft); color:#8b9bd8}
+.btn-primary{background:var(--accent); border-color:var(--accent); color:#fff; box-shadow:0 8px 18px -8px rgba(35,72,200,.6)}
+.btn-primary:hover{background:var(--accent-2); border-color:var(--accent-2)}
+.btn-primary[disabled]{background:var(--accent-soft); border-color:var(--accent-soft); color:#8b9bd8; box-shadow:none}
 
 .topbar{position:sticky; top:0; z-index:40; background:rgba(236,238,241,.82); backdrop-filter:blur(12px); border-bottom:1px solid var(--rule)}
 .nav{height:60px; display:flex; align-items:center; gap:16px}
@@ -44,41 +45,48 @@ button{font-family:inherit}
 .brand .sub{font-size:12px; color:var(--ink-3); font-weight:500}
 .spacer{flex:1}
 
-.head{padding:54px 0 36px}
-.head-grid{display:grid; grid-template-columns:minmax(0,1fr) 340px; gap:44px; align-items:center}
+.head{padding:58px 0 40px}
+.head-grid{display:grid; grid-template-columns:minmax(0,1fr) 380px; gap:52px; align-items:center}
 .eyebrow{font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--accent); font-weight:600; display:flex; align-items:center; gap:8px; flex-wrap:wrap}
 .eyebrow .sep{color:var(--rule-2)}
-.head h1{font-family:var(--display); font-size:clamp(30px,4.3vw,48px); line-height:1.04; letter-spacing:-.03em; font-weight:600; margin:16px 0 0; max-width:16ch}
-.lede{color:var(--ink-2); font-size:16px; line-height:1.62; margin:16px 0 0; max-width:60ch}
+.head h1{font-family:var(--display); font-size:clamp(31px,4.3vw,49px); line-height:1.05; letter-spacing:-.032em; font-weight:600; margin:18px 0 0; max-width:17ch}
+.lede{color:var(--ink-2); font-size:16px; line-height:1.64; margin:18px 0 0; max-width:60ch}
 .lede b{color:var(--ink); font-weight:600}
-.head-actions{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-top:24px}
+.head-actions{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-top:26px}
 .head-note{font-family:var(--mono); font-size:11.5px; color:var(--ink-3)}
 
-/* 3D graph */
-.graph-card{background:var(--panel); border:1px solid var(--rule); border-radius:var(--r); box-shadow:var(--shadow); padding:10px}
-.graph-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:8px}
-.graph-cell{position:relative; border-radius:var(--r-sm); background:radial-gradient(120% 120% at 30% 18%, #FBFCFD 0%, #EEF1F5 100%); overflow:hidden; border:1px solid var(--rule)}
-.graph-cell .graph3d{height:132px; border-radius:0; background:transparent}
-.graph-cell-label{position:absolute; left:9px; bottom:7px; font-family:var(--mono); font-size:9.5px; color:var(--ink-3); background:rgba(255,255,255,.72); border:1px solid rgba(204,211,220,.72); border-radius:999px; padding:2px 7px; pointer-events:none}
-.graph3d{width:100%; height:300px; border-radius:var(--r-sm); background:radial-gradient(120% 120% at 30% 18%, #FBFCFD 0%, #EEF1F5 100%); overflow:hidden}
-.graph3d canvas{display:block}
-.graph3d.nofx{display:flex; align-items:center; justify-content:center}
-.graph-foot{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:9px 6px 3px}
-.graph-key{display:flex; gap:14px; font-family:var(--mono); font-size:10.5px; color:var(--ink-3)}
+/* graph slide — a few grounded instances on one framed surface */
+.graph-card{background:var(--panel); border:1px solid var(--rule); border-radius:20px; box-shadow:var(--shadow-lg); padding:14px}
+.slide-h{display:flex; align-items:baseline; justify-content:space-between; gap:10px; padding:1px 4px 11px}
+.slide-h .t{font-family:var(--display); font-size:13.5px; font-weight:600; letter-spacing:-.01em; color:var(--ink)}
+.slide-h .s{font-family:var(--mono); font-size:10px; color:var(--ink-3)}
+.graph-stage{position:relative; border-radius:15px; overflow:hidden; padding:8px;
+  background:radial-gradient(135% 110% at 50% 2%, #FCFDFE 0%, #EEF1F6 58%, #E5E9F0 100%);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.75), inset 0 0 0 1px rgba(204,211,220,.5), inset 0 -30px 56px -34px rgba(35,72,200,.12)}
+.graph-grid{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+.graph-cell{position:relative; height:140px; border-radius:11px; overflow:hidden; transition:box-shadow .2s}
+.graph-cell:hover{box-shadow:inset 0 0 0 1px rgba(35,72,200,.22)}
+.graph-cell .graph3d{position:absolute; inset:0; width:100%; height:100%; background:transparent}
+.graph-cell .graph3d canvas{display:block}
+.graph-cell .graph3d.nofx{display:flex; align-items:center; justify-content:center}
+.graph-cell .lbl{position:absolute; left:8px; bottom:7px; font-family:var(--mono); font-size:9px; color:var(--ink-3); background:rgba(255,255,255,.62); border:1px solid rgba(204,211,220,.55); border-radius:999px; padding:2px 7px; pointer-events:none}
+.graph-foot{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 5px 3px}
+.graph-key{display:flex; gap:15px; font-family:var(--mono); font-size:10.5px; color:var(--ink-3)}
 .graph-key i{width:9px; height:9px; border-radius:50%; display:inline-block; margin-right:6px; vertical-align:middle}
-.graph-key i.dom{background:var(--accent)} .graph-key i.domd{background:#C8CFDA}
-.graph-hint{font-family:var(--mono); font-size:10px; color:var(--ink-3)}
+.graph-key i.dom{background:var(--accent)} .graph-key i.domd{background:#CBD2DC}
+.graph-hint{font-family:var(--mono); font-size:10px; color:var(--ink-3); display:flex; align-items:center; gap:6px}
+.graph-hint::before{content:"⤿"; font-size:13px}
 
-.work{padding:8px 0 60px}
-.work-grid{display:grid; grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr); gap:20px; align-items:start}
+.work{padding:8px 0 64px}
+.work-grid{display:grid; grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr); gap:22px; align-items:start}
 .card{background:var(--panel); border:1px solid var(--rule); border-radius:var(--r); box-shadow:var(--shadow)}
 .card-h{display:flex; align-items:center; gap:10px; padding:13px 16px; border-bottom:1px solid var(--rule)}
 .card-h h3{margin:0; font-size:11px; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-3); font-weight:600}
 .card-h .meta{margin-left:auto; font-family:var(--mono); font-size:11px; color:var(--ink-3)}
 
 /* code panel (dark figure) */
-.code{position:sticky; top:76px; background:var(--code-bg); border:1px solid #232732; border-radius:var(--r); overflow:hidden; box-shadow:var(--shadow)}
-.code-h{display:flex; align-items:center; gap:9px; padding:11px 15px; border-bottom:1px solid #232732; background:#171A21}
+.code{position:sticky; top:76px; background:var(--code-bg); border:1px solid #232732; border-radius:var(--r); overflow:hidden; box-shadow:var(--shadow-lg)}
+.code-h{display:flex; align-items:center; gap:9px; padding:12px 15px; border-bottom:1px solid #232732; background:#171A21}
 .code-h .title{font-family:var(--mono); font-size:12px; font-weight:600; color:#C6CCD8}
 .code-h .status{margin-left:auto; font-family:var(--mono); font-size:10.5px; font-weight:600; color:#7C8494; text-transform:uppercase; letter-spacing:.05em; display:flex; align-items:center; gap:7px}
 .code-h .status::before{content:""; width:6px; height:6px; border-radius:50%; background:#7C8494}
@@ -87,7 +95,7 @@ button{font-family:inherit}
 .code-note{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 15px; border-bottom:1px solid #232732; background:#13151A}
 .code-note span{font-size:11.5px; color:#8C94A3} .code-note b{color:#C6CCD8; font-weight:600}
 .region{font-family:var(--mono); font-size:10.5px; color:#E6B566; border:1px solid #3a3424; background:#211e15; border-radius:999px; padding:4px 9px; white-space:nowrap}
-.codebox{max-height:700px; overflow:auto; font-family:var(--mono); font-size:11.5px; line-height:1.62; color:#D6DBE4; white-space:pre; tab-size:2; padding:16px}
+.codebox{max-height:704px; overflow:auto; font-family:var(--mono); font-size:11.5px; line-height:1.62; color:#D6DBE4; white-space:pre; tab-size:2; padding:16px}
 .codebox.deployed{padding:0; white-space:normal}
 .codebox .c{color:#6B7384}.codebox .k{color:#C5A3FF}.codebox .s{color:#7FD6A8}.codebox .f{color:#7FB0FF}.codebox .dec{color:#E6B566}
 .ln{display:flex; min-height:18.6px}
@@ -105,7 +113,7 @@ button{font-family:inherit}
 .stepchip b{color:#E6B566; margin-right:6px}
 
 /* pipeline */
-.demo{display:grid; gap:16px}
+.demo{display:grid; gap:18px}
 .flow{display:grid; grid-template-columns:repeat(4,1fr); background:var(--panel); border:1px solid var(--rule); border-radius:var(--r); box-shadow:var(--shadow); overflow:hidden}
 .flowstep{padding:14px; border-right:1px solid var(--rule); transition:background .2s}
 .flowstep:last-child{border-right:none}
@@ -115,41 +123,32 @@ button{font-family:inherit}
 .flowstep.active{background:var(--accent-soft)} .flowstep.active .n{color:var(--accent)}
 .flowstep.done{background:var(--pass-soft)} .flowstep.done .n{color:var(--pass)} .flowstep.done .n::after{content:" ✓"}
 
-/* combined chart + workload box */
-.chart-wrap{padding:14px 16px 6px}
+/* benchmark bar chart */
+.chart-wrap{padding:16px 16px 8px}
 .plot{width:100%; height:auto; display:block}
 .gridline{stroke:var(--rule); stroke-width:1}
 .gridline.tick{stroke:var(--rule); stroke-dasharray:2 4}
-.refline{stroke:var(--rule-2); stroke-width:1; stroke-dasharray:5 4}
-.axislbl{fill:var(--ink-3); font-size:10px; font-family:var(--mono)}
-.axisttl{fill:var(--ink-3); font-size:10.5px; font-family:var(--mono)}
-.reflbl{fill:var(--ink-3); font-size:10px; font-family:var(--mono)}
-.pt{transition:r .3s ease}
-.pt-cand{fill:var(--ink-3)} .pt-sel{fill:var(--accent)}
-.pt-test{fill:var(--panel); stroke:var(--accent); stroke-width:1.6; stroke-dasharray:3 2}
-.halo{fill:none; stroke:var(--accent); stroke-width:1.4; opacity:.4; transition:r .4s ease}
-.gaplink{stroke:var(--accent); stroke-width:1.2; stroke-dasharray:3 3; opacity:.5}
-.plbl{font-family:var(--mono); font-size:10px; font-weight:600; opacity:0; transition:opacity .35s ease}
-.plbl.sel{fill:var(--accent)} .plbl.test{fill:var(--ink-2)} .plbl.on{opacity:1}
-.bar-bg{fill:var(--panel-2); stroke:var(--rule); stroke-width:1}
-.bar-fill{fill:var(--rule-2); transition:width .45s ease, opacity .25s ease}
-.bar-fill.sel{fill:var(--accent)}
-.bar-fill.warn{fill:#DDBA6E}
-.bar-lbl{fill:var(--ink); font-size:11px; font-weight:600; font-family:var(--sans)}
-.bar-sub{fill:var(--ink-3); font-size:10px; font-family:var(--mono)}
-.bar-val{fill:var(--ink); font-size:10.5px; font-weight:700; font-family:var(--mono)}
-.bar-size{fill:var(--ink-2); font-size:10px; font-family:var(--mono)}
-.bar-note{fill:var(--ink-3); font-size:10px; font-family:var(--mono)}
-.bar-head{fill:var(--ink-3); font-size:10px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; font-family:var(--mono)}
+.b-axisline{stroke:var(--rule-2); stroke-width:1}
+.b-head{fill:var(--ink-3); font-size:9.5px; font-weight:600; letter-spacing:.07em; text-transform:uppercase; font-family:var(--mono)}
+.b-axis{fill:var(--ink-3); font-size:9.5px; font-family:var(--mono)} .b-axis.dim{fill:var(--ink-3); opacity:.85}
+.b-name{fill:var(--ink); font-size:12px; font-weight:600; font-family:var(--sans)} .b-name.pai{fill:var(--accent)}
+.b-sub{fill:var(--ink-3); font-size:10px; font-family:var(--mono)}
+.b-track{fill:var(--panel-2); stroke:var(--rule); stroke-width:1}
+.b-fill{transition:width .55s cubic-bezier(.22,.7,.2,1)}
+.b-fill.pai{fill:var(--accent)} .b-fill.neutral{fill:#AEB7C6} .b-fill.timeout{fill:#DDBA6E}
+.b-val{fill:var(--ink-2); font-size:11px; font-weight:600; font-family:var(--mono); font-variant-numeric:tabular-nums} .b-val.pai{fill:var(--accent)}
+.b-size{fill:var(--ink); font-size:11px; font-weight:600; font-family:var(--mono); font-variant-numeric:tabular-nums} .b-size.warn{fill:var(--amber); font-weight:600}
+.b-rowhi{fill:var(--accent-soft); opacity:.6}
+.b-cap{fill:var(--ink-3); font-size:10.5px; font-family:var(--mono)}
 .phase{font-family:var(--mono); font-size:11px; color:var(--accent); font-weight:600}
 
-.metrics-row{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; padding:2px 16px 14px; border-bottom:1px solid var(--rule)}
-.cw{border:1px solid var(--rule); border-radius:var(--r-sm); padding:11px; background:var(--panel-2)}
-.cw .l{font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3); font-weight:600}
-.cw .v{font-family:var(--display); font-size:22px; font-weight:600; letter-spacing:-.03em; margin-top:6px; font-variant-numeric:tabular-nums}
-.cw .v.pass{color:var(--pass)} .cw .v.warn{color:var(--amber)}
+.metrics-row{display:grid; grid-template-columns:repeat(4,1fr); gap:9px; padding:4px 16px 15px; border-bottom:1px solid var(--rule)}
+.cw{border:1px solid var(--rule); border-radius:var(--r-sm); padding:12px; background:var(--panel-2)}
+.cw .l{font-family:var(--mono); font-size:9.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3); font-weight:600}
+.cw .v{font-family:var(--display); font-size:21px; font-weight:600; letter-spacing:-.03em; margin-top:7px; font-variant-numeric:tabular-nums}
+.cw .v.pass{color:var(--pass)} .cw .v.accent{color:var(--accent)}
 
-.obs-block{padding:15px 16px 17px}
+.obs-block{padding:16px}
 .obs-block h4{margin:0; font-size:11px; text-transform:uppercase; letter-spacing:.09em; color:var(--ink-3); font-weight:600}
 .obs-block .wl{font-family:var(--display); font-size:17px; font-weight:600; letter-spacing:-.02em; margin:10px 0 3px}
 .obs-block .wl-sub{color:var(--ink-2); font-size:12.5px}
@@ -157,7 +156,7 @@ button{font-family:inherit}
 .facts span{font-family:var(--mono); font-size:10px; color:var(--ink-2); border:1px solid var(--rule); border-radius:999px; padding:4px 8px; background:var(--panel-2)}
 
 /* candidate queue */
-.qlist{display:grid; gap:8px; max-height:236px; overflow:auto; padding:12px 14px}
+.qlist{display:grid; gap:8px; max-height:240px; overflow:auto; padding:12px 14px}
 .cand{display:grid; grid-template-columns:50px 1fr auto; gap:11px; align-items:center; border:1px solid var(--rule); border-radius:var(--r-sm); padding:10px 12px; background:var(--panel-2); opacity:.4; transition:opacity .25s, border-color .2s, background .2s, transform .2s}
 .cand.shown{opacity:1}
 .cand.active{border-color:var(--accent); background:var(--accent-soft)}
@@ -174,14 +173,17 @@ button{font-family:inherit}
 /* ledger */
 .ledger table{width:100%; border-collapse:collapse; font-size:12px}
 .ledger th{text-align:left; color:var(--ink-3); font-size:10px; letter-spacing:.07em; text-transform:uppercase; font-weight:600; padding:10px 14px; border-bottom:1px solid var(--rule)}
+.ledger th.num{text-align:right}
 .ledger td{padding:10px 14px; border-bottom:1px solid var(--rule); color:var(--ink)}
 .ledger td.num{text-align:right} .ledger td.ok{color:var(--pass); text-align:center} .ledger td.idea{color:var(--ink-2)}
 .ledger tbody tr{opacity:0; transition:opacity .35s ease}
 .ledger tbody tr.shown{opacity:1}
 .ledger tbody tr:last-child td{border-bottom:none}
 .ledger tr.sel td{background:var(--pass-soft)}
+.lnote{color:var(--ink-2); font-size:11.5px; padding:11px 14px; border-top:1px solid var(--rule); background:var(--panel-2)}
+.lnote b{color:var(--ink)}
 
-.foot{padding:24px 0 50px; border-top:1px solid var(--rule); color:var(--ink-3); font-size:12px; margin-top:20px}
+.foot{padding:26px 0 56px; border-top:1px solid var(--rule); color:var(--ink-3); font-size:12px; margin-top:24px}
 .foot b{color:var(--ink-2)} .foot .mono{font-size:11px}
 
 .codebox::-webkit-scrollbar, .qlist::-webkit-scrollbar{width:9px; height:9px}
@@ -189,11 +191,11 @@ button{font-family:inherit}
 .qlist::-webkit-scrollbar-thumb{background:var(--rule-2); border-radius:999px}
 
 @media(max-width:1080px){
-  .head-grid{grid-template-columns:1fr} .graph-card{max-width:420px}
+  .head-grid{grid-template-columns:1fr; gap:32px} .graph-card{max-width:440px}
   .work-grid{grid-template-columns:1fr} .code{position:relative; top:auto}
 }
 @media(max-width:680px){
-  .wrap{width:min(100% - 28px, 1160px)} .head{padding-top:36px}
+  .wrap{width:min(100% - 28px, 1180px)} .head{padding-top:38px}
   .flow{grid-template-columns:1fr 1fr} .flowstep:nth-child(2){border-right:none}
   .flowstep:nth-child(1),.flowstep:nth-child(2){border-bottom:1px solid var(--rule)}
   .metrics-row{grid-template-columns:1fr 1fr}
@@ -207,25 +209,29 @@ button{font-family:inherit}
 <nav class="topbar"><div class="wrap nav">
   <div class="brand"><span class="mark"><span>p</span>AI</span><span class="sub">distribution-aware programming</span></div>
   <div class="spacer"></div>
-
+  <button class="btn btn-primary" id="runTop">Run replay</button>
 </div></nav>
 
 <header class="head"><div class="wrap">
   <div class="head-grid">
     <div>
-      <div class="eyebrow">pAI demo <span class="sep">/</span> decorated solver <span class="sep">/</span> PACE replay</div>
-      <h1>Mark a piece of code. pAI learns from traces and makes it faster over time.</h1>
-      <p class="lede">pAI lets developers mark an expensive function with a decorator. As repeated calls come in, pAI learns the workload, synthesizes specialized replacements, verifies them, and patches only that function. This replay uses PACE 2025 Dominating Set: on 100 private graphs, the selected solver returns valid outputs with average size 231,595 in 2.89s. Released PACE solvers return slightly smaller sets, but take hundreds of seconds. Your application still calls solve().</b>.</p>
+      <div class="eyebrow">pAI <span class="sep">/</span> decorated solver <span class="sep">/</span> PACE 2025 replay</div>
+      <h1>Mark a function. pAI learns from its calls and makes it faster over time.</h1>
+      <p class="lede">Wrap an expensive function in a pAI decorator. As repeated calls arrive, pAI learns the workload, synthesizes specialized replacements, verifies them, and patches only that function. This replay uses <b>PACE 2025 Dominating Set</b>: across 100 private graphs the selected solver returns valid sets averaging <b>231,595</b> vertices in <b>2.89s</b> — within a few percent of the released PACE solvers, which take hundreds of seconds. Your application keeps calling <b>solve()</b>.</p>
       <div class="head-actions">
         <button class="btn btn-primary" id="runMain">Run replay</button>
+        <span class="head-note">3 candidates · 5 validation graphs · 100 private-test graphs</span>
       </div>
     </div>
     <div class="graph-card">
-      <div class="graph-grid">
-        <div class="graph-cell"><div class="graph3d" id="graph3d0"></div><span class="graph-cell-label">private #01</span></div>
-        <div class="graph-cell"><div class="graph3d" id="graph3d1"></div><span class="graph-cell-label">private #18</span></div>
-        <div class="graph-cell"><div class="graph3d" id="graph3d2"></div><span class="graph-cell-label">private #47</span></div>
-        <div class="graph-cell"><div class="graph3d" id="graph3d3"></div><span class="graph-cell-label">private #83</span></div>
+      <div class="slide-h"><span class="t">Private test instances</span><span class="s">sampled from 100</span></div>
+      <div class="graph-stage">
+        <div class="graph-grid">
+          <div class="graph-cell"><div class="graph3d" id="graph3d0"></div><span class="lbl">#01</span></div>
+          <div class="graph-cell"><div class="graph3d" id="graph3d1"></div><span class="lbl">#18</span></div>
+          <div class="graph-cell"><div class="graph3d" id="graph3d2"></div><span class="lbl">#47</span></div>
+          <div class="graph-cell"><div class="graph3d" id="graph3d3"></div><span class="lbl">#83</span></div>
+        </div>
       </div>
       <div class="graph-foot">
         <div class="graph-key"><span><i class="dom"></i>dominator</span><span><i class="domd"></i>dominated</span></div>
@@ -238,7 +244,7 @@ button{font-family:inherit}
 <main class="work"><div class="wrap">
   <div class="work-grid">
     <section class="code" id="codePanel" aria-label="Selected solver">
-      <div class="code-h"><span class="title" id="codeTitle">run.py</span><span class="status" id="codeStatus">generic baseline</span></div>
+      <div class="code-h"><span class="title" id="codeTitle">solver.py</span><span class="status" id="codeStatus">decorated · generic</span></div>
       <div class="code-note"><span><b>Your code</b> marks the optimization target with a pAI decorator.</span><span class="region">@pai.optimize · solve()</span></div>
       <div class="codebox" id="codeBox"></div>
       <div class="deploy-note"><b>Patch applied:</b> the app still calls <code>solve()</code>. The decorated function now holds the full verified solver — exactly the code below.</div>
@@ -259,18 +265,18 @@ button{font-family:inherit}
       </div>
 
       <div class="card">
-        <div class="card-h"><h3>Performance snapshot</h3><span class="phase" id="phase">baseline</span></div>
-        <div class="chart-wrap"><svg class="plot" id="plot" viewBox="0 0 680 330" role="img" aria-label="PACE private-test average size versus runtime comparison"></svg></div>
+        <div class="card-h"><h3>Private-test comparison</h3><span class="phase" id="phase">idle</span></div>
+        <div class="chart-wrap"><svg class="plot" id="plot" viewBox="0 0 700 300" role="img" aria-label="Runtime and average size versus released solvers"></svg></div>
         <div class="metrics-row">
-          <div class="cw"><div class="l">pAI avg. size</div><div class="v" id="roQ">—</div></div>
-          <div class="cw"><div class="l">pAI runtime</div><div class="v" id="roMs">—</div></div>
+          <div class="cw"><div class="l">Avg. size</div><div class="v" id="roSize">—</div></div>
+          <div class="cw"><div class="l">Runtime</div><div class="v" id="roMs">—</div></div>
           <div class="cw"><div class="l">Validity</div><div class="v pass" id="roFeas">—</div></div>
-          <div class="cw"><div class="l">vs Codex</div><div class="v warn" id="roTest">—</div></div>
+          <div class="cw"><div class="l">Speedup</div><div class="v accent" id="roSpeed">—</div></div>
         </div>
         <div class="obs-block">
           <h4>Demo workload</h4>
           <div class="wl">PACE Dominating Set replay</div>
-          <div class="wl-sub">100 private graphs · valid outputs · size and runtime</div>
+          <div class="wl-sub">100 private graphs · valid outputs · direct size &amp; runtime</div>
           <div class="facts"><span>decorated solve()</span><span>verified patch</span><span>100 private graphs</span><span>validity checked</span></div>
         </div>
       </div>
@@ -281,18 +287,19 @@ button{font-family:inherit}
       </div>
 
       <div class="card ledger">
-        <div class="card-h"><h3>Verified candidates</h3><span class="meta">validation · feasibility checks</span></div>
+        <div class="card-h"><h3>Verified candidates</h3><span class="meta">validation · 5 graphs</span></div>
         <table>
-          <thead><tr><th>Candidate</th><th class="idea">Strategy</th><th>Check</th><th>Role</th><th>Feasible</th><th>Outcome</th></tr></thead>
+          <thead><tr><th>Candidate</th><th class="idea">Strategy</th><th class="num">Avg size</th><th class="num">Runtime</th><th>Feasible</th><th>Outcome</th></tr></thead>
           <tbody id="evalBody"></tbody>
         </table>
+        <div class="lnote">Runner-up <b>it1·s2</b> returned a marginally smaller set (74,758) about 2× faster; the selected solver was chosen by an internal lower-bound proxy, then evaluated on the 100 private graphs.</div>
       </div>
     </aside>
   </div>
 </div></main>
 
 <footer class="foot"><div class="wrap">
-  <b>Source:</b> <span class="mono">pace2025_dominating_set / pace2025_ds_heuristic_llm_01</span>, heuristic track. We report the direct PACE quantities: validity, average dominating-set size, and runtime. Lower size and lower runtime are better. The chart reports private-test performance against Codex, released PACE solvers, general heuristics, and exact-style baselines. Lower-bound-normalized quality is kept internal because the private lower bounds are loose. Every output is a valid dominating set; optimality is not claimed. Recorded run: 3 candidates, 5 validation graphs, 100 private-test graphs.
+  <b>Source:</b> <span class="mono">pace2025_dominating_set</span>, heuristic track. Reported directly: validity, average dominating-set size, and runtime — lower size and lower runtime are better. The comparison shows private-test runtime against Codex best@5, the released PACE solvers, general heuristics, and exact-style baselines; competitor figures are reference values. Lower-bound-normalized quality is kept internal because the private lower bounds are loose. Every output is a valid dominating set; optimality is not claimed. Recorded run: 3 candidates · 5 validation graphs · 100 private-test graphs.
 </div></footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -1065,113 +1072,95 @@ def solve(instance, analysis=None, manifest=None):
 
     return ds
 </script>
-<script>// Three real synthesized candidates for PACE 2025 Dominating Set (heuristic track).
-// Sizes are average dominating-set sizes; lower is better.
+<script>/* Real synthesized candidates — PACE 2025 Dominating Set (heuristic track). Sizes are
+   average dominating-set sizes (lower is better); validation numbers are grounded in the run. */
 const CAND=[
  {id:'it0·s2', title:'Tree-like sparse core — leaf/path rules + bounded repair',
-  check:'held-out validation', role:'candidate', dec:'sup', tag:'superseded'},
+  valSize:77918, valMs:1480, dec:'sup', tag:'superseded'},
  {id:'it1·s2', title:'Pendant-heavy — forced leaf supports + O(m) local gain',
-  check:'held-out validation', role:'runner-up', dec:'rej', tag:'runner-up'},
+  valSize:74758, valMs:1251, dec:'rej', tag:'runner-up'},
  {id:'it1·s0', title:'Bounded-degree core — bucketed marginal-gain greedy',
-  check:'held-out validation', role:'deployed solver', selected:true, dec:'sel', tag:'selected',
-  testSize:231595, testMs:2890},
+  valSize:74826, valMs:2456, selected:true, dec:'sel', tag:'selected',
+  testSize:231595, testMs:2890, testN:100},
 ];
 
-const BASELINES=[
- {name:'pAI', ms:2890, size:231595, kind:'pai', label:'pAI · 2.89s'},
- {name:'Codex best@5', ms:6340, size:236926, kind:'codex', label:'Codex'},
- {name:'Fontan–Verger', ms:286240, size:224106, kind:'pace'},
- {name:'Root', ms:360420, size:224108, kind:'pace'},
- {name:'Shadoks', ms:316070, size:224306, kind:'pace'},
- {name:'AEG Heidelberg', ms:350140, size:224086, kind:'pace'},
- {name:'Greeduce', ms:300860, size:224699, kind:'pace'},
+/* Private-test comparison. Bar length encodes runtime (log); size shown alongside.
+   pAI numbers are from the run; competitor rows are the supplied reference figures. */
+const ROWS=[
+ {name:'pAI · selected solver', sub:'verified patch',   ms:2890,   val:'2.89s',     size:'231.6k',        kind:'pai'},
+ {name:'Codex best@5',          sub:'LLM, no eval loop', ms:6340,   val:'6.34s',     size:'236.9k',        kind:'neutral'},
+ {name:'General heuristics',    sub:'untuned',           ms:8360,   val:'8.3s',      size:'234.7–241.6k',  kind:'neutral'},
+ {name:'Released PACE solvers', sub:'2025 winners',      ms:316000, val:'286–360s',  size:'≈224.1k',       kind:'neutral'},
+ {name:'Exact-style baselines', sub:'ILP / branch&bound',ms:390000, val:'360–420s',  size:'timeout',       kind:'timeout'},
 ];
-const HEUR_RANGE={x1:8290,x2:8430,y1:234674,y2:241604,label:'general heuristics'};
-const TIMEOUT_RANGE={x1:360100,x2:420100,label:'exact-style timeout'};
 
 const SVG='http://www.w3.org/2000/svg';
-const PL={l:54,r:126,t:28,b:34,W:680,H:330};
+const B={x0:172,x1:486,nameX:6,valX:560,sizeX:694,top:74,rowH:40,barH:13,W:700,H:300};
+const rdom=[2.5,460];
+const lg=v=>Math.log10(v);
+const bx=s=>B.x0+(lg(s)-lg(rdom[0]))/(lg(rdom[1])-lg(rdom[0]))*(B.x1-B.x0);
 const $=id=>document.getElementById(id);
 const el=(t,a)=>{const e=document.createElementNS(SVG,t);for(const k in a)e.setAttribute(k,a[k]);return e;};
 const txt=(node,s)=>{node.textContent=s;return node;};
-const fmtSize=v=>v>=100000?(v/1000).toFixed(1)+'k':Math.round(v).toLocaleString();
-const fmtRuntime=ms=>ms>=1000?(ms/1000).toFixed(ms<10000?2:0)+'s':Math.round(ms)+'ms';
-const PAI_MS=BASELINES.find(b=>b.kind==='pai').ms;
-const BAR_ROWS=[
- {name:'pAI selected', ms:2890, size:'231.6k', kind:'pai'},
- {name:'Codex best@5', ms:6340, size:'236.9k', kind:'codex'},
- {name:'General heuristics', ms:8360, size:'234.7–241.6k', kind:'heur'},
- {name:'Released PACE solvers', ms:316070, size:'224.1–224.7k', kind:'pace'},
- {name:'Exact-style timeout', ms:360100, size:'timeout', kind:'timeout'},
-];
-const ratioDom=[1,150];
-const barX=v=>PL.l+(Math.log10(v)-Math.log10(ratioDom[0]))/(Math.log10(ratioDom[1])-Math.log10(ratioDom[0]))*(PL.W-PL.l-PL.r);
-const ratioFmt=v=>v>=100?Math.round(v)+'×':v>=10?v.toFixed(0)+'×':v.toFixed(1)+'×';
+const num=v=>v.toLocaleString('en-US');
 
-function axes(){ renderBenchmark(false); }
-
-function renderBenchmark(emphasize){
+function renderBenchmark(){
   const svg=$('plot'); if(!svg) return; svg.innerHTML='';
-  const barL=PL.l+132, barR=PL.W-PL.r, rowH=48, barH=12, top=62;
-  svg.appendChild(txt(el('text',{class:'bar-head',x:PL.l,y:24}),'solver / baseline'));
-  svg.appendChild(txt(el('text',{class:'bar-head',x:barL,y:24}),'runtime vs pAI'));
-  svg.appendChild(txt(el('text',{class:'bar-head',x:PL.W-PL.r+16,y:24}),'avg. size'));
-  [1,3,10,30,100].forEach(v=>{
-    const x=barX(v);
-    svg.appendChild(el('line',{class:'gridline tick',x1:x,y1:44,x2:x,y2:top+rowH*(BAR_ROWS.length-1)+28}));
-    svg.appendChild(txt(el('text',{class:'axislbl',x:x,y:PL.H-12,'text-anchor':'middle'}),v+'×'));
+  // column heads
+  svg.appendChild(txt(el('text',{class:'b-head',x:B.nameX,y:22}),'solver / baseline'));
+  svg.appendChild(txt(el('text',{class:'b-head',x:B.valX,y:22,'text-anchor':'end'}),'runtime'));
+  svg.appendChild(txt(el('text',{class:'b-head',x:B.sizeX,y:22,'text-anchor':'end'}),'avg. size'));
+  const gridTop=34, gridBot=B.top+(ROWS.length-1)*B.rowH+16;
+  // gridlines + faster arrow
+  [3,10,30,100,300].forEach(v=>{ const x=bx(v);
+    svg.appendChild(el('line',{class:'gridline tick',x1:x,y1:gridTop,x2:x,y2:gridBot}));
+    svg.appendChild(txt(el('text',{class:'b-axis',x:x,y:gridBot+15,'text-anchor':'middle'}),v+'s'));
   });
-  svg.appendChild(txt(el('text',{class:'bar-note',x:barL,y:44}),'lower is faster · bar length is log-scaled'));
-
-  BAR_ROWS.forEach((b,i)=>{
-    const y=top+i*rowH;
-    const ratio=b.ms/PAI_MS;
-    const x0=barX(1), x1=barX(Math.max(1,ratio));
-    svg.appendChild(txt(el('text',{class:'bar-lbl',x:PL.l,y:y+4}),b.name));
-    svg.appendChild(txt(el('text',{class:'bar-sub',x:PL.l,y:y+20}),fmtRuntime(b.ms)));
-    svg.appendChild(el('rect',{class:'bar-bg',x:x0,y:y-9,width:barR-x0,height:barH,rx:6}));
-    const cls='bar-fill '+(b.kind==='pai'?'sel':(b.kind==='timeout'?'warn':''));
-    const fill=el('rect',{class:cls,x:x0,y:y-9,width:emphasize&&b.kind==='pai'?Math.max(x1-x0,10):0,height:barH,rx:6});
+  svg.appendChild(el('line',{class:'b-axisline',x1:B.x0,y1:gridBot,x2:B.x1,y2:gridBot}));
+  svg.appendChild(txt(el('text',{class:'b-axis dim',x:B.x0,y:gridTop-4}),'← faster   ·   log scale'));
+  // highlight band behind pAI row
+  const hi=B.top+0*B.rowH;
+  svg.appendChild(el('rect',{class:'b-rowhi',x:0,y:hi-B.rowH/2+4,width:B.W,height:B.rowH-6,rx:8}));
+  // rows
+  ROWS.forEach((r,i)=>{
+    const cy=B.top+i*B.rowH;
+    svg.appendChild(txt(el('text',{class:'b-name'+(r.kind==='pai'?' pai':''),x:B.nameX,y:cy-1}),r.name));
+    svg.appendChild(txt(el('text',{class:'b-sub',x:B.nameX,y:cy+13}),r.sub));
+    svg.appendChild(el('rect',{class:'b-track',x:B.x0,y:cy-B.barH/2,width:B.x1-B.x0,height:B.barH,rx:6.5}));
+    const w=Math.max(bx(r.ms/1000)-B.x0,7);
+    const fill=el('rect',{class:'b-fill '+r.kind,x:B.x0,y:cy-B.barH/2,width:0,height:B.barH,rx:6.5});
     svg.appendChild(fill);
-    requestAnimationFrame(()=>fill.setAttribute('width',Math.max(x1-x0,10)));
-    svg.appendChild(txt(el('text',{class:'bar-val',x:Math.min(x1+8,barR+4),y:y+2}),b.kind==='timeout'?'≥'+ratioFmt(ratio):ratioFmt(ratio)));
-    svg.appendChild(txt(el('text',{class:'bar-size',x:PL.W-PL.r+16,y:y+2}),b.size));
+    requestAnimationFrame(()=>fill.setAttribute('width',w));
+    svg.appendChild(txt(el('text',{class:'b-val'+(r.kind==='pai'?' pai':''),x:B.valX,y:cy+3,'text-anchor':'end'}),r.val));
+    svg.appendChild(txt(el('text',{class:'b-size'+(r.size==='timeout'?' warn':''),x:B.sizeX,y:cy+3,'text-anchor':'end'}),r.size));
   });
-  svg.appendChild(txt(el('text',{class:'bar-note',x:PL.l,y:PL.H-12}),'Size is still reported directly; the bar focuses the visual comparison on runtime.'));
+  svg.appendChild(txt(el('text',{class:'b-cap',x:B.nameX,y:B.H-8}),
+    'pAI is ~110× faster than the released PACE winners, at ~3% larger sets — valid on all 100 private graphs.'));
 }
+function axes(){ renderBenchmark(); }
 
-function plotLabel(g,x,y,text,cls,dx=10,dy=4){
-  const lb=txt(el('text',{class:'plbl '+(cls||''),x:x+dx,y:y+dy}),text);
-  g.appendChild(lb); setTimeout(()=>lb.classList.add('on'),100);
-}
 const stCls={sel:'st-sel',rej:'st-rej',sup:'st-sup'};
 function build(){
   const s=$('stream'), b=$('evalBody'); s.innerHTML=''; b.innerHTML='';
   CAND.forEach((c,i)=>{
     const card=document.createElement('div'); card.className='cand'; card.id='cand'+i;
-    card.innerHTML='<div class="cand-id">'+c.id+'</div>'+ 
-      '<div class="cand-main"><div class="cand-ti">'+c.title+'</div>'+ 
-      '<div class="cand-meta"><span class="kv">'+c.check+'</span>'+ 
-      '<span class="kv">'+c.role+'</span>'+ 
-      '<span class="kv ok">feasible</span></div></div>'+ 
+    card.innerHTML='<div class="cand-id">'+c.id+'</div>'+
+      '<div class="cand-main"><div class="cand-ti">'+c.title+'</div>'+
+      '<div class="cand-meta"><span class="kv">'+num(c.valSize)+'</span>'+
+      '<span class="kv">'+(c.valMs/1000).toFixed(2)+'s</span>'+
+      '<span class="kv ok">valid</span></div></div>'+
       '<div class="tag '+stCls[c.dec]+'">'+c.tag+'</div>';
     s.appendChild(card);
     const tr=document.createElement('tr'); tr.id='row'+i; if(c.selected)tr.className='sel';
-    tr.innerHTML='<td class="mono"><b>'+c.id+'</b></td>'+ 
-      '<td class="idea">'+c.title+'</td>'+ 
-      '<td>'+c.check+'</td>'+ 
-      '<td>'+c.role+'</td>'+ 
-      '<td class="mono ok">✓</td>'+ 
+    tr.innerHTML='<td class="mono"><b>'+c.id+'</b></td>'+
+      '<td class="idea">'+c.title+'</td>'+
+      '<td class="mono num">'+num(c.valSize)+'</td>'+
+      '<td class="mono num">'+(c.valMs/1000).toFixed(2)+'s</td>'+
+      '<td class="mono ok">✓</td>'+
       '<td><span class="tag '+stCls[c.dec]+'">'+c.tag+'</span></td>';
     b.appendChild(tr);
   });
 }
-
-function dot(c,selected){
-  // Candidate-level numeric plotting is intentionally suppressed. The chart shows
-  // private-test performance against external baselines, which matches the page narrative.
-}
-function testDot(c){ renderBenchmark(true); }
 
 let running=false, state='idle';
 function setBtns(label,disabled){['runTop','runMain'].forEach(id=>{const b=$(id); if(!b)return; b.textContent=label; b.disabled=disabled;});}
@@ -1183,7 +1172,7 @@ const INITIAL_CODE=`<span class="c"># solver.py — mark the code pAI is allowed
 
 <span class="dec">@pai.optimize(</span>
     learn_from=<span class="s">"calls"</span>,
-    objective=<span class="s">"valid && minimize(size, runtime)"</span>,
+    objective=<span class="s">"valid &amp;&amp; minimize(size, runtime)"</span>,
 <span class="dec">)</span>
 <span class="k">def</span> <span class="f">solve</span>(instance, analysis=None):
     <span class="c"># Correct and general, but not tuned to these graphs yet.</span>
@@ -1200,13 +1189,12 @@ function resetCode(){
   const box=$('codeBox'); const panel=$('codePanel');
   if(panel)panel.classList.remove('deployed');
   if(box){box.classList.remove('deployed'); box.innerHTML=INITIAL_CODE;}
-  const t=$('codeTitle'); if(t)t.textContent='run.py'; setStatus('','generic baseline');
+  const t=$('codeTitle'); if(t)t.textContent='solver.py'; setStatus('','decorated · generic');
 }
 function reset(){
   CAND.forEach((_,i)=>{const c=$('cand'+i),r=$('row'+i); if(c)c.classList.remove('shown','active'); if(r)r.classList.remove('shown');});
-  axes();
-  ['roQ','roMs','roFeas','roTest'].forEach(id=>{ if($(id))$(id).textContent='—'; });
-  setPhase('baseline'); resetCode(); resetFlow(); state='idle'; setBtns('Run replay',false);
+  ['roSize','roMs','roFeas','roSpeed'].forEach(id=>{ if($(id))$(id).textContent='—'; });
+  setPhase('idle'); resetCode(); resetFlow(); state='idle'; setBtns('Run replay',false);
 }
 
 function run(){
@@ -1221,9 +1209,8 @@ function run(){
     setFlow(i===0?1:2);
     const card=$('cand'+i), row=$('row'+i);
     if(card)card.classList.add('shown','active'); if(row)row.classList.add('shown');
-    setPhase('checking candidates');
-    dot(c,false);
-    i++; setTimeout(step,820);
+    setPhase('verifying candidates');
+    i++; setTimeout(step,840);
   };
   setTimeout(step,300);
 }
@@ -1231,16 +1218,15 @@ function run(){
 function select(){
   const c=CAND.find(x=>x.selected); const idx=CAND.indexOf(c);
   setFlow(3,false); const f2=$('flow2'),f3=$('flow3'); if(f2)f2.classList.add('done'); if(f3)f3.classList.add('active');
-  setPhase('choosing patch'); setStatus('live','choosing patch');
+  setPhase('patching solve()'); setStatus('live','choosing patch');
   const card=$('cand'+idx); if(card)card.classList.add('active');
-  dot(c,true);
-  if($('roQ'))$('roQ').textContent=fmtSize(c.testSize);
-  if($('roMs'))$('roMs').textContent=(c.testMs/1000).toFixed(2)+'s';
   if($('roFeas'))$('roFeas').textContent='100/100';
+  if($('roSize'))$('roSize').textContent=num(c.testSize);
   showSelectedCode();
   setTimeout(()=>{
-    testDot(c);
-    if($('roTest'))$('roTest').textContent='2.2× faster';
+    if($('roMs'))$('roMs').textContent=(c.testMs/1000).toFixed(2)+'s';
+    if($('roSpeed'))$('roSpeed').textContent='≈110×';
+    renderBenchmark();
     setPhase('patched ✓'); setFlow(3,true);
     if(f3){f3.classList.add('done'); f3.classList.remove('active');}
     setStatus('done','patch applied'); running=false; state='done'; setBtns('Replay again',false);
@@ -1261,7 +1247,7 @@ function highlightLine(line){
 function renderCode(){
   const raw=$('realsrc').textContent.replace(/^\n/,'');
   const body=raw.split('\n');
-  const prefix=['# solver.py — mark the code pAI is allowed to improve','import pai','','# ── helper code synthesized inside the decorated solver module ──'];
+  const prefix=['# solver.py — mark the code pAI is allowed to improve','import pai','','# ── helpers synthesized inside the decorated solver module ──'];
   const box=$('codeBox'); box.classList.add('deployed');
   let html='',gut=1,inDoc=false;
   const emit=(line,withId,idx)=>{
@@ -1301,76 +1287,73 @@ function renderCode(){
 }
 function showSelectedCode(){renderCode(); $('codePanel').classList.add('deployed'); $('codeTitle').textContent='solver.py → patched'; setStatus('live','patch verified');}
 
-/* ---------------- 3D dominating-set graph grid ---------------- */
+/* ---------------- single grounded 3D dominating-set graph ---------------- */
+function shadowTexture(){
+  const c=document.createElement('canvas'); c.width=c.height=128; const g=c.getContext('2d');
+  const grd=g.createRadialGradient(64,64,2,64,64,62);
+  grd.addColorStop(0,'rgba(26,36,64,0.26)'); grd.addColorStop(0.55,'rgba(26,36,64,0.10)'); grd.addColorStop(1,'rgba(26,36,64,0)');
+  g.fillStyle=grd; g.fillRect(0,0,128,128);
+  const t=new THREE.Texture(c); t.needsUpdate=true; return t;
+}
 function initGraph3D(){
   const hosts=[...document.querySelectorAll('.graph3d')];
   if(!hosts.length) return;
   if(typeof THREE==='undefined'){ hosts.forEach(h=>h.classList.add('nofx')); return; }
-  hosts.forEach((host,i)=>initGraphCell(host,i));
+  hosts.forEach((h,i)=>initGraphCell(h,i));
 }
-
 function initGraphCell(host,variant){
-  let W=host.clientWidth||160, H=host.clientHeight||132;
+  let W=host.clientWidth||168, H=host.clientHeight||140;
   const scene=new THREE.Scene();
   const camera=new THREE.PerspectiveCamera(42, W/H, 0.1, 100);
-  camera.position.set(0,0,8.2);
+  camera.position.set(0,0.95,8.6); camera.lookAt(0,-0.22,0);
   let renderer;
   try{ renderer=new THREE.WebGLRenderer({antialias:true, alpha:true}); }
   catch(e){ host.classList.add('nofx'); return; }
   renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
   renderer.setSize(W,H); host.appendChild(renderer.domElement);
 
+  scene.add(new THREE.AmbientLight(0xffffff,0.84));
+  const d1=new THREE.DirectionalLight(0xffffff,0.74); d1.position.set(3,5,5); scene.add(d1);
+  const d2=new THREE.DirectionalLight(0x9db4ff,0.28); d2.position.set(-4,-1,-4); scene.add(d2);
+
+  const shadow=new THREE.Mesh(new THREE.PlaneGeometry(6.6,6.6),
+    new THREE.MeshBasicMaterial({map:shadowTexture(),transparent:true,depthWrite:false}));
+  shadow.rotation.x=-Math.PI/2; shadow.position.y=-2.42; scene.add(shadow);
+
   const root=new THREE.Group(); scene.add(root);
-  scene.add(new THREE.AmbientLight(0xffffff,0.82));
-  const d1=new THREE.DirectionalLight(0xffffff,0.7); d1.position.set(3,4,5); scene.add(d1);
-  const d2=new THREE.DirectionalLight(0x9db4ff,0.26); d2.position.set(-4,-2,-4); scene.add(d2);
-
-  let s=20260615+variant*117; const rnd=()=>{s=(s*1664525+1013904223)>>>0; return s/4294967296;};
-  const ACCENT=0x2348C8, DOMD=0xC8CFDA, EDGE=0xAEB7C6;
-  const nodes=[], edges=[], domPos=[];
+  let s=20260615+variant*877; const rnd=()=>{s=(s*1664525+1013904223)>>>0; return s/4294967296;};
+  const ACCENT=0x2348C8, DOMD=0xCBD2DC, EDGE=0xB1BAC8;
+  const nodes=[],edges=[],domPos=[];
   const N_DOM=[4,5,6,5][variant%4];
-  const radius=[1.9,2.05,1.82,2.1][variant%4];
-  for(let i=0;i<N_DOM;i++){
-    const t=i/N_DOM*Math.PI*2 + 0.28 + variant*.16;
-    const y=(rnd()-0.5)*(variant===2?2.8:2.1);
-    domPos.push(new THREE.Vector3(Math.cos(t)*radius, y, Math.sin(t)*radius));
-    nodes.push({p:domPos[i], dom:true});
-  }
+  const radius=[1.82,2.0,1.78,2.05][variant%4];
+  for(let i=0;i<N_DOM;i++){ const t=i/N_DOM*Math.PI*2+0.3+variant*0.2, y=(rnd()-0.5)*(variant===2?2.6:2.0);
+    domPos.push(new THREE.Vector3(Math.cos(t)*radius,y,Math.sin(t)*radius)); nodes.push({p:domPos[i],dom:true}); }
   for(let i=0;i<N_DOM;i++) edges.push([i,(i+1)%N_DOM]);
-  if(variant===1 || variant===3) edges.push([0,Math.floor(N_DOM/2)]);
-  for(let i=0;i<N_DOM;i++){
-    const k=(variant===0?4:variant===1?3:variant===2?5:2)+Math.floor(rnd()*3);
-    for(let j=0;j<k;j++){
-      const off=new THREE.Vector3(rnd()-0.5,rnd()-0.5,rnd()-0.5).normalize().multiplyScalar(0.62+rnd()*0.62);
-      const idx=nodes.length; nodes.push({p:domPos[i].clone().add(off), dom:false});
-      edges.push([i,idx]);
-      if(variant===2 && rnd()>.72){
-        const idx2=nodes.length; nodes.push({p:nodes[idx].p.clone().add(off.clone().normalize().multiplyScalar(.48+rnd()*.32)), dom:false});
-        edges.push([idx,idx2]);
-      }
-    }
-  }
-
-  const gDom=new THREE.SphereGeometry(0.17,24,24), gLeaf=new THREE.SphereGeometry(0.09,16,16);
-  const mDom=new THREE.MeshStandardMaterial({color:ACCENT,roughness:0.32,metalness:0.12,emissive:0x14307c,emissiveIntensity:0.24});
-  const mLeaf=new THREE.MeshStandardMaterial({color:DOMD,roughness:0.62,metalness:0.0});
-  nodes.forEach(n=>{const m=new THREE.Mesh(n.dom?gDom:gLeaf, n.dom?mDom:mLeaf); m.position.copy(n.p); root.add(m);});
+  if(variant===1||variant===3) edges.push([0,Math.floor(N_DOM/2)]);
+  for(let i=0;i<N_DOM;i++){ const k=(variant===0?4:variant===1?3:variant===2?5:3)+Math.floor(rnd()*3);
+    for(let j=0;j<k;j++){ const off=new THREE.Vector3(rnd()-0.5,rnd()-0.5,rnd()-0.5).normalize().multiplyScalar(0.6+rnd()*0.55);
+      const idx=nodes.length; nodes.push({p:domPos[i].clone().add(off),dom:false}); edges.push([i,idx]);
+      if(variant===2 && rnd()>0.74){ const idx2=nodes.length;
+        nodes.push({p:nodes[idx].p.clone().add(off.clone().normalize().multiplyScalar(0.46+rnd()*0.3)),dom:false}); edges.push([idx,idx2]); } } }
+  const gDom=new THREE.SphereGeometry(0.165,26,26), gLeaf=new THREE.SphereGeometry(0.09,16,16);
+  const mDom=new THREE.MeshStandardMaterial({color:ACCENT,roughness:0.3,metalness:0.16,emissive:0x122a72,emissiveIntensity:0.28});
+  const mLeaf=new THREE.MeshStandardMaterial({color:DOMD,roughness:0.6,metalness:0.04});
+  nodes.forEach(n=>{const m=new THREE.Mesh(n.dom?gDom:gLeaf,n.dom?mDom:mLeaf); m.position.copy(n.p); root.add(m);});
   const pts=[]; edges.forEach(([a,b])=>{const A=nodes[a].p,B=nodes[b].p; pts.push(A.x,A.y,A.z,B.x,B.y,B.z);});
-  const geo=new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.Float32BufferAttribute(pts,3));
-  root.add(new THREE.LineSegments(geo, new THREE.LineBasicMaterial({color:EDGE,transparent:true,opacity:0.52})));
+  const geo=new THREE.BufferGeometry(); geo.setAttribute('position',new THREE.Float32BufferAttribute(pts,3));
+  root.add(new THREE.LineSegments(geo,new THREE.LineBasicMaterial({color:EDGE,transparent:true,opacity:0.5})));
 
-  let drag=false, lx=0, ly=0, auto=0.0014+variant*.00018, rotX=0.18+variant*.06, rotY=0.34+variant*.25;
+  let drag=false,lx=0,ly=0,auto=0.0015+variant*0.0002,rotX=0.16+variant*0.05,rotY=0.4+variant*0.3;
   const cv=renderer.domElement; cv.style.cursor='grab'; cv.style.touchAction='none';
   const pt=e=>e.touches?e.touches[0]:e;
-  const down=e=>{drag=true; auto=0; cv.style.cursor='grabbing'; const t=pt(e); lx=t.clientX; ly=t.clientY;};
-  const move=e=>{ if(!drag)return; const t=pt(e); rotY+=(t.clientX-lx)*0.008; rotX+=(t.clientY-ly)*0.008; rotX=Math.max(-1.25,Math.min(1.25,rotX)); lx=t.clientX; ly=t.clientY; };
-  const up=()=>{ if(!drag)return; drag=false; cv.style.cursor='grab'; auto=0.0014+variant*.00018; };
+  const down=e=>{drag=true;auto=0;cv.style.cursor='grabbing';const t=pt(e);lx=t.clientX;ly=t.clientY;};
+  const move=e=>{ if(!drag)return; const t=pt(e); rotY+=(t.clientX-lx)*0.009; rotX+=(t.clientY-ly)*0.009; rotX=Math.max(-1.0,Math.min(1.0,rotX)); lx=t.clientX; ly=t.clientY; };
+  const up=()=>{ if(!drag)return; drag=false; cv.style.cursor='grab'; auto=0.0015+variant*0.0002; };
   cv.addEventListener('mousedown',down); window.addEventListener('mousemove',move); window.addEventListener('mouseup',up);
   cv.addEventListener('touchstart',down,{passive:true}); cv.addEventListener('touchmove',move,{passive:true}); cv.addEventListener('touchend',up);
-
-  window.addEventListener('resize',()=>{ W=host.clientWidth||160; H=host.clientHeight||132; camera.aspect=W/H; camera.updateProjectionMatrix(); renderer.setSize(W,H); });
+  window.addEventListener('resize',()=>{ W=host.clientWidth||168; H=host.clientHeight||140; camera.aspect=W/H; camera.updateProjectionMatrix(); renderer.setSize(W,H); });
   const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  (function tick(){ if(!drag && !reduce) rotY+=auto; root.rotation.x=rotX; root.rotation.y=rotY; renderer.render(scene,camera); requestAnimationFrame(tick); })();
+  (function tick(){ if(!drag&&!reduce) rotY+=auto; root.rotation.x=rotX; root.rotation.y=rotY; renderer.render(scene,camera); requestAnimationFrame(tick); })();
 }
 
 axes(); build(); resetCode(); resetFlow(); setBtns('Run replay',false); initGraph3D();
